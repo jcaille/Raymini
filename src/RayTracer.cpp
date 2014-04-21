@@ -37,7 +37,7 @@ inline int clamp (float f, int inf, int sup) {
     return (v < inf ? inf : (v > sup ? sup : v));
 }
 
-bool RayTracer::rayObjectIntersection(Ray ray, Object object, float& intersectionDistance, Vec3Df& intersectionColor)
+bool RayTracer::rayObjectIntersection(const Ray& ray, const Object& object, float& intersectionDistance, Vec3Df& intersectionColor)
 {
    
     // Instead of translating the object by object.trans, we translate
@@ -53,7 +53,7 @@ bool RayTracer::rayObjectIntersection(Ray ray, Object object, float& intersectio
     return false;
 }
 
- bool RayTracer::raySceneIntersection(const Ray ray, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor)
+ bool RayTracer::raySceneIntersection(const Ray& ray, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor)
 {
     
     const BoundingBox & sceneBoundingBox = scene->getBoundingBox ();
@@ -72,7 +72,7 @@ bool RayTracer::rayObjectIntersection(Ray ray, Object object, float& intersectio
     Vec3Df objectIntersectionColor;
     
     // For each object in the scene, check if intersection exists
-    for (unsigned int k = 0; k < 2; k++) {
+    for (unsigned int k = 0; k < scene->getObjects().size(); k++) {
         
         const Object& o = scene->getObjects()[k];
         

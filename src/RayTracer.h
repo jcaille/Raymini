@@ -52,8 +52,8 @@ public:
      *
      *  @return True if the ray intersect the object
      */
-    virtual bool rayObjectIntersection(const Ray ray,
-                               const Object object,
+    virtual bool rayObjectIntersection(const Ray& ray,
+                               const Object& object,
                                float& intersectionDistance,
                                Vec3Df& intersectionColor);
 
@@ -66,7 +66,7 @@ public:
      *
      *  @return True if the ray intersects the scene;
      */
-    virtual bool raySceneIntersection(const Ray ray, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor);
+    virtual bool raySceneIntersection(const Ray& ray, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor);
     
 protected:
     inline RayTracer () {}
