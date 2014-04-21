@@ -29,7 +29,7 @@ Two solutions: you can navigate to the project directory (the directory containi
 Better yet; you can configure Xcode to set the custom working directory: in the upper-left corner, click on `RayTracer`, "Edit Scheme". 
 ![1](https://github.com/jcaille/Raymini/raw/master/doc/1.png)
 
-Go to "Run" -> "Options" -> Check "Use custom working directory" and choose the project dfirectory as custom working directory
+Go to "Run" -> "Options" -> Check "Use custom working directory" and choose the project directory as custom working directory
 ![2](https://github.com/jcaille/Raymini/raw/master/doc/2.png)
 
 Running the project (`cmd+R`) should bring up this Qt window :
