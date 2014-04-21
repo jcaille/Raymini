@@ -6,10 +6,18 @@ Ray tracer project for SI350 class @ Télécom ParisTech
 
 ## Compiling
 
+### Brew
 
 First of all, we will use [homebrew](http://brew.sh) as a package & dependency manager. If you don't have it, you can simply install it with the line 
     
     ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+
+If you do have it, maek sure to update and upgrad all packages by running
+
+    brew upgrade
+    brew update
+    
+### Installing requirements with Brew
 
 The project has dependency on `qt` and `libqglviewer` : install both of those by typing `brew install qt` and `brew install libqglviewer`. You will need to remove previous versions of those libraries if you installed them any other way. Quick sanity check : `brew info qt` should tell you you have version `4.8.5`.
 
