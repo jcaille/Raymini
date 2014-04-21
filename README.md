@@ -12,7 +12,7 @@ First of all, we will use [homebrew](http://brew.sh) as a package & dependency m
     
     ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 
-If you do have it, maek sure to update and upgrad all packages by running
+If you do have it, make sure to update and upgrade all packages by running
 
     brew upgrade
     brew update
