@@ -27,13 +27,13 @@ The program hard-codes a bunch of path to model files and expects to be launched
 Two solutions: you can navigate to the project directory (the directory containing the Xcode file) using your terminal and launch the program like that: `./bin/RayTracer`, which is easy but not really convenient.
 
 Better yet; you can configure Xcode to set the custom working directory: in the upper-left corner, click on `RayTracer`, "Edit Scheme". 
-<!-- ![1](/Users/Olotiar/Documents/Polytechnique/Cours/Telecom/INFSI350/RayTracer/doc/1.png) -->
+![1](https://github.com/jcaille/Raymini/raw/master/doc/1.png)
 
 Go to "Run" -> "Options" -> Check "Use custom working directory" and choose the project dfirectory as custom working directory
-<!-- ![2](/Users/Olotiar/Documents/Polytechnique/Cours/Telecom/INFSI350/RayTracer/doc/2.png) -->
+![2](https://github.com/jcaille/Raymini/raw/master/doc/2.png)
 
 Running the project (`cmd+R`) should bring up this Qt window :
-<!-- ![3](/Users/Olotiar/Documents/Polytechnique/Cours/Telecom/INFSI350/RayTracer/doc/3.png) -->
+![3](https://github.com/jcaille/Raymini/raw/master/doc/3.png)
 
 
 
