@@ -8,8 +8,10 @@
 #include "QTUtils.h"
 
 #include <cmath>
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
 #include <QtGui/QHBoxLayout>
+#pragma clang diagnostic pop
 
 IntegerWidget::IntegerWidget (const QString & name,
                               int minValue, 

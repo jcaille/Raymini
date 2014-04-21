@@ -8,7 +8,11 @@
 #include "RayTracer.h"
 #include "Ray.h"
 #include "Scene.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
 #include <QProgressDialog>
+#pragma clang diagnostic pop
 
 static RayTracer * instance = NULL;
 

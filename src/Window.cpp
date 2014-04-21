@@ -6,6 +6,9 @@
 #include <cstdio>
 #include <cstdlib>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#pragma clang diagnostic ignored "-Wconversion"
 #include <QDockWidget>
 #include <QGroupBox>
 #include <QButtonGroup>
@@ -32,6 +35,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QStatusBar>
+#pragma clang diagnostic pop
 
 #include "RayTracer.h"
 

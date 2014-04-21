@@ -10,9 +10,13 @@
 #define GLVIEWER_H
 
 //#include <GL/glew.h>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#pragma clang diagnostic ignored "-Wconversion"
 #include <QGLViewer/qglviewer.h>
 #include <vector>
 #include <string>
+#pragma clang diagnostic pop
 
 #include "Scene.h"
 

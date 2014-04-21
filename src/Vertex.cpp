@@ -12,8 +12,6 @@
 
 using namespace std;
 
-static const unsigned int SIZE_OF_VERTEX = 10;
-
 ostream & operator<< (ostream & output, const Vertex & v) {
     output << v.getPos () << endl << v.getNormal ();
     return output;

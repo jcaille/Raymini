@@ -10,7 +10,12 @@
 
 #include <iostream>
 #include <vector>
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wconversion"
 #include <QtGui/QImage>
+#pragma clang diagnostic pop
+
 
 #include "Vec3D.h"
 

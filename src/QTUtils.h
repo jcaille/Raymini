@@ -7,11 +7,15 @@
 
 #ifndef QTUTILS_H
 #define QTUTILS_H
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#pragma clang diagnostic ignored "-Wconversion"
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
 #include <QtGui/QSlider>
 #include <QtGui/QLCDNumber>
+#pragma clang diagnostic pop
+
 
 class IntegerWidget : public QWidget {
     Q_OBJECT

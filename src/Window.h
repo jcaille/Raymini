@@ -2,6 +2,11 @@
 #define WINDOW_H
 
 #include "GLViewer.h"
+
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#pragma clang diagnostic ignored "-Wconversion"
 #include <QMainWindow>
 #include <QAction>
 #include <QToolBar>
@@ -13,6 +18,8 @@
 #include <QSpinBox>
 #include <QImage>
 #include <QLabel>
+#pragma clang diagnostic pop
+
 
 #include <vector>
 #include <string>
