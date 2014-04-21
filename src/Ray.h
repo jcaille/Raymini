@@ -13,6 +13,7 @@
 
 #include "Vec3D.h"
 #include "BoundingBox.h"
+#include "Triangle.h"
 
 class Ray {
 public:
@@ -27,6 +28,19 @@ public:
     inline Vec3Df & getDirection () { return direction; }
 
     bool intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const;
+    
+    /**
+     *  Checks if the ray intersects with the given triangle. We use the Möller-Trumbore algorithm described
+     *  in http://en.wikipedia.org/wiki/Moller-Trumbore_intersection_algorithm
+     *
+     *  @param a                    The first vertex of the triangle
+     *  @param b                    The second vertex of the triangle
+     *  @param c                    The third vertex of the triangle
+     *  @param intersectionPoint    If the method returns true, this parameter will contain the intersection point.
+     *
+     *  @return true if the Ray and the triangle have a point in common (keeping in mind accury issues)
+     */
+    bool intersectTriangle(const Vec3Df a, const Vec3Df b, const Vec3Df c, Vec3Df &intersectionPoint) const;
     
 private:
     Vec3Df origin;

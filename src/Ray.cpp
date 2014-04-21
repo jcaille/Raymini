@@ -7,6 +7,8 @@
 
 #include "Ray.h"
 
+#define ACCURACY 10e-6
+
 using namespace std;
 
 static const unsigned int NUMDIM = 3, RIGHT = 0, LEFT = 1, MIDDLE = 2;
@@ -60,4 +62,47 @@ bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const
             intersectionPoint[i] = candidatePlane[i];
         }
     return (true);			
+}
+
+bool Ray::intersectTriangle(const Vec3Df a, const Vec3Df b, const Vec3Df c, Vec3Df &intersectionPoint) const
+{
+    //e1 and e2 are the two edges containing a
+    Vec3Df e1 = b - a;
+    Vec3Df e2 = c -a ;
+    
+    //Begin calculating determinant
+    Vec3Df P = Vec3Df::crossProduct(this->getDirection(), e2);
+    
+    //If determinant is near 0, ray lies in plane of triangle. Wer discard it
+    float det = Vec3Df::dotProduct(e1, P);
+    if (fabs(det) < ACCURACY) {
+        return false;
+    }
+    
+    // Get the distance from a to the ray origin
+    Vec3Df T = this->getOrigin() - a;
+    
+    // Calculate U parameter
+    float u = Vec3Df::dotProduct(T, P) / det;
+    // Check if U is within correct bounds
+    if (u < 0.0 || u > 1.0) {
+        return false;
+    }
+    
+    // Get V parameter
+    Vec3Df Q = Vec3Df::crossProduct(T, e1);
+    float v = Vec3Df::dotProduct(this->getDirection(), Q) / det;
+    // Check if V is within correct bounds
+    if(v < 0.0 || v > 1.0){
+        return false;
+    }
+    
+    // Get the intersection point (that has to be not too close to the origin)
+    float t = Vec3Df::dotProduct(e2, Q) / det;
+    if(t > ACCURACY){
+        intersectionPoint = this->getOrigin() + t * this->getDirection();
+        return true;
+        // Might get better precision using u and v.
+    }
+    return false;
 }
