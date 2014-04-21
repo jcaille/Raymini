@@ -19,6 +19,11 @@
 
 #include "Vec3D.h"
 
+// Forward declaration
+class Object;
+class Ray;
+class Scene;
+
 class RayTracer {
 public:
     static RayTracer * getInstance ();
@@ -35,6 +40,33 @@ public:
                    float aspectRatio,
                    unsigned int screenWidth,
                    unsigned int screenHeight);
+    
+
+    /**
+     *  Get the color and distance of the interaction between a given ray and a given object. Overload this function to customize the behavior of the renderer. The base RayTracer uses bouding boxes to check for intersection.
+     *
+     *  @param ray                  The ray
+     *  @param object               The object.
+     *  @param intersectionDistance If the function returns true, this will contain the distance between the ray origin and the intersection point
+     *  @param intersectionColor    If the function returns true, this will contain the color of the ray after intersecting the object.
+     *
+     *  @return True if the ray intersect the object
+     */
+    virtual bool rayObjectIntersection(const Ray ray,
+                               const Object object,
+                               float& intersectionDistance,
+                               Vec3Df& intersectionColor);
+
+     /**
+     *  Get the color and distance of the intersection between a given ray and the global scene.
+     *
+     *  @param basePixelRay         The base ray
+     *  @param intersectionDistance If the function returns true, this will contain the distance between the ray origin and the intersection point
+     *  @param RayTracer            If the function returns true, this will contain the color of the ray after intersecting the object.
+     *
+     *  @return True if the ray intersects the scene;
+     */
+    virtual bool raySceneIntersection(const Ray ray, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor);
     
 protected:
     inline RayTracer () {}
