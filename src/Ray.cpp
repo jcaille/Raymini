@@ -64,26 +64,27 @@ bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const
     return (true);			
 }
 
-bool Ray::intersectTriangle(const Vec3Df a, const Vec3Df b, const Vec3Df c, Vec3Df &intersectionPoint) const
+bool Ray::intersectTriangle(const Vec3Df& a, const Vec3Df& b, const Vec3Df& c, float& intersectionDistance) const
 {
     //e1 and e2 are the two edges containing a
     Vec3Df e1 = b - a;
-    Vec3Df e2 = c -a ;
+    Vec3Df e2 = c - a;
     
     //Begin calculating determinant
-    Vec3Df P = Vec3Df::crossProduct(this->getDirection(), e2);
+    Vec3Df P = Vec3Df::crossProduct(direction, e2);
     
-    //If determinant is near 0, ray lies in plane of triangle. Wer discard it
+    //If determinant is near 0, ray lies in plane of triangle. We discard it
     float det = Vec3Df::dotProduct(e1, P);
     if (fabs(det) < ACCURACY) {
         return false;
     }
+    float detInverse = 1.0 / det;
     
     // Get the distance from a to the ray origin
-    Vec3Df T = this->getOrigin() - a;
+    Vec3Df T = origin - a;
     
     // Calculate U parameter
-    float u = Vec3Df::dotProduct(T, P) / det;
+    float u = Vec3Df::dotProduct(T, P) * detInverse;
     // Check if U is within correct bounds
     if (u < 0.0 || u > 1.0) {
         return false;
@@ -91,16 +92,16 @@ bool Ray::intersectTriangle(const Vec3Df a, const Vec3Df b, const Vec3Df c, Vec3
     
     // Get V parameter
     Vec3Df Q = Vec3Df::crossProduct(T, e1);
-    float v = Vec3Df::dotProduct(this->getDirection(), Q) / det;
+    float v = Vec3Df::dotProduct(direction, Q) * detInverse;
     // Check if V is within correct bounds
     if(v < 0.0 || v > 1.0){
         return false;
     }
     
     // Get the intersection point (that has to be not too close to the origin)
-    float t = Vec3Df::dotProduct(e2, Q) / det;
+    float t = Vec3Df::dotProduct(e2, Q) * detInverse;
     if(t > ACCURACY){
-        intersectionPoint = this->getOrigin() + t * this->getDirection();
+        intersectionDistance = t;
         return true;
         // Might get better precision using u and v.
     }

@@ -38,6 +38,7 @@
 #pragma clang diagnostic pop
 
 #include "RayTracer.h"
+#include "BRDFRayTracer.h"
 
 using namespace std;
 
@@ -67,7 +68,11 @@ Window::~Window () {
 
 void Window::renderRayImage () {
     qglviewer::Camera * cam = viewer->camera ();
+    
+    // Switch between different renderer here.
+    // Might be useful to have some keybinding to do this !
     RayTracer * rayTracer = RayTracer::getInstance ();
+    
     qglviewer::Vec p = cam->position ();
     qglviewer::Vec d = cam->viewDirection ();
     qglviewer::Vec u = cam->upVector ();
