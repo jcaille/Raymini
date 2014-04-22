@@ -97,8 +97,11 @@ bool BRDFRayTracer::rayObjectIntersection(const Ray &ray, const Object &object, 
         
         Vec3Df wi = light.getPos() - minIntersectionPos;
         wi.normalize();
+        Vec3Df wo = ray.getOrigin() - minIntersectionPos ;
+        wo.normalize();
+        Vec3Df r = 2*norm * (Vec3Df::dotProduct(norm, wi)) - wi;
         
-         f += max(mat.getDiffuse() * Vec3Df::dotProduct(norm, wi),0);
+        f += max(mat.getDiffuse() * Vec3Df::dotProduct(norm, wi) + mat.getSpecular() * powf( Vec3Df::dotProduct(r, wo) , 2.0), 0 );
         
     }
     
