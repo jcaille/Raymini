@@ -1,25 +1,23 @@
 //
-//  BRDFRayTracer.h
+//  BasicRayTracer.h
 //  RayTracer
 //
-//  Created by Jean Caillé on 21/04/2014.
+//  Created by Florian Denis on 22/04/14.
 //  Copyright (c) 2014 Florian Denis. All rights reserved.
 //
 
-#ifndef __RayTracer__BRDFRayTracer__
-#define __RayTracer__BRDFRayTracer__
+#ifndef __RayTracer__BasicRayTracer__
+#define __RayTracer__BasicRayTracer__
 
 #include "RayTracer.h"
 
-class BRDFRayTracer : public RayTracer
-{
-
-public :
+class BasicRayTracer : public RayTracer {
+    
+public:
+    
     
     /**
-     *  We overload this method to modify the way the ray interact with an object
-     *  Instead of simply checking if we intersect the bouding box, we will first seek if the ray intersect a triangle
-     *  If so, we will compute the BRDF at the intersection point, and pass that color back to the ray
+     *  This is the default code from Boubekeur for the project : it effectively computes the intersection between the object and a bounding box
      *
      *  @param ray                  The ray
      *  @param object               The object
@@ -29,13 +27,13 @@ public :
      *  @return true if there is an intersection between the object and the ray;
      */
     virtual bool rayObjectIntersection(const Ray &ray, const Object &object, float &intersectionDistance, Vec3Df &intersectionColor);
-    
+  
 protected:
     friend RayTracer;
-    inline BRDFRayTracer () {}
-    inline virtual ~BRDFRayTracer () {}
+    inline BasicRayTracer () {}
+    inline virtual ~BasicRayTracer () {}
 
+    
 };
 
-
-#endif /* defined(__RayTracer__BRDFRayTracer__) */
+#endif /* defined(__RayTracer__BasicRayTracer__) */

@@ -15,26 +15,6 @@
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
-#pragma mark - Singleton pattern
-
-static BRDFRayTracer * instance = NULL;
-
-BRDFRayTracer * BRDFRayTracer::getInstance () {
-    if (instance == NULL){
-        instance = new BRDFRayTracer ();
-        std::cout << "Creating BRDF raytracer" << std::endl;
-    }
-    return instance;
-}
-
-void BRDFRayTracer::destroyInstance () {
-    if (instance != NULL) {
-        delete instance;
-        std::cout << "Deleting BRDF raytracer" << std::endl;
-        instance = NULL;
-    }
-}
-
 #pragma mark - Overloading
 
 // This class implements the simplest BRDF there is.

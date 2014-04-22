@@ -9,6 +9,9 @@
 #include "Ray.h"
 #include "Scene.h"
 
+#include "BasicRayTracer.h"
+#include "BRDFRayTracer.h"
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
 #include <QProgressDialog>
@@ -18,7 +21,7 @@ static RayTracer * instance = NULL;
 
 RayTracer * RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new RayTracer ();
+        instance = new BRDFRayTracer ();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
@@ -32,28 +35,12 @@ void RayTracer::destroyInstance () {
     }
 }
 
-inline int clamp (float f, int inf, int sup) {
+static inline int clamp (float f, int inf, int sup) {
     int v = static_cast<int> (f);
     return (v < inf ? inf : (v > sup ? sup : v));
 }
 
-bool RayTracer::rayObjectIntersection(const Ray& ray, const Object& object, float& intersectionDistance, Vec3Df& intersectionColor)
-{
-   
-    // Instead of translating the object by object.trans, we translate
-    // the camera by the -object.trans. Clever, huh ?
-    Ray correctedRay = Ray(ray.getOrigin() - object.getTrans(), ray.getDirection());
-
-    bool hasIntersection = correctedRay.intersect (object.getBoundingBox (), intersectionColor);
-    if (hasIntersection) {
-        intersectionDistance = Vec3Df::squaredDistance (intersectionColor, correctedRay.getOrigin());
-        intersectionColor = 255 * object.getMaterial().getColor();
-        return true;
-    }
-    return false;
-}
-
- bool RayTracer::raySceneIntersection(const Ray& ray, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor)
+bool RayTracer::raySceneIntersection(const Ray& ray, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor)
 {
     
     const BoundingBox & sceneBoundingBox = scene->getBoundingBox ();
@@ -66,7 +53,7 @@ bool RayTracer::rayObjectIntersection(const Ray& ray, const Object& object, floa
     }
     
     bool intersection = false;
-    intersectionDistance = 1000000000; // Store the local Z-buffer in the return parameter
+    intersectionDistance = std::numeric_limits<float>::max();
    
     float objectIntersectionDistance;
     Vec3Df objectIntersectionColor;
@@ -81,7 +68,6 @@ bool RayTracer::rayObjectIntersection(const Ray& ray, const Object& object, floa
         if (objectIntersection && objectIntersectionDistance < intersectionDistance) {
             // Keep the intersection if it is closer to the camera
             
-            intersectionDistance = objectIntersectionDistance;
             intersectionDistance = objectIntersectionDistance;
             intersectionColor = objectIntersectionColor;
             intersection = true;
@@ -111,7 +97,6 @@ QImage RayTracer::render (const Vec3Df & camPos,
     Scene* scene = Scene::getInstance();
     
     for (unsigned int i = 0; i < screenWidth; i++) {
-        std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
         for (unsigned int j = 0; j < screenHeight; j++) {
             

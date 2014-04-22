@@ -55,7 +55,7 @@ public:
     virtual bool rayObjectIntersection(const Ray& ray,
                                const Object& object,
                                float& intersectionDistance,
-                               Vec3Df& intersectionColor);
+                               Vec3Df& intersectionColor) = 0;
 
      /**
      *  Get the color and distance of the intersection between a given ray and the global scene.
