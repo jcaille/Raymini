@@ -64,8 +64,13 @@ bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const
     return (true);			
 }
 
-bool Ray::intersectTriangle(const Vec3Df& a, const Vec3Df& b, const Vec3Df& c, float& intersectionDistance) const
+bool Ray::intersect_jean (const Triangle & tri, const Mesh & mesh, float &intersectionDistance) const
 {
+    
+    Vec3Df a = mesh.getVertices()[tri.getVertex(0)].getPos();
+    Vec3Df b = mesh.getVertices()[tri.getVertex(1)].getPos();
+    Vec3Df c = mesh.getVertices()[tri.getVertex(2)].getPos();
+    
     //e1 and e2 are the two edges containing a
     Vec3Df e1 = b - a;
     Vec3Df e2 = c - a;
@@ -103,7 +108,55 @@ bool Ray::intersectTriangle(const Vec3Df& a, const Vec3Df& b, const Vec3Df& c, f
     if(t > ACCURACY){
         intersectionDistance = t;
         return true;
-        // Might get better precision using u and v.
     }
+    return false;
+}
+
+bool Ray::intersect_florian(const Triangle & tri, const Mesh & mesh, float &intersectionDistance) const
+{
+    
+    Vec3Df p0 = mesh.getVertices()[tri.getVertex(0)].getPos();
+    Vec3Df p1 = mesh.getVertices()[tri.getVertex(1)].getPos();
+    Vec3Df p2 = mesh.getVertices()[tri.getVertex(2)].getPos();
+
+    Vec3Df e0 = p1 - p0;
+    Vec3Df e1 = p2 - p0;
+    
+    Vec3Df n = Vec3Df::crossProduct(e0, e1);
+    n.normalize();
+    
+    Vec3Df q = Vec3Df::crossProduct(direction, e1);
+    
+    float a = Vec3Df::dotProduct(e0, q);
+    
+    if(abs(a) < ACCURACY)
+        return false;
+    
+    Vec3Df s = (origin-p0)/a;
+    
+    Vec3Df r = Vec3Df::crossProduct(s, e0);
+    
+    float b0 = Vec3Df::dotProduct(s, q);
+    
+    if (b0 < 0)
+        return false;
+    
+    float b1 = Vec3Df::dotProduct(r, direction);
+    
+    if (b1 < 0)
+        return false;
+
+    float b2 = 1 - b0 - b1;
+    
+    if (b2 < 0)
+        return false;
+    
+    float t = Vec3Df::dotProduct(e1, r);
+    
+    if (t>=0){
+        intersectionDistance = t;
+        return true;
+    }
+    
     return false;
 }

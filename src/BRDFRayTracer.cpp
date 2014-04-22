@@ -43,11 +43,7 @@ bool BRDFRayTracer::rayObjectIntersection(const Ray &ray, const Object &object, 
     {
         float triangleDistance;
         Triangle t = object.getMesh().getTriangles()[i];
-        if (correctedRay.intersectTriangle(
-                                           mesh.getVertices()[t.getVertex(0)].getPos(),
-                                           mesh.getVertices()[t.getVertex(1)].getPos(),
-                                           mesh.getVertices()[t.getVertex(2)].getPos(),
-                                           triangleDistance)) {
+        if (correctedRay.intersect_jean(t, mesh, triangleDistance)) {
             if(triangleDistance < minIntersectionDistance)
             {
                 minIntersectionDistance = triangleDistance;
