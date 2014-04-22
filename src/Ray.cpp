@@ -8,7 +8,7 @@
 #include "Ray.h"
 #include "Scene.h"
 
-#define ACCURACY 0
+#define ACCURACY 1e-6
 
 using namespace std;
 
@@ -109,9 +109,9 @@ bool Ray::intersect(const Triangle & tri, const Mesh & mesh, Vec3Df & intersecti
     float t = Vec3Df::dotProduct(e1, r);
     
     if (t>=0){
-        coords.push_back(b1);
         coords.push_back(b2);
         coords.push_back(b0);
+        coords.push_back(b1);
         
         intersectionPoint = origin + t * direction;
         return true;
