@@ -54,7 +54,7 @@ bool BRDFRayTracer::rayObjectIntersection(const Ray &ray, const Object &object, 
     }
     
     // Find the triangle (if any) containing the closest intersection
-    float minIntersectionDistance = 1000000000000000;
+    float minIntersectionDistance = std::numeric_limits<float>::max();
     int minIntersectionIndex = -1;
     
     Mesh mesh = object.getMesh();
