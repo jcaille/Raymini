@@ -25,28 +25,32 @@ bool BRDFRayTracer::rayObjectIntersection(const Ray &ray, const Object &object, 
 {
     // Instead of translating the object by object.trans, we translate
     // the camera by the -object.trans. Clever, huh ?
-    Ray correctedRay = Ray(ray.getOrigin() - object.getTrans(), ray.getDirection());
+    Ray correctedRay(ray.getOrigin() - object.getTrans(), ray.getDirection());
     
-    if (correctedRay.intersect (object.getBoundingBox (), intersectionColor))
+    if (!correctedRay.intersect(object.getBoundingBox(), intersectionColor))
     {
         // The ray does not intersect the bouding box, no need to go deeper
         return false;
     }
     
     // Find the triangle (if any) containing the closest intersection
-    float minIntersectionDistance = std::numeric_limits<float>::max();
+    intersectionDistance = std::numeric_limits<float>::max();
     int minIntersectionIndex = -1;
     
     Mesh mesh = object.getMesh();
     
-    for(int i = 0 ; i < mesh.getTriangles().size() ; i++)
+    size_t n = mesh.getTriangles().size();
+    std::vector<Triangle> triangles = object.getMesh().getTriangles();
+    
+    for(int i = 0 ; i < n; ++i)
     {
-        float triangleDistance;
-        Triangle t = object.getMesh().getTriangles()[i];
-        if (correctedRay.intersect_jean(t, mesh, triangleDistance)) {
-            if(triangleDistance < minIntersectionDistance)
+        Vec3Df intersectionPos;
+        Triangle t = triangles[i];
+        if (correctedRay.intersect(t, mesh, intersectionPos)) {
+            float triangleDistance =  Vec3Df::distance(intersectionPos, correctedRay.getOrigin());
+            if(triangleDistance < intersectionDistance)
             {
-                minIntersectionDistance = triangleDistance;
+                intersectionDistance = triangleDistance;
                 minIntersectionIndex = i;
             }
         }

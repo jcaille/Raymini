@@ -29,14 +29,7 @@ public:
     inline Vec3Df & getDirection () { return direction; }
 
     bool intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const;
-    
-    /**
-     *  Checks if the ray intersects with the given triangle. We use the Möller-Trumbore algorithm described
-     *  in http://en.wikipedia.org/wiki/Moller-Trumbore_intersection_algorithm
-     */
-    bool intersect_jean (const Triangle & tri, const Mesh & mesh, float &intersectionDistance) const;
-
-    bool intersect_florian (const Triangle & tri, const Mesh & mesh, float &intersectionDistance) const;
+    bool intersect (const Triangle & tri, const Mesh & mesh, Vec3Df & intersectionPoint) const;
     
 private:
     Vec3Df origin;

@@ -97,6 +97,7 @@ QImage RayTracer::render (const Vec3Df & camPos,
     Scene* scene = Scene::getInstance();
     
     for (unsigned int i = 0; i < screenWidth; i++) {
+        std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
         for (unsigned int j = 0; j < screenHeight; j++) {
             
