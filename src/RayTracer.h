@@ -54,6 +54,7 @@ public:
      */
     virtual bool rayObjectIntersection(const Ray& ray,
                                const Object& object,
+                               const Scene* scene,
                                float& intersectionDistance,
                                Vec3Df& intersectionColor) = 0;
 

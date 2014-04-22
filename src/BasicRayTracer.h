@@ -26,7 +26,7 @@ public:
      *
      *  @return true if there is an intersection between the object and the ray;
      */
-    virtual bool rayObjectIntersection(const Ray &ray, const Object &object, float &intersectionDistance, Vec3Df &intersectionColor);
+    virtual bool rayObjectIntersection(const Ray &ray, const Object &object, const Scene* scene, float &intersectionDistance, Vec3Df &intersectionColor);
   
 protected:
     friend RayTracer;

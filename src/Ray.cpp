@@ -6,6 +6,7 @@
 // *********************************************************
 
 #include "Ray.h"
+#include "Scene.h"
 
 #define ACCURACY 0
 
@@ -65,7 +66,7 @@ bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const
 }
 
 
-bool Ray::intersect(const Triangle & tri, const Mesh & mesh, Vec3Df & intersectionPoint) const
+bool Ray::intersect(const Triangle & tri, const Mesh & mesh, Vec3Df & intersectionPoint, vector<float>& coords) const
 {
     
     Vec3Df p0 = mesh.getVertices()[tri.getVertex(0)].getPos();
@@ -104,9 +105,14 @@ bool Ray::intersect(const Triangle & tri, const Mesh & mesh, Vec3Df & intersecti
     if (b2 < 0)
         return false;
     
+    
     float t = Vec3Df::dotProduct(e1, r);
     
     if (t>=0){
+        coords.push_back(b1);
+        coords.push_back(b2);
+        coords.push_back(b0);
+        
         intersectionPoint = origin + t * direction;
         return true;
     }

@@ -63,7 +63,7 @@ bool RayTracer::raySceneIntersection(const Ray& ray, const Scene* scene, float& 
         
         const Object& o = scene->getObjects()[k];
         
-        bool objectIntersection = rayObjectIntersection(ray, o, objectIntersectionDistance, objectIntersectionColor);
+        bool objectIntersection = rayObjectIntersection(ray, o, scene, objectIntersectionDistance, objectIntersectionColor);
         
         if (objectIntersection && objectIntersectionDistance < intersectionDistance) {
             // Keep the intersection if it is closer to the camera

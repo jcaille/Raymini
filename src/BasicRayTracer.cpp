@@ -11,7 +11,7 @@
 #include "Scene.h"
 
 
-bool BasicRayTracer::rayObjectIntersection(const Ray& ray, const Object& object, float& intersectionDistance, Vec3Df& intersectionColor)
+bool BasicRayTracer::rayObjectIntersection(const Ray& ray, const Object& object, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor)
 {
     
     // Instead of translating the object by object.trans, we translate
