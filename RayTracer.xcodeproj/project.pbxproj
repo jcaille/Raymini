@@ -31,6 +31,7 @@
 		1A73A7A5190527C300B6A310 /* moc_Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A7A2190527C300B6A310 /* moc_Window.cpp */; };
 		1A73A7A71905280400B6A310 /* QtOpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A73A7A61905280400B6A310 /* QtOpenGL.framework */; };
 		1ADF5ECF19064A6F00A46FB5 /* BasicRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1ADF5ECD19064A6F00A46FB5 /* BasicRayTracer.cpp */; };
+		7627F8ED1907103400121E57 /* KDTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7627F8EB1907103100121E57 /* KDTree.cpp */; };
 		7670A94D19067AD000509C5E /* QGLViewer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7670A94C19067AD000509C5E /* QGLViewer.framework */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +90,8 @@
 		1A73A7A61905280400B6A310 /* QtOpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtOpenGL.framework; path = ../../../../../../../../../usr/local/Frameworks/QtOpenGL.framework; sourceTree = "<group>"; };
 		1ADF5ECD19064A6F00A46FB5 /* BasicRayTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BasicRayTracer.cpp; path = src/BasicRayTracer.cpp; sourceTree = SOURCE_ROOT; };
 		1ADF5ECE19064A6F00A46FB5 /* BasicRayTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasicRayTracer.h; path = src/BasicRayTracer.h; sourceTree = SOURCE_ROOT; };
+		7627F8EB1907103100121E57 /* KDTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KDTree.cpp; path = src/KDTree.cpp; sourceTree = SOURCE_ROOT; };
+		7627F8EC1907103200121E57 /* KDTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KDTree.h; path = src/KDTree.h; sourceTree = SOURCE_ROOT; };
 		7670A94C19067AD000509C5E /* QGLViewer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QGLViewer.framework; path = /usr/local/lib/QGLViewer.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -149,6 +152,8 @@
 				1A73A76E19051BE500B6A310 /* Ray.h */,
 				1A73A76D19051BE500B6A310 /* Ray.cpp */,
 				1A73A75F19051BE500B6A310 /* Edge.h */,
+				7627F8EB1907103100121E57 /* KDTree.cpp */,
+				7627F8EC1907103200121E57 /* KDTree.h */,
 				1A73A75E19051BE500B6A310 /* BoundingBox.h */,
 				1A73A75D19051BE500B6A310 /* BoundingBox.cpp */,
 				1A73A76819051BE500B6A310 /* Mesh.h */,
@@ -302,6 +307,7 @@
 				1A73A77A19051BE500B6A310 /* BoundingBox.cpp in Sources */,
 				1A73A78619051BE500B6A310 /* Vertex.cpp in Sources */,
 				1ADF5ECF19064A6F00A46FB5 /* BasicRayTracer.cpp in Sources */,
+				7627F8ED1907103400121E57 /* KDTree.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

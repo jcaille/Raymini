@@ -36,8 +36,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <vector>
 #include <algorithm>
+#include <QList>
 
 #include "Vec3D.h"
+#include "Triangle.h"
+#include "Vertex.h"
 
 const float BOUNDINGBOX_EPSILON = 0.0001f;
 
@@ -46,6 +49,7 @@ public:
     BoundingBox () : minBb (Vec3Df (0.0f, 0.0f, 0.0f)), maxBb (Vec3Df (0.0f, 0.0f, 0.0f)) {}
     BoundingBox (const Vec3Df & p) : minBb (p), maxBb (p) {}
     BoundingBox (const Vec3Df & min, const Vec3Df & max) : minBb (min), maxBb (max) {}
+    BoundingBox (const std::vector< Triangle > & list_triangles, const std::vector< int > & triangle_indexes, const std::vector<Vertex>& V);
 
     inline void init (const Vec3Df & p) {
         minBb = maxBb = p;

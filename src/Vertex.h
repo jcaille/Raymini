@@ -42,7 +42,7 @@ public:
     inline void setNormal (const Vec3Df & newNormal) { normal = newNormal; }
     inline void mark () { marked = true; }
     inline void unmark () { marked = false; }
-    inline void setId (int newId) { id = newId; } 
+    inline void setId (int newId) { id = newId; }
     inline bool operator== (const Vertex & v) { return (v.pos == pos && v.normal == normal); }
     void interpolate (const Vertex & u, const Vertex & v, float alpha = 0.5);
 
@@ -57,6 +57,7 @@ private:
     Vec3Df normal;
     bool marked;
     int id;
+    bool up;
 };
 
 extern std::ostream & operator<< (std::ostream & output, const Vertex & v);
