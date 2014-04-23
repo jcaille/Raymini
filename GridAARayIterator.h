@@ -18,8 +18,10 @@ class GridAARayIterator : public RayIterator
 {
     public :
     int gridSize;
-    GridAARayIterator(Vec3Df cameraPosition, Vec3Df direction, Vec3Df upVector, Vec3Df rightVector, float fov, float ar, unsigned int screenWidth, unsigned int screenHeight);
-    void raysForPixel(int i, int j, std::vector<Ray>& res);
+    GridAARayIterator(){};
+    
+    virtual void setCameraInformations(Vec3Df cameraPosition, Vec3Df direction, Vec3Df upVector, Vec3Df rightVector, float fov, float ar, unsigned int screenWidth, unsigned int screenHeight);
+    virtual void raysForPixel(int i, int j, std::vector<Ray>& res);
 
     protected :
 };

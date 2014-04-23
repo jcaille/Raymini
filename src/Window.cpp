@@ -38,6 +38,7 @@
 #pragma clang diagnostic pop
 
 #include "RayTracer.h"
+#include "GridAARayIterator.h"
 
 using namespace std;
 
@@ -65,12 +66,40 @@ Window::~Window () {
 
 }
 
+
+RayIterator* Window::getIterator()
+{
+
+    RayIterator *r = NULL;
+    
+    switch (rayIteratorComboBox->currentIndex()) {
+            
+        case 1:
+            r = new GridAARayIterator();
+            ((GridAARayIterator*)r)->gridSize = 2;
+            break;
+        case 2:
+            r = new GridAARayIterator();
+            ((GridAARayIterator*)r)->gridSize = 3;
+            break;
+        default:
+            r = new RayIterator();
+    }
+    
+    return r;
+}
+
 void Window::renderRayImage () {
+    
+    std::cout << "The value of the dropdown is : " << std::endl;
+    // Get the value
+    
     qglviewer::Camera * cam = viewer->camera ();
     
     // Switch between different renderer here.
     // Might be useful to have some keybinding to do this !
     RayTracer * rayTracer = RayTracer::getInstance ();
+    rayTracer->rayIterator = getIterator();
     
     qglviewer::Vec p = cam->position ();
     qglviewer::Vec d = cam->viewDirection ();
@@ -156,8 +185,17 @@ void Window::initControlWidget () {
 
     layout->addWidget (previewGroupBox);
     
+    
     QGroupBox * rayGroupBox = new QGroupBox ("Ray Tracing", controlWidget);
     QVBoxLayout * rayLayout = new QVBoxLayout (rayGroupBox);
+    
+    
+    rayIteratorComboBox = new QComboBox;
+    rayIteratorComboBox->addItem(tr("No AA"));
+    rayIteratorComboBox->addItem(tr("AA : 4x"));
+    rayIteratorComboBox->addItem(tr("AA : 8x"));
+    rayLayout->addWidget(rayIteratorComboBox);
+    
     QPushButton * rayButton = new QPushButton ("Render", rayGroupBox);
     rayLayout->addWidget (rayButton);
     connect (rayButton, SIGNAL (clicked ()), this, SLOT (renderRayImage ()));

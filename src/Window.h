@@ -26,6 +26,7 @@
 
 #include "QTUtils.h"
 
+class RayIterator;
 
 class Window : public QMainWindow {
     Q_OBJECT
@@ -44,12 +45,15 @@ public slots :
     void about ();
     
 private :
-    void initControlWidget ();
-        
+    void initControlWidget();
+    RayIterator *getIterator();
+    
     QActionGroup * actionGroup;
     QGroupBox * controlWidget;
     QString currentDirectory;
 
+    QComboBox* rayIteratorComboBox;
+    
     GLViewer * viewer;
 };
 

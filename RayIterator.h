@@ -30,9 +30,7 @@ protected:
     
 public:
     
-    // Constructor
-    RayIterator(){};
-    RayIterator(Vec3Df cameraPosition, Vec3Df direction, Vec3Df upVector, Vec3Df rightVector, float fov, float ar, unsigned int screenWidth, unsigned int screenHeight);
+    virtual void setCameraInformation(Vec3Df cameraPosition, Vec3Df direction, Vec3Df upVector, Vec3Df rightVector, float fov, float ar, unsigned int screenWidth, unsigned int screenHeight);
     
     virtual void raysForPixel(int i, int j, std::vector<Ray>& res);
 };

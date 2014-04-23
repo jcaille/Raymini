@@ -68,9 +68,10 @@ public:
      *  @return True if the ray intersects the scene;
      */
     virtual bool raySceneIntersection(const Ray& ray, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor);
-    
+
+    RayIterator *rayIterator;
+
 protected:
-    RayIterator rayIterator;
     
     inline RayTracer () {}
     inline virtual ~RayTracer () {}

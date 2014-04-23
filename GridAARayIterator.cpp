@@ -8,10 +8,16 @@
 
 #include "GridAARayIterator.h"
 
-GridAARayIterator::GridAARayIterator(Vec3Df cameraPosition, Vec3Df direction, Vec3Df upVector, Vec3Df rightVector, float fov, float ar, unsigned int screenWidth, unsigned int screenHeight)
-:RayIterator(cameraPosition, direction, upVector, rightVector, fov, ar, screenWidth, screenHeight)
+void GridAARayIterator::setCameraInformations(Vec3Df cameraPosition, Vec3Df direction, Vec3Df upVector, Vec3Df rightVector, float fov, float ar, unsigned int screenWidth, unsigned int screenHeight)
 {
-    
+        _camPos = cameraPosition;
+        _direction = direction;
+        _upVector = upVector;
+        _rightVector = rightVector;
+        _fieldOfView = fov;
+        _aspectRatio = ar;
+        _screenHeight = screenHeight;
+        _screenWidth = screenWidth;
 }
 
 void GridAARayIterator::raysForPixel(int i, int j, std::vector<Ray>& res)

@@ -80,9 +80,7 @@ bool RayTracer::raySceneIntersection(const Ray& ray, const Scene* scene, float& 
     return intersection;
 }
 
-// POINT D'ENTREE DU PROJET.
-// Le code suivant ray trace uniquement la boite englobante de la scene.
-// Il faut remplacer ce code par une veritable raytracer
+
 QImage RayTracer::render (const Vec3Df & camPos,
                           const Vec3Df & direction,
                           const Vec3Df & upVector,
@@ -91,6 +89,7 @@ QImage RayTracer::render (const Vec3Df & camPos,
                           float aspectRatio,
                           unsigned int screenWidth,
                           unsigned int screenHeight) {
+    
     QImage image (QSize (screenWidth, screenHeight), QImage::Format_RGB888);
 
     QProgressDialog progressDialog ("Raytracing...", "Cancel", 0, 100);
@@ -98,23 +97,21 @@ QImage RayTracer::render (const Vec3Df & camPos,
     
     Scene* scene = Scene::getInstance();
     
-    GridAARayIterator rayI = GridAARayIterator(camPos, direction, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
-    rayI.gridSize = 4;
-    
+    rayIterator->setCameraInformation(camPos, direction, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
     std::vector<Ray> rays;
     for (unsigned int i = 0; i < screenWidth; i++) {
         
         std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
+        
         for (unsigned int j = 0; j < screenHeight; j++) {
-            rayI.raysForPixel(i, j, rays);
+            
+            rayIterator->raysForPixel(i, j, rays);
             
             Vec3Df color;
             Vec3Df c;
             float distance;
             
-            
-
             for (int r = 0; r < rays.size(); r++) {
                 if (!raySceneIntersection(rays[r], scene, distance, c)) {
                     // No intersection, get a default value for c
@@ -129,51 +126,4 @@ QImage RayTracer::render (const Vec3Df & camPos,
     progressDialog.setValue (100);
     return image;
 
-#if 0
-    const int n = 3;    // n*n = number of ray per pixel
-    
-    for (unsigned int i = 0; i < screenWidth; i++) {
-        
-        std::cout << i << " " << screenWidth << std::endl;
-        progressDialog.setValue ((100*i)/screenWidth);
-        for (unsigned int j = 0; j < screenHeight; j++) {
-            
-            Vec3Df color(0,0,0);
-            
-            for (int k = 0; k < n; ++k){
-                
-                for (int l = 0; l < n; ++l){
-                    
-                    // Get the ray starting at camPos and going through the (i,j) pixel
-                    float tanX = tan (fieldOfView)*aspectRatio;
-                    float tanY = tan (fieldOfView);
-                    Vec3Df stepX = (float (k+n*i) - n*screenWidth/2.f)/(n * screenWidth) * tanX * rightVector;
-                    Vec3Df stepY = (float (l+n*j) - n*screenHeight/2.f)/(n * screenHeight) * tanY * upVector;
-                    Vec3Df step = stepX + stepY;
-                    Vec3Df dir = direction + step;
-                    dir.normalize ();
-                    Ray ray(camPos, dir);
-                    
-                    Vec3Df c;
-                    float distance;
-                    
-                    if (!raySceneIntersection(ray, scene, distance, c)) {
-                        // No intersection, get a default value for c
-                        c = backgroundColor;
-                    }
-
-                    color += c;
-                    
-                }
-            }
-            
-            color /= (n*n);
-            
-            image.setPixel (i, j, qRgb (clamp (color[0], 0, 255), clamp (color[1], 0, 255), clamp (color[2], 0, 255)));
-        }
-    }
-    progressDialog.setValue (100);
-    return image;
-#endif
-    
 }

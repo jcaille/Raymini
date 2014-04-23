@@ -8,7 +8,7 @@
 
 #include "RayIterator.h"
 
-RayIterator::RayIterator(Vec3Df cameraPosition,
+void RayIterator::setCameraInformation(Vec3Df cameraPosition,
                          Vec3Df direction,
                          Vec3Df upVector,
                          Vec3Df rightVector,
