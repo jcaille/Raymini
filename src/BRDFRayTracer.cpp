@@ -10,6 +10,7 @@
 #include "BRDFRayTracer.h"
 #include "Ray.h"
 #include "Scene.h"
+#include "BRDF.h"
 
 using std::vector;
 
@@ -19,11 +20,6 @@ using std::vector;
 #pragma clang diagnostic pop
 
 #pragma mark - Overloading
-
-inline static float max(float a, float b)
-{
-    return a > b ? a : b;
-}
 
 // This class implements the simplest BRDF there is.
 // We simply overload the rayObjectIntersection method, as there is no
@@ -74,39 +70,7 @@ bool BRDFRayTracer::rayObjectIntersection(const Ray &ray, const Object &object, 
         return false;
     }
     
-    
-    
-    // Phong
-    Triangle t = triangles[minIntersectionIndex];
-    Material mat = object.getMaterial();
-    
-    Vertex p0 = mesh.getVertices()[t.getVertex(0)];
-    Vertex p1 = mesh.getVertices()[t.getVertex(1)];
-    Vertex p2 = mesh.getVertices()[t.getVertex(2)];
-    
-    Vec3Df n0 = p0.getNormal();
-    Vec3Df n1 = p1.getNormal();
-    Vec3Df n2 = p2.getNormal();
-    
-    Vec3Df norm = minCoords[0] * n0 + minCoords[1] * n1 + minCoords[2] * n2;
-    norm.normalize();
-    
-    float f = 0;
-    
-    for (Light light : scene->getLights()){
-        
-        Vec3Df wi = light.getPos() - minIntersectionPos;
-        wi.normalize();
-        Vec3Df wo = ray.getOrigin() - minIntersectionPos ;
-        wo.normalize();
-        Vec3Df r = 2*norm * (Vec3Df::dotProduct(norm, wi)) - wi;
-        
-        f += max(mat.getDiffuse() * Vec3Df::dotProduct(norm, wi) + mat.getSpecular() * powf( Vec3Df::dotProduct(r, wo) , 2.0), 0 );
-        
-    }
-    
-    intersectionColor = 255*(f * mat.getColor());
-    
+    intersectionColor = Phong::brdf(minIntersectionPos, ray.getOrigin(), minCoords, mesh.getTriangles()[minIntersectionIndex], object, scene);
     
     return true;
 

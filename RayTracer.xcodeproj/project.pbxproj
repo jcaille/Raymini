@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0FBF0827190572B700584DCE /* BRDFRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FBF0825190572B700584DCE /* BRDFRayTracer.cpp */; };
+		1A71DE3819079CB700BB58C8 /* BRDF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A71DE3619079CB700BB58C8 /* BRDF.cpp */; };
 		1A73A77A19051BE500B6A310 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A75D19051BE500B6A310 /* BoundingBox.cpp */; };
 		1A73A77B19051BE500B6A310 /* GLViewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A76019051BE500B6A310 /* GLViewer.cpp */; };
 		1A73A77C19051BE500B6A310 /* Light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A76219051BE500B6A310 /* Light.cpp */; };
@@ -49,6 +50,8 @@
 /* Begin PBXFileReference section */
 		0FBF0825190572B700584DCE /* BRDFRayTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BRDFRayTracer.cpp; path = src/BRDFRayTracer.cpp; sourceTree = SOURCE_ROOT; };
 		0FBF0826190572B700584DCE /* BRDFRayTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRDFRayTracer.h; path = src/BRDFRayTracer.h; sourceTree = SOURCE_ROOT; };
+		1A71DE3619079CB700BB58C8 /* BRDF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BRDF.cpp; sourceTree = SOURCE_ROOT; };
+		1A71DE3719079CB700BB58C8 /* BRDF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRDF.h; sourceTree = SOURCE_ROOT; };
 		1A73A75119051B9600B6A310 /* RayTracer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RayTracer; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A73A75D19051BE500B6A310 /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BoundingBox.cpp; path = src/BoundingBox.cpp; sourceTree = SOURCE_ROOT; };
 		1A73A75E19051BE500B6A310 /* BoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BoundingBox.h; path = src/BoundingBox.h; sourceTree = SOURCE_ROOT; };
@@ -203,6 +206,8 @@
 				1ADF5ECD19064A6F00A46FB5 /* BasicRayTracer.cpp */,
 				0FBF0826190572B700584DCE /* BRDFRayTracer.h */,
 				0FBF0825190572B700584DCE /* BRDFRayTracer.cpp */,
+				1A71DE3719079CB700BB58C8 /* BRDF.h */,
+				1A71DE3619079CB700BB58C8 /* BRDF.cpp */,
 			);
 			name = RayTracing;
 			sourceTree = "<group>";
@@ -302,6 +307,7 @@
 				1A73A77A19051BE500B6A310 /* BoundingBox.cpp in Sources */,
 				1A73A78619051BE500B6A310 /* Vertex.cpp in Sources */,
 				1ADF5ECF19064A6F00A46FB5 /* BasicRayTracer.cpp in Sources */,
+				1A71DE3819079CB700BB58C8 /* BRDF.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
