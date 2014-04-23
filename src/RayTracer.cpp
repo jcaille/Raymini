@@ -10,7 +10,7 @@
 #include "Scene.h"
 
 #include "BasicRayTracer.h"
-#include "BRDFRayTracer.h"
+#include "BoundingBoxRayTracer.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
@@ -21,7 +21,7 @@ static RayTracer * instance = NULL;
 
 RayTracer * RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new BRDFRayTracer ();
+        instance = new BasicRayTracer ();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
@@ -96,30 +96,45 @@ QImage RayTracer::render (const Vec3Df & camPos,
     
     Scene* scene = Scene::getInstance();
     
+    const int n = 3;    // n*n = number of ray per pixel
+    
     for (unsigned int i = 0; i < screenWidth; i++) {
         std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
         for (unsigned int j = 0; j < screenHeight; j++) {
             
-            // Get the ray starting at camPos and going through the (i,j) pixel
+            Vec3Df color(0,0,0);
             
-            float tanX = tan (fieldOfView)*aspectRatio;
-            float tanY = tan (fieldOfView);
-            Vec3Df stepX = (float (i) - screenWidth/2.f)/screenWidth * tanX * rightVector;
-            Vec3Df stepY = (float (j) - screenHeight/2.f)/screenHeight * tanY * upVector;
-            Vec3Df step = stepX + stepY;
-            Vec3Df dir = direction + step;
-            dir.normalize ();
-            Ray ray(camPos, dir);
+            for (int k = 0; k < n; ++k){
+                
+                for (int l = 0; l < n; ++l){
+                    
+                    // Get the ray starting at camPos and going through the (i,j) pixel
+                    float tanX = tan (fieldOfView)*aspectRatio;
+                    float tanY = tan (fieldOfView);
+                    Vec3Df stepX = (float (k+n*i) - n*screenWidth/2.f)/(n * screenWidth) * tanX * rightVector;
+                    Vec3Df stepY = (float (l+n*j) - n*screenHeight/2.f)/(n * screenHeight) * tanY * upVector;
+                    Vec3Df step = stepX + stepY;
+                    Vec3Df dir = direction + step;
+                    dir.normalize ();
+                    Ray ray(camPos, dir);
+                    
+                    Vec3Df c;
+                    float distance;
+                    
+                    if (!raySceneIntersection(ray, scene, distance, c)) {
+                        // No intersection, get a default value for c
+                        c = backgroundColor;
+                    }
 
-            Vec3Df c;
-            float distance;
-
-            if (!raySceneIntersection(ray, scene, distance, c)) {
-                // No intersection, get a default value for c
-                c = backgroundColor;
+                    color += c;
+                    
+                }
             }
-            image.setPixel (i, j, qRgb (clamp (c[0], 0, 255), clamp (c[1], 0, 255), clamp (c[2], 0, 255)));
+            
+            color /= (n*n);
+            
+            image.setPixel (i, j, qRgb (clamp (color[0], 0, 255), clamp (color[1], 0, 255), clamp (color[2], 0, 255)));
         }
     }
     progressDialog.setValue (100);
