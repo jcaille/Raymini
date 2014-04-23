@@ -34,6 +34,7 @@ void RayIterator::raysForPixel(int i, int j, std::vector<Ray>& res)
     Vec3Df stepX = ((float) i - _screenWidth/2.f)/(_screenWidth) * tanX * _rightVector;
     Vec3Df stepY = ((float) j - _screenHeight/2.f)/(_screenHeight) * tanY * _upVector;
     Vec3Df step = stepX + stepY;
+    
     Vec3Df dir = _direction + step;
     dir.normalize ();
 

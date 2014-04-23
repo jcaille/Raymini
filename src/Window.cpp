@@ -38,7 +38,6 @@
 #pragma clang diagnostic pop
 
 #include "RayTracer.h"
-#include "BRDFRayTracer.h"
 
 using namespace std;
 

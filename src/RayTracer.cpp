@@ -12,6 +12,8 @@
 #include "BasicRayTracer.h"
 #include "BoundingBoxRayTracer.h"
 
+#include "GridAARayIterator.h"
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
 #include <QProgressDialog>
@@ -96,9 +98,42 @@ QImage RayTracer::render (const Vec3Df & camPos,
     
     Scene* scene = Scene::getInstance();
     
+    GridAARayIterator rayI = GridAARayIterator(camPos, direction, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
+    rayI.gridSize = 4;
+    
+    std::vector<Ray> rays;
+    for (unsigned int i = 0; i < screenWidth; i++) {
+        
+        std::cout << i << " " << screenWidth << std::endl;
+        progressDialog.setValue ((100*i)/screenWidth);
+        for (unsigned int j = 0; j < screenHeight; j++) {
+            rayI.raysForPixel(i, j, rays);
+            
+            Vec3Df color;
+            Vec3Df c;
+            float distance;
+            
+            
+
+            for (int r = 0; r < rays.size(); r++) {
+                if (!raySceneIntersection(rays[r], scene, distance, c)) {
+                    // No intersection, get a default value for c
+                    c = backgroundColor;
+                }
+                color += c;
+            }
+            color /= rays.size();
+            image.setPixel (i, j, qRgb (clamp (color[0], 0, 255), clamp (color[1], 0, 255), clamp (color[2], 0, 255)));
+        }
+    }
+    progressDialog.setValue (100);
+    return image;
+
+#if 0
     const int n = 3;    // n*n = number of ray per pixel
     
     for (unsigned int i = 0; i < screenWidth; i++) {
+        
         std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
         for (unsigned int j = 0; j < screenHeight; j++) {
@@ -139,4 +174,6 @@ QImage RayTracer::render (const Vec3Df & camPos,
     }
     progressDialog.setValue (100);
     return image;
+#endif
+    
 }

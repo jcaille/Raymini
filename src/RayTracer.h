@@ -16,7 +16,7 @@
 #include <QtGui/QImage>
 #pragma clang diagnostic pop
 
-
+#include "RayIterator.h"
 #include "Vec3D.h"
 
 // Forward declaration
@@ -70,6 +70,8 @@ public:
     virtual bool raySceneIntersection(const Ray& ray, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor);
     
 protected:
+    RayIterator rayIterator;
+    
     inline RayTracer () {}
     inline virtual ~RayTracer () {}
     

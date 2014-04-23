@@ -14,7 +14,8 @@
 #include <vector>
 
 class RayIterator {
- 
+
+protected:
     // informations about scene
     Vec3Df _camPos;
     Vec3Df _direction;
@@ -30,9 +31,10 @@ class RayIterator {
 public:
     
     // Constructor
+    RayIterator(){};
     RayIterator(Vec3Df cameraPosition, Vec3Df direction, Vec3Df upVector, Vec3Df rightVector, float fov, float ar, unsigned int screenWidth, unsigned int screenHeight);
     
-    void raysForPixel(int i, int j, std::vector<Ray>& res);
+    virtual void raysForPixel(int i, int j, std::vector<Ray>& res);
 };
 
 #endif /* defined(__RayTracer__RayIterator__) */
