@@ -27,6 +27,7 @@ class KDTree {
     vector<Triangle> triangles;
     
     struct Plan{
+        
         Vec3Df position;
         Vec3Df n;
         
@@ -36,6 +37,7 @@ class KDTree {
     };
     
     struct Node{
+        
         // The tree the node is in
         KDTree* tree;
         // The depth of the node - If 0, node is root
@@ -56,28 +58,10 @@ class KDTree {
         void buildNode(int maxDepth);
         Node(vector<int>& triangleIndexes, int depth, KDTree* tree);
         Vec3Df getMedianPoint(Vec3Df normal);
-        static bool compareTriangles(const int triangleIndex1, const int triangleIndex2);
-
         
     };
     
-    /*struct InternNode : public Node{
-        
-        Plan plan;
-        Node* left_node;
-        Node* right_node;
-        
-        InternNode(Plan plan);
-        void setLeft_Node(Node left_node);
-        void setRight_Node(Node right_node);
-
-    };
-
-    struct LeafNode : public Node {
-        vector<Triangle> list_triangles;
-    };*/
-    
-    public :
+      public :
         KDTree();
         KDTree( const vector<Triangle> & T, const vector<Vertex> & V);
         KDTree( const Mesh& mesh);
