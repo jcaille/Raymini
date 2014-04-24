@@ -94,7 +94,7 @@ void KDTree::Node::buildNode(int maxDepth)
                 
         //regarder si tous les sommets sont du même côté du plan...
         if ( (aLeft && bLeft && cLeft) ){
-            //Ils sont du même à gauche
+            //Ils sont tous à gauche
             leftIndexes.push_back(triangleIndexes[i]);
         }else if( !aLeft && !bLeft && !cLeft){
             //Ils sont tous à droite
@@ -130,6 +130,7 @@ bool KDTree::Node::compareTriangles(const int triangleIndex1, const int triangle
 }
 
 Vec3Df KDTree::Node::getMedianPoint(Vec3Df normal){
+    
     vector<float> median_float;
     
     for (unsigned int i =0; i< triangleIndexes.size(); i++){
@@ -138,9 +139,24 @@ Vec3Df KDTree::Node::getMedianPoint(Vec3Df normal){
         median_float.push_back(Vec3Df::dotProduct(average, normal) );
     }
     
-    std::sort(triangleIndexes.begin(), triangleIndexes.end(), KDTree::Node::compareTriangles);
+    
+    /*vector<float> median_float_copy = median_float;
+    
+    std::sort(median_float_copy.begin(), median_float_copy.end());
+    vector<float>::iterator it = median_float_copy.begin() + floor(median_float_copy.size()/2);
+    float result = (*it);
+    
+    std::vector<float>::iterator it2 = std::find(median_float.begin(), median_float.end(), result);
+    std::vector<float>::size_type pos = std::distance(median_float.begin(), it2) -1;
+    
+    return (tree->vertices[ tree->triangles[triangleIndexes[pos]].getVertex(0) ].getPos() + tree->vertices [ tree->triangles[triangleIndexes[pos]].getVertex(1) ].getPos() + tree->vertices [ tree->triangles[triangleIndexes[pos]].getVertex(2) ].getPos())/3;
+    */
+    //std::sort(triangleIndexes.begin(), triangleIndexes.end(), KDTree::Node::compareTriangles);
 
-#if 0
+//#if 0
+    
+    
+    vector<float> median_float_copy = median_float;
     std::nth_element(median_float_copy.begin(), median_float_copy.begin()+median_float_copy.size()/2, median_float_copy.end());
     
     
@@ -153,16 +169,18 @@ Vec3Df KDTree::Node::getMedianPoint(Vec3Df normal){
     
     return (tree->vertices[ tree->triangles[triangleIndexes[pos]].getVertex(0) ].getPos() + tree->vertices [ tree->triangles[triangleIndexes[pos]].getVertex(1) ].getPos() + tree->vertices [ tree->triangles[triangleIndexes[pos]].getVertex(2) ].getPos())/3;
 
-#endif
+//#endif
     return Vec3Df(0, 0, 0);
     
 }
 
 bool KDTree::Plan::isLeft(Vec3Df point){
     
-    return Vec3Df::dotProduct(n , point - position) <= 0;
+    return Vec3Df::dotProduct(n , point) <= 0;
     
 }
+
+
 /*void KDTree::buildKDTree(KDTree::Node* node){
  
     BoundingBox Bb = BoundingBox(T , V );
