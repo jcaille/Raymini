@@ -139,6 +139,9 @@ public:
     }
     bool intersectRay (const Vec3Df & origin, const Vec3Df & direction, Vec3Df & intersection) const;
 
+    void applyTranslation(Vec3Df trans){
+        minBb += trans; maxBb += trans;
+    }
 private:
     inline float getWHL (unsigned int i) const {
         return (maxBb[i] - minBb[i]);
