@@ -70,7 +70,7 @@ bool BasicRayTracer::rayObjectIntersection(const Ray &ray, const Object &object,
         return false;
     }
     
-    intersectionColor = Phong::brdf(minIntersectionPos, ray.getOrigin(), minCoords, mesh.getTriangles()[minIntersectionIndex], object, scene);
+    intersectionColor = Phong::brdf(minIntersectionPos, correctedRay.getOrigin(), minCoords, mesh.getTriangles()[minIntersectionIndex], object, scene);
     
     return true;
 

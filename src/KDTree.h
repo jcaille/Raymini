@@ -24,8 +24,7 @@ class KDTree {
 
     protected :
     
-    // The mesh the KDTree is related to
-    const Mesh& mesh;
+    Mesh mesh;
     
     struct Plan{
         
@@ -39,8 +38,10 @@ class KDTree {
     
     struct Node{
         
-        // The tree the node is in
-        KDTree* tree;
+        Node();
+        ~Node();
+        Node(const Node& node);
+                
         // The depth of the node - If 0, node is root
         unsigned int depth;
         // The indices of node triangles in the tree->triangle vector.
@@ -56,20 +57,26 @@ class KDTree {
         Node* right_node;
         
         // Builds a node by finding the bouding box, the separating plan and dividing triangles between left and right node.
-        void buildNode(int maxDepth);
-        Node(vector<int>& triangleIndexes, int depth, KDTree* tree);
-        Vec3Df getMedianPoint(Vec3Df normal);
+        void buildNode(const KDTree& tree, int maxDepth);
+        
+        Node(vector<int>& triangleIndexes, int depth, const KDTree& tree);
+        
+        Vec3Df getMedianPoint(const Mesh& mesh, Vec3Df normal);
         static bool compareTriangles(const int triangleIndex1, const int triangleIndex2);
 
-        bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle) const;
+        bool intersectRay(const Ray& ray, const KDTree& tree, float& intersectionDistance, Triangle& intersectionTriangle) const;
     };
     
-      public :
-        KDTree(const Mesh& mesh);
-        void buildRootNode(int maxDepth);
+    public :
+    
+        KDTree(const Mesh& mesh, int maxDepth);
         bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle) const;
+    
     private :
-        Node* root;
+    
+        void buildRootNode(int maxDepth);
+    
+        Node root;
     
 };
 
