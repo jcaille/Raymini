@@ -61,13 +61,13 @@ class KDTree {
         Vec3Df getMedianPoint(Vec3Df normal);
         static bool compareTriangles(const int triangleIndex1, const int triangleIndex2);
 
-        bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle);
+        bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle) const;
     };
     
       public :
         KDTree(const Mesh& mesh);
         void buildRootNode(int maxDepth);
-        bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle);
+        bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle) const;
     private :
         Node* root;
     

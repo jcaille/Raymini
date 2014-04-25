@@ -38,6 +38,8 @@ public:
 
     inline const BoundingBox & getBoundingBox () const { return bbox; }
     void updateBoundingBox ();
+    
+    inline const KDTree & getKDTree () const { return tree; }
 
 private:
     Mesh mesh;

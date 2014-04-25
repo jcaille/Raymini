@@ -157,7 +157,7 @@ bool KDTree::Plan::isLeft(Vec3Df point){
 
 #pragma mark - Ray Intersection
 
-bool KDTree::Node::intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle)
+bool KDTree::Node::intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle) const
 {
     // Check if ray intersect bouding box
     Vec3Df position;
@@ -222,7 +222,7 @@ bool KDTree::Node::intersectRay(const Ray& ray, float& intersectionDistance, Tri
     }
 }
 
-bool KDTree::intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle)
+bool KDTree::intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle) const
 {
     return root->intersectRay(ray, intersectionDistance, intersectionTriangle);
 }
