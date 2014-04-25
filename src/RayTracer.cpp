@@ -24,7 +24,7 @@ static RayTracer * instance = NULL;
 
 RayTracer * RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new BasicRayTracer ();
+        instance = new KDTreeRayTracer ();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;

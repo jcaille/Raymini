@@ -25,7 +25,7 @@ class KDTree {
     protected :
     
     // The mesh the KDTree is related to
-    const Mesh* mesh;
+    const Mesh& mesh;
     
     struct Plan{
         
@@ -65,8 +65,7 @@ class KDTree {
     };
     
       public :
-        KDTree();
-        KDTree(const Mesh* mesh);
+        KDTree(const Mesh& mesh);
         void buildRootNode(int maxDepth);
         bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle);
     private :

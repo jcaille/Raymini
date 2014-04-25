@@ -20,8 +20,7 @@ class Ray;
 
 class Object {
 public:
-    inline Object () {}
-    inline Object (const Mesh & mesh, const Material & mat) : mesh (mesh), mat (mat), tree(&mesh) {
+    inline Object (const Mesh & mesh, const Material & mat) : mesh (mesh), mat (mat), tree(mesh) {
         updateBoundingBox ();
         tree.buildRootNode(10);
     }
