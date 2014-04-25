@@ -16,6 +16,8 @@
 #include "Triangle.h"
 #include "Mesh.h"
 
+class Object;
+
 class Ray {
 public:
     inline Ray () {}
@@ -28,9 +30,34 @@ public:
     inline const Vec3Df & getDirection () const { return direction; }
     inline Vec3Df & getDirection () { return direction; }
 
+    // Intersection w/ a bounding box
     bool intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const;
-    bool intersect (const Triangle & tri, const Mesh & mesh, Vec3Df & intersectionPoint, std::vector<float>& coords) const;
     
+    // Intersection w/ a single triangle
+    bool intersect(const Triangle & tri,
+                   const std::vector<Vertex>& vertices,
+                   float& intersectionDistance,
+                   Vec3Df & intersectionPoint,
+                   std::vector<float>& coords) const;
+    
+    // intersect with an list of triangles
+    bool intersect(const std::vector<Triangle>& triangles,
+                   const std::vector<Vertex>& vertices,
+                   float& intersectionDistance,
+                   Vec3Df & intersectionPoint,
+                   std::vector<float>& coords,
+                   Triangle& intersectionTriangle,
+                   float minIntersectionDistance = 0,
+                   float maxIntersectionDistance = std::numeric_limits<float>::max()) const;
+
+    
+    bool intersect(const Object &object,
+                   float &intersectionDistance,
+                   Vec3Df &intersectionPoint,
+                   std::vector<float>& barycentricCoordinates,
+                   Triangle& intersectionTriangle,
+                   float minIntersectionDistance = 0,
+                   float maxIntersectionDistance = std::numeric_limits<float>::max()) const;
 private:
     Vec3Df origin;
     Vec3Df direction;

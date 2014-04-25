@@ -163,6 +163,8 @@ bool KDTree::Plan::isLeft(Vec3Df point){
 
 bool KDTree::Node::intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle)
 {
+    return false;
+#if 0
     // Check if ray intersect bouding box
     Vec3Df position;
     if(!ray.intersect(boundingBox, position))
@@ -224,6 +226,7 @@ bool KDTree::Node::intersectRay(const Ray& ray, float& intersectionDistance, Tri
         }
         return true;
     }
+#endif
 }
 
 bool KDTree::intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle)

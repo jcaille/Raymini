@@ -27,51 +27,15 @@ using std::vector;
 
 bool BasicRayTracer::rayObjectIntersection(const Ray &ray, const Object &object, const Scene* scene, float &intersectionDistance, Vec3Df &intersectionColor)
 {
-    // Instead of translating the object by object.trans, we translate
-    // the camera by the -object.trans. Clever, huh ?
-    Ray correctedRay(ray.getOrigin() - object.getTrans(), ray.getDirection());
     
-    if (!correctedRay.intersect(object.getBoundingBox(), intersectionColor))
-    {
-        // The ray does not intersect the bouding box, no need to go deeper
+    Vec3Df intersectionPoint;
+    vector<float> barycentricCoordinates;
+    Triangle intersectionTriangle;
+    bool intersection = ray.intersect(object, intersectionDistance, intersectionPoint, barycentricCoordinates, intersectionTriangle);
+    if(!intersection){
         return false;
     }
-    
-    // Find the triangle (if any) containing the closest intersection
-    intersectionDistance = std::numeric_limits<float>::max();
-    int minIntersectionIndex = -1;
-    Vec3Df minIntersectionPos;
-    vector<float> minCoords;
-    
-    Mesh mesh = object.getMesh();
-    
-    size_t n = mesh.getTriangles().size();
-    std::vector<Triangle> triangles = object.getMesh().getTriangles();
-    
-    for(int i = 0 ; i < n; ++i)
-    {
-        Vec3Df intersectionPos;
-        Triangle t = triangles[i];
-        vector<float> coords;
-        if (correctedRay.intersect(t, mesh, intersectionPos, coords)) {
-            float triangleDistance =  Vec3Df::distance(intersectionPos, correctedRay.getOrigin());
-            if(triangleDistance < intersectionDistance)
-            {
-                intersectionDistance = triangleDistance;
-                minIntersectionPos = intersectionPos;
-                minCoords = coords;
-                minIntersectionIndex = i;
-            }
-        }
-    }
-    
-    if (minIntersectionIndex == -1) {
-        // No intersection
-        return false;
-    }
-    
-    intersectionColor = Phong::brdf(minIntersectionPos, ray.getOrigin(), minCoords, mesh.getTriangles()[minIntersectionIndex], object, scene);
-    
+    intersectionColor = Phong::brdf(intersectionPoint, ray.getOrigin(), barycentricCoordinates, intersectionTriangle, object, scene);
     return true;
 
 }
