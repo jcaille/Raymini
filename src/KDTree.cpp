@@ -80,9 +80,6 @@ KDTree::Node::Node(const Node& node)
 
 void KDTree::Node::buildNode(const KDTree& tree, int maxDepth)
 {
-    if (depth == maxDepth) {
-        return;
-    }
     
     // Find the median plan
     Vec3Df n;
@@ -103,11 +100,16 @@ void KDTree::Node::buildNode(const KDTree& tree, int maxDepth)
     plan.n = n;
     plan.position = position;
     
+    if (depth == maxDepth) {
+        return;
+    }
+    
     //seperate triangles
     
     vector<int> leftIndexes, rightIndexes;
-    for (unsigned int i=0; i<triangleIndexes.size(); i++){
-        Triangle t = tree.mesh.getTriangles()[triangleIndexes[i]];
+    for (int idx : triangleIndexes){
+        
+        Triangle t = tree.mesh.getTriangles()[idx];
             
         Vec3Df a = tree.mesh.getVertices()[ t.getVertex(0) ].getPos() - position;
         Vec3Df b = tree.mesh.getVertices()[ t.getVertex(1) ].getPos() - position;
@@ -116,42 +118,47 @@ void KDTree::Node::buildNode(const KDTree& tree, int maxDepth)
         bool aLeft = plan.isLeft(a);
         bool bLeft = plan.isLeft(b);
         bool cLeft = plan.isLeft(c);
-                
+        
         //regarder si tous les sommets sont du même côté du plan...
-        if ( (aLeft && bLeft && cLeft) ){
+        if ( aLeft && bLeft && cLeft ){
             //Ils sont tous à gauche
-            leftIndexes.push_back(triangleIndexes[i]);
-        }else if( !aLeft && !bLeft && !cLeft){
+            leftIndexes.push_back(idx);
+            
+        } else if( !aLeft && !bLeft && !cLeft){
             //Ils sont tous à droite
-            rightIndexes.push_back(triangleIndexes[i]);
+            rightIndexes.push_back(idx);
         } else {
             // Le triangle doit être ajouté des deux côtés
-            rightIndexes.push_back(triangleIndexes[i]);
-            leftIndexes.push_back(triangleIndexes[i]);
+            rightIndexes.push_back(idx);
+            leftIndexes.push_back(idx);
         }
+        
     }
     
     if(rightIndexes == leftIndexes)
         return;
     
-    if(rightIndexes.size() != 0 && triangleIndexes.size() != rightIndexes.size()){
+    if (triangleIndexes.size() == rightIndexes.size() || triangleIndexes.size() == leftIndexes.size())
+        return;
+    
+    
+    if(rightIndexes.size() != 0){
         right_node = new KDTree::Node(rightIndexes, depth + 1, tree);
         right_node->buildNode(tree, maxDepth);
     } 
     
-    if(leftIndexes.size() != 0 && triangleIndexes.size() != leftIndexes.size() ){
+    if(leftIndexes.size() != 0){
         left_node = new KDTree::Node(leftIndexes, depth + 1, tree);
         left_node->buildNode(tree, maxDepth);
     }
-    
-    
+      
 }
 
 Vec3Df KDTree::Node::getMedianPoint(const Mesh& mesh, Vec3Df normal){
     
     vector<float> median_float;
     
-    for (unsigned int i =0; i< triangleIndexes.size(); i++){
+    for (unsigned int i = 0; i< triangleIndexes.size(); i++){
         
         Triangle t = mesh.getTriangles()[triangleIndexes[i]];
         Vec3Df a = mesh.getVertices()[t.getVertex(0)].getPos();
@@ -201,20 +208,23 @@ bool KDTree::Node::intersectRay(const Ray& ray, const KDTree& tree, float& inter
     // If there are no sons, check with node triangles
     vector<float> barycentricCoordinates;
     if(left_node == NULL && right_node == NULL){
+        
         float minDistance = std::numeric_limits<float>::max();
         int minDistanceIndex = -1;
         
-        for (int i = 0; i < triangleIndexes.size(); i++) {
-            bool intersection = ray.intersect(tree.mesh.getTriangles()[triangleIndexes[i]], tree.mesh, position, barycentricCoordinates);
-            if (intersection && Vec3Df::distance(ray.getOrigin(), position) < minDistance) {
-                minDistance = Vec3Df::distance(ray.getOrigin(), position);
-                minDistanceIndex = i;
+        for (int index : triangleIndexes) {
+            bool intersection = ray.intersect(tree.mesh.getTriangles()[index], tree.mesh, position, barycentricCoordinates);
+            float d = Vec3Df::distance(ray.getOrigin(), position);
+            if (intersection && d < minDistance) {
+                minDistance = d;
+                minDistanceIndex = index;
             }
         }
+        
         if(minDistanceIndex != -1)
         {
             intersectionDistance = minDistance;
-            intersectionTriangle = tree.mesh.getTriangles()[triangleIndexes[minDistanceIndex]];
+            intersectionTriangle = tree.mesh.getTriangles()[minDistanceIndex];
             return true;
         } else {
             return false;
@@ -232,28 +242,21 @@ bool KDTree::Node::intersectRay(const Ray& ray, const KDTree& tree, float& inter
     bool intersectionLeft   = left_node != NULL && left_node->intersectRay(ray, tree, intersectionDistanceLeft, intersectionTriangleLeft);
     bool intersectionRight  = right_node != NULL && right_node->intersectRay(ray, tree, intersectionDistanceRight, intersectiontriangleRight);
     
-    if (!intersectionRight && ! intersectionLeft) {
-        return false;
-    } else if (intersectionRight && !intersectionLeft) {
+    if (intersectionRight && !intersectionLeft) {
         intersectionDistance = intersectionDistanceRight;
         intersectionTriangle = intersectiontriangleRight;
-        return true;
     } else if (!intersectionRight && intersectionLeft) {
         intersectionDistance = intersectionDistanceLeft;
         intersectionTriangle = intersectionTriangleLeft;
-        return true;
+    } else if(intersectionDistanceLeft < intersectionDistanceRight) {
+        intersectionDistance = intersectionDistanceLeft;
+        intersectionTriangle = intersectionTriangleLeft;
     } else {
-        // Ray intersect in both sons, compare distances
-        if(intersectionDistanceLeft < intersectionDistanceRight)
-        {
-            intersectionDistance = intersectionDistanceLeft;
-            intersectionTriangle = intersectionTriangleLeft;
-        } else {
-            intersectionDistance = intersectionDistanceRight;
-            intersectionTriangle = intersectiontriangleRight;
-        }
-        return true;
+        intersectionDistance = intersectionDistanceRight;
+        intersectionTriangle = intersectiontriangleRight;
     }
+    
+    return intersectionLeft || intersectionRight;
 }
 
 bool KDTree::intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle) const
