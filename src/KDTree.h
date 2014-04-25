@@ -66,6 +66,7 @@ class KDTree {
         KDTree( const vector<Triangle> & T, const vector<Vertex> & V);
         KDTree( const Mesh& mesh);
         void buildRootNode(int maxDepth);
+    
     private :
         Node* root;
     

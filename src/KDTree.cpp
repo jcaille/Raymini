@@ -94,7 +94,7 @@ void KDTree::Node::buildNode(int maxDepth)
                 
         //regarder si tous les sommets sont du même côté du plan...
         if ( (aLeft && bLeft && cLeft) ){
-            //Ils sont du même à gauche
+            //Ils sont tous à gauche
             leftIndexes.push_back(triangleIndexes[i]);
         }else if( !aLeft && !bLeft && !cLeft){
             //Ils sont tous à droite
@@ -123,6 +123,7 @@ void KDTree::Node::buildNode(int maxDepth)
 }
 
 Vec3Df KDTree::Node::getMedianPoint(Vec3Df normal){
+    
     vector<float> median_float;
     
     for (unsigned int i =0; i< triangleIndexes.size(); i++){
@@ -133,8 +134,6 @@ Vec3Df KDTree::Node::getMedianPoint(Vec3Df normal){
         median_float.push_back(Vec3Df::dotProduct(average, normal) );
     }
     
-    //    std::sort(triangleIndexes.begin(), triangleIndexes.end(), KDTree::Node::compareTriangles);
-
     std::vector<float> median_float_copy = median_float;
     
     std::nth_element(median_float_copy.begin(), median_float_copy.begin()+median_float_copy.size()/2, median_float_copy.end());
@@ -147,12 +146,11 @@ Vec3Df KDTree::Node::getMedianPoint(Vec3Df normal){
     //    std::sort(median_float.begin(), median_float.end());
     
     return (tree->vertices[ tree->triangles[triangleIndexes[pos]].getVertex(0) ].getPos() + tree->vertices [ tree->triangles[triangleIndexes[pos]].getVertex(1) ].getPos() + tree->vertices [ tree->triangles[triangleIndexes[pos]].getVertex(2) ].getPos())/3;
-
     
 }
 
 bool KDTree::Plan::isLeft(Vec3Df point){
     
-    return Vec3Df::dotProduct(n , point - position) <= 0;
+    return Vec3Df::dotProduct(n , point) <= 0;
     
 }
