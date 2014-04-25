@@ -37,8 +37,11 @@ void Scene::updateBoundingBox () {
         bbox = BoundingBox ();
     else {
         bbox = objects[0].getBoundingBox ();
-        for (unsigned int i = 1; i < objects.size (); i++)
-            bbox.extendTo (objects[i].getBoundingBox ());
+        for (unsigned int i = 1; i < objects.size (); i++){
+            BoundingBox b = objects[i].getBoundingBox();
+            b.applyTranslation(objects[i].getTrans());
+            bbox.extendTo (b);
+        }
     }
 }
 
@@ -47,16 +50,22 @@ void Scene::buildDefaultScene () {
     Mesh groundMesh;
     groundMesh.loadOFF ("models/ground.off");
     Material groundMat;
-    Object ground (groundMesh, groundMat);    
+    Object ground (groundMesh, groundMat);
     objects.push_back (ground);
+  
+    Mesh sphereMesh;
+    sphereMesh.loadOFF ("models/sphere.off");
+    Material sphereMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f));
+    Object sphere (sphereMesh, sphereMat);
+    sphere.setTrans (Vec3Df (-1.0f, 0.0f, 2.f));
+    objects.push_back (sphere);
     
-    Mesh monkeyMesh;
-    monkeyMesh.loadOFF ("models/monkey.off");
-    Material monkeyMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f));
-    Object monkey (monkeyMesh, monkeyMat);
-    monkey.setTrans (Vec3Df (0.0f, 0.0f, 1.f));
-    objects.push_back (monkey);
-    
+    Mesh sphere2Mesh;
+    sphere2Mesh.loadOFF ("models/sphere.off");
+    Material sphereMat2 (1.f, 1.f, 5.0,Vec3Df (.6f, .6f, .2f));
+    Object sphere2 (sphere2Mesh, sphereMat2);
+    sphere2.setTrans (Vec3Df (1.0f, 0.0f, 2.f));
+    objects.push_back (sphere2);
     
 //    Material ramMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f));
 //    Object ram (ramMesh, ramMat);
@@ -74,6 +83,12 @@ void Scene::buildDefaultScene () {
 //    Object garg (gargMesh, gargMat);
 //    garg.setTrans (Vec3Df (-1.f, 1.0f, 0.1f));
 //    objects.push_back (garg);
-    Light l (Vec3Df (3.0f, 3.0f, 3.0f), Vec3Df (1.0f, 1.0f, 1.0f), 1.0f);
-    lights.push_back (l);
+    
+    Light l1 (Vec3Df (0.0, 0.0, 10.0), Vec3Df (1.0f, 1.0f, 1.0f), 1.0f);
+//    Light l2 (Vec3Df (00.0, 10.0, 1.0), Vec3Df (1.0f, 1.0f, 1.0f), 1.0f);
+//    Light l3 (Vec3Df (-10.0, -10.0, 1.0), Vec3Df (1.0f, 1.0f, 1.0f), 1.0f);
+
+    lights.push_back (l1);
+//    lights.push_back(l2);
+//    lights.push_back(l3);
 }
