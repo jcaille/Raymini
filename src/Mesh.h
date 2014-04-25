@@ -46,7 +46,8 @@ public:
     void renderGL (bool flat) const;
     
     void loadOFF (const std::string & filename);
-  
+    void makeCube();
+    
     class Exception {
     private: 
         std::string msg;
