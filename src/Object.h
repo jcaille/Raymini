@@ -14,12 +14,14 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "BoundingBox.h"
+#include "KDTree.h"
 
 class Object {
 public:
     inline Object () {}
-    inline Object (const Mesh & mesh, const Material & mat) : mesh (mesh), mat (mat) {
+    inline Object (const Mesh & mesh, const Material & mat) : mesh (mesh), mat (mat), tree(mesh) {
         updateBoundingBox ();
+        tree.buildRootNode(10);
     }
     virtual ~Object () {}
 
@@ -40,6 +42,7 @@ private:
     Material mat;
     BoundingBox bbox;
     Vec3Df trans;
+    KDTree tree;
 };
 
 

@@ -33,3 +33,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "BoundingBox.h"
 
+BoundingBox::BoundingBox(const std::vector< Triangle > & list_triangles, const std::vector< int > & triangle_indexes, const std::vector<Vertex>& V){
+    
+    std::vector<float> triangle_x, triangle_y, triangle_z;
+        
+    for (unsigned int i=0; i< triangle_indexes.size() ; i++){
+        for (unsigned int j=0; j<3; j++){
+            
+            triangle_x.push_back(V[list_triangles[triangle_indexes[i]].getVertex(j)].getPos()[0]);
+            triangle_y.push_back(V[list_triangles[triangle_indexes[i]].getVertex(j)].getPos()[1]);
+            triangle_z.push_back(V[list_triangles[triangle_indexes[i]].getVertex(j)].getPos()[2]);
+        }
+    }
+    
+    float maxX, maxY, maxZ;
+    maxX = *std::max_element(triangle_x.begin(), triangle_x.end());
+    maxY = *std::max_element(triangle_y.begin(), triangle_y.end());
+    maxZ = *std::max_element(triangle_z.begin(), triangle_z.end());
+    
+   maxBb = Vec3Df(maxX, maxY, maxZ);
+    
+    minBb = Vec3Df(*std::min_element(triangle_x.begin(), triangle_x.end()), *std::min_element(triangle_y.begin(), triangle_y.end()), *std::min_element(triangle_z.begin(), triangle_z.end()));
+
+}
