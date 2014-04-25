@@ -16,13 +16,16 @@
 #include "BoundingBox.h"
 #include "KDTree.h"
 
+class Ray;
+
 class Object {
 public:
     inline Object () {}
-    inline Object (const Mesh & mesh, const Material & mat) : mesh (mesh), mat (mat), tree(mesh) {
+    inline Object (const Mesh & mesh, const Material & mat) : mesh (mesh), mat (mat), tree(&mesh) {
         updateBoundingBox ();
         tree.buildRootNode(10);
     }
+    
     virtual ~Object () {}
 
     inline const Vec3Df & getTrans () const { return trans;}
@@ -36,7 +39,7 @@ public:
 
     inline const BoundingBox & getBoundingBox () const { return bbox; }
     void updateBoundingBox ();
-    
+
 private:
     Mesh mesh;
     Material mat;

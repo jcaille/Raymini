@@ -18,13 +18,14 @@
 
 using namespace std;
 
+class Ray;
+
 class KDTree {
 
     protected :
     
-    // The vertices and triangles common to the KDTree
-    vector<Vertex> vertices;
-    vector<Triangle> triangles;
+    // The mesh the KDTree is related to
+    const Mesh* mesh;
     
     struct Plan{
         
@@ -58,15 +59,16 @@ class KDTree {
         void buildNode(int maxDepth);
         Node(vector<int>& triangleIndexes, int depth, KDTree* tree);
         Vec3Df getMedianPoint(Vec3Df normal);
-        
+        static bool compareTriangles(const int triangleIndex1, const int triangleIndex2);
+
+        bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle);
     };
     
       public :
         KDTree();
-        KDTree( const vector<Triangle> & T, const vector<Vertex> & V);
-        KDTree( const Mesh& mesh);
+        KDTree(const Mesh* mesh);
         void buildRootNode(int maxDepth);
-    
+        bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle);
     private :
         Node* root;
     

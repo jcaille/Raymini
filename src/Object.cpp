@@ -6,6 +6,7 @@
 // *********************************************************
 
 #include "Object.h"
+#include "Ray.h"
 
 using namespace std;
 
