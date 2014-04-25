@@ -25,7 +25,8 @@ bool KDTreeRayTracer::rayObjectIntersection(const Ray &ray, const Object &object
     Vec3Df hitPoint;
     std::vector<float> coords;
     
-    correctedRay.intersect(intersectionTriangle, object.getMesh(), hitPoint, coords);
+    float a;
+    correctedRay.intersect(intersectionTriangle, object.getMesh().getVertices(), a, hitPoint, coords);
     
     intersectionColor = Phong::brdf(hitPoint, correctedRay.getOrigin(), coords, intersectionTriangle, object, scene);
     

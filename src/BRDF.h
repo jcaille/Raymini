@@ -13,6 +13,8 @@
 #include "Scene.h"
 #include "Object.h"
 
+//class Material;
+
 class Phong {
     
 public:
@@ -30,6 +32,9 @@ public:
      *  @return Color
      */
     static Vec3Df brdf(const Vec3Df& hitPoint, const Vec3Df& pov, const std::vector<float> coords, const Triangle& t, const Object &object, const Scene *scene);
+    
+    static Vec3Df singleLightBRDF(const Vec3Df &hitPoint, const Vec3Df &pov, const Vec3Df normal, Material material, Light light);
+    
     
 };
 

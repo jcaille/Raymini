@@ -16,7 +16,7 @@
 
 
 KDTree::KDTree(const Mesh& mesh, int maxDepth)
-  : mesh(mesh)
+: mesh(mesh)
 {
     buildRootNode(maxDepth);
 }
@@ -35,19 +35,19 @@ void KDTree::buildRootNode(int maxDepth)
 #pragma mark - Node
 
 KDTree::Node::Node()
-  : left_node(NULL),
-    right_node(NULL)
+: left_node(NULL),
+right_node(NULL)
 {
     
 }
 
 KDTree::Node::Node(vector<int>& _triangleIndexes, int _depth, const KDTree& tree)
-  :  depth(_depth),
-     triangleIndexes(_triangleIndexes),
-     boundingBox(tree.mesh.getTriangles(), triangleIndexes, tree.mesh.getVertices()),
-     plan(),
-     left_node(NULL),
-     right_node(NULL)
+:  depth(_depth),
+triangleIndexes(_triangleIndexes),
+boundingBox(tree.mesh.getTriangles(), triangleIndexes, tree.mesh.getVertices()),
+plan(),
+left_node(NULL),
+right_node(NULL)
 {
 }
 
@@ -58,16 +58,16 @@ KDTree::Node::~Node()
     
     if (right_node)
         delete right_node;
-
+    
 }
 
 KDTree::Node::Node(const Node& node)
-  : depth(node.depth),
-    triangleIndexes(node.triangleIndexes),
-    boundingBox(node.boundingBox),
-    plan(node.plan),
-    left_node(NULL),
-    right_node(NULL)
+: depth(node.depth),
+triangleIndexes(node.triangleIndexes),
+boundingBox(node.boundingBox),
+plan(node.plan),
+left_node(NULL),
+right_node(NULL)
 {
     
     if (node.left_node)
@@ -110,7 +110,7 @@ void KDTree::Node::buildNode(const KDTree& tree, int maxDepth)
     for (int idx : triangleIndexes){
         
         Triangle t = tree.mesh.getTriangles()[idx];
-            
+        
         Vec3Df a = tree.mesh.getVertices()[ t.getVertex(0) ].getPos() - position;
         Vec3Df b = tree.mesh.getVertices()[ t.getVertex(1) ].getPos() - position;
         Vec3Df c = tree.mesh.getVertices()[ t.getVertex(2) ].getPos() - position;
@@ -145,13 +145,13 @@ void KDTree::Node::buildNode(const KDTree& tree, int maxDepth)
     if(rightIndexes.size() != 0){
         right_node = new KDTree::Node(rightIndexes, depth + 1, tree);
         right_node->buildNode(tree, maxDepth);
-    } 
+    }
     
     if(leftIndexes.size() != 0){
         left_node = new KDTree::Node(leftIndexes, depth + 1, tree);
         left_node->buildNode(tree, maxDepth);
     }
-      
+    
 }
 
 Vec3Df KDTree::Node::getMedianPoint(const Mesh& mesh, Vec3Df normal){
@@ -213,7 +213,9 @@ bool KDTree::Node::intersectRay(const Ray& ray, const KDTree& tree, float& inter
         int minDistanceIndex = -1;
         
         for (int index : triangleIndexes) {
-            bool intersection = ray.intersect(tree.mesh.getTriangles()[index], tree.mesh, position, barycentricCoordinates);
+#warning Fix when distance works 
+            float a;
+            bool intersection = ray.intersect(tree.mesh.getTriangles()[index], tree.mesh.getVertices(), a, position, barycentricCoordinates);
             float d = Vec3Df::distance(ray.getOrigin(), position);
             if (intersection && d < minDistance) {
                 minDistance = d;
@@ -230,7 +232,7 @@ bool KDTree::Node::intersectRay(const Ray& ray, const KDTree& tree, float& inter
             return false;
         }
     }
-
+    
     
     // Otherwise, the two sons are present.
     float intersectionDistanceLeft, intersectionDistanceRight;
