@@ -34,7 +34,10 @@ protected:
     virtual ~Scene ();
     
 private:
+    
+    void buildCornellBox(float scale = 1);
     void buildDefaultScene ();
+    
     std::vector<Object> objects;
     std::vector<Light> lights;
     BoundingBox bbox;
