@@ -27,7 +27,7 @@ public:
         : vertices (mesh.vertices), 
           triangles (mesh.triangles) {}
         
-    inline virtual ~Mesh () {}
+    inline ~Mesh () {}
     std::vector<Vertex> & getVertices () { return vertices; }
     const std::vector<Vertex> & getVertices () const { return vertices; }
     std::vector<Triangle> & getTriangles () { return triangles; }

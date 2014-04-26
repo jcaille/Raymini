@@ -251,15 +251,9 @@ void Mesh::makeBox(const Vec3Df& center, const Vec3Df& front, const Vec3Df& up, 
     Vec3Df origin = center - .5*( u + v + w );
     
     for (int i = 0; i < 2; ++i)
-    {
         for (int j = 0; j < 2; ++j)
-        {
             for (int k = 0; k < 2; ++k)
-            {
-                vertices.push_back( Vertex(origin + i*u + j*v + k*w, Vec3Df (1.0, 0.0, 0.0)) );
-            }
-        }
-    }
+                vertices.push_back( Vertex(origin + i*u + j*v + k*w) );
     
     
     triangles.push_back(Triangle(0,1,2));

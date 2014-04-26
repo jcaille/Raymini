@@ -11,18 +11,18 @@
 #include "Scene.h"
 
 
-bool BoundingBoxRayTracer::rayObjectIntersection(const Ray& ray, const Object& object, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor)
+void BoundingBoxRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Triangle& intersectionTriangle, const Object& intersectionObject, Vec3Df& intersectionColor)
 {
-    
-    // Instead of translating the object by object.trans, we translate
-    // the camera by the -object.trans. Clever, huh ?
-    Ray correctedRay = Ray(ray.getOrigin() - object.getTrans(), ray.getDirection());
-    
-    bool hasIntersection = correctedRay.intersect (object.getBoundingBox (), intersectionColor);
-    if (hasIntersection) {
-        intersectionDistance = Vec3Df::squaredDistance (intersectionColor, correctedRay.getOrigin());
-        intersectionColor = 255 * object.getMaterial().getColor();
-        return true;
+    intersectionColor = 255*intersectionObject.getMaterial().getColor();
+}
+
+
+bool BoundingBoxRayTracer::rayObjectIntersection(const Ray& ray, const Object& object, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle)
+{
+    bool intersection = ray.intersect(object.getBoundingBox(), intersectionPoint);
+    if (intersection) {
+        intersectionDistance = Vec3Df::squaredDistance(intersectionPoint, ray.getOrigin());
     }
-    return false;
+    
+    return intersection;
 }

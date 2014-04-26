@@ -20,17 +20,20 @@ class Ray;
 
 class Object {
 public:
-    inline Object (const Mesh & aMesh, const Material & aMat) : mesh (aMesh), mat (aMat), tree(mesh,10) {
+    
+    inline Object() {}
+    inline ~Object () {}
+    
+    inline Object (const Mesh & mesh, const Material & aMat) : mat (aMat), tree(mesh,10) {
         updateBoundingBox ();
     }
     
-    virtual ~Object () {}
 
     inline const Vec3Df & getTrans () const { return trans;}
     inline void setTrans (const Vec3Df & t) { trans = t; }
 
-    inline const Mesh & getMesh () const { return mesh; }
-    inline Mesh & getMesh () { return mesh; }
+    inline const Mesh & getMesh () const { return tree.getMesh(); }
+    inline Mesh & getMesh () { return tree.getMesh(); }
     
     inline const Material & getMaterial () const { return mat; }
     inline Material & getMaterial () { return mat; }
@@ -41,7 +44,6 @@ public:
     inline const KDTree & getKDTree () const { return tree; }
 
 private:
-    Mesh mesh;
     Material mat;
     BoundingBox bbox;
     Vec3Df trans;

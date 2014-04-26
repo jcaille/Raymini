@@ -38,41 +38,40 @@ Vec3Df Phong::brdf(const Vec3Df& hitPoint, const Vec3Df& pov, const std::vector<
     Vec3Df norm = coords[0] * n0 + coords[1] * n1 + coords[2] * n2;
     norm.normalize();
     
-
-    
+    Vec3Df realHitPoint = hitPoint + object.getTrans();
     
     Vec3Df color(0,0,0);
     
     for (Light light : scene->getLights()){
         
-        Vec3Df realHitPoint = hitPoint + object.getTrans();
-        
-        Vec3Df lightDirection = light.getPos() - realHitPoint;
-        lightDirection.normalize();
-        
-        Ray lightRay = Ray(realHitPoint, lightDirection);
-        
-        // test lightray intersection with scene
-        bool intersection = false;
-        for (unsigned int k = 0; k < scene->getObjects().size(); k++) {
-            
-            const Object& o = scene->getObjects()[k];
-            
-            float you;
-            Vec3Df should;
-            std::vector<float> code_in;
-            Triangle objective_c; // We don't care about return arguments
-            float epsilon = 10e-3;
-            intersection =  lightRay.intersect(o, you, should, code_in, objective_c , epsilon);
-            if (intersection) {
-                break;
-            }
-        }
-
-        if(!intersection)
-        {
+//        Vec3Df lightDirection = light.getPos() - realHitPoint;
+//        lightDirection.normalize();
+//        
+//        Ray lightRay = Ray(realHitPoint, lightDirection);
+//        
+//        // test lightray intersection with scene
+//        bool intersection = false;
+//        for (unsigned int k = 0; k < scene->getObjects().size(); k++) {
+//            
+//            const Object& o = scene->getObjects()[k];
+//            
+//            float you;
+//            Vec3Df should;
+//            std::vector<float> code_in;
+//            Triangle objective_c; // We don't care about return arguments
+//            
+//            float epsilon = 10e-2;
+//            
+//            intersection =  lightRay.intersect(o, you, should, code_in, objective_c , epsilon);
+//            if (intersection) {
+//                break;
+//            }
+//        }
+//
+//        if(!intersection)
+//        {
             color += singleLightBRDF(realHitPoint, pov, norm, object.getMaterial(), light);
-        }
+//        }
         
     }
     
@@ -92,6 +91,6 @@ Vec3Df Phong::singleLightBRDF(const Vec3Df &hitPoint, const Vec3Df &pov, const V
     f += max(material.getDiffuse() * Vec3Df::dotProduct(normal, wi), 0 );                              // Diffuse
     f += max(material.getSpecular() * powf( Vec3Df::dotProduct(r, wo) , material.getShininess()), 0);     // Specular
     
-    return 255*f*material.getColor()*light.getColor();
+    return 255*f*material.getColor()*light.getColor()*light.getIntensity();
 
 }
