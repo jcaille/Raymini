@@ -33,8 +33,8 @@ public:
     
     inline const Vec3Df & getTrans () const { return _trans;}
     inline void setTrans (const Vec3Df & t) { _trans = t; }
-
-
+    
+    void sample(float density, std::vector<Vec3Df>& samples) const;
     
 private:
     

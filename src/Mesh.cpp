@@ -168,6 +168,53 @@ void Mesh::barycentricCoordinates(const Vec3Df pt, const Triangle& triangle, std
     coords.push_back(b1);
 }
 
+float Mesh::area(const Triangle& triangle) const
+{
+    Vec3Df p0 = vertices[triangle.getVertex(0)].getPos();
+    Vec3Df p1 = vertices[triangle.getVertex(1)].getPos();
+    Vec3Df p2 = vertices[triangle.getVertex(2)].getPos();
+    
+    Vec3Df e0 = p1 - p0;
+    Vec3Df e1 = p2 - p0;
+
+    return  .5* Vec3Df::crossProduct(e0, e1).getLength();
+    
+}
+
+static inline float random_float(float lo, float hi)
+{
+    return lo + static_cast<float>( rand() ) / ( static_cast <float> (RAND_MAX/(hi-lo)));
+}
+
+void Mesh::sample(float density, std::vector<Vec3Df>& samples) const
+{
+
+    for (const Triangle& triangle : triangles){
+        
+        // Compute the number of samples we want for this triangle
+        float a = area(triangle);
+        int n = round(a * density);
+        
+        Vec3Df p0 = vertices[triangle.getVertex(0)].getPos();
+        Vec3Df p1 = vertices[triangle.getVertex(1)].getPos();
+        Vec3Df p2 = vertices[triangle.getVertex(2)].getPos();
+        
+        // Draw those samples
+        for (int i = 0; i < n; ++i){
+            
+            float b0 = random_float(0 , 1 );
+            float b1 = random_float(0 , 1 - b0 );
+            float b2 = 1 - b0 - b1;
+            
+            samples.push_back(b0*p0 + b1*p1 + b2*p2);
+            
+        }
+        
+    }
+    
+    
+}
+
 inline void glVertexVec3Df (const Vec3Df & v) {
     glVertex3f (v[0], v[1], v[2]);
 }

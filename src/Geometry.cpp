@@ -19,3 +19,13 @@ void Geometry::_updateBoundingBox()
             _bbox.extendTo (V[i].getPos ());
     }
 }
+
+void Geometry::sample(float density, std::vector<Vec3Df>& samples) const
+{
+    size_t idx = samples.size();
+    getMesh().sample(density, samples);
+    for (; idx < samples.size(); ++idx){
+        samples[idx] += getTrans();
+    }
+
+}

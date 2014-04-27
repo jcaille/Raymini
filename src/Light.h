@@ -15,29 +15,34 @@
 class Light : public Geometry {
 public:
     
-    inline Light () : color (Vec3Df (1.0f, 1.0f, 1.0f)), intensity (1.0f) {}
-    inline Light (const Vec3Df & pos, const Vec3Df & color, float intensity) : color (color), intensity (intensity) {
+    inline Light () : _color(1.0f, 1.0f, 1.0f), _intensity(1.0f) {}
+    inline Light (const Vec3Df & pos, const Vec3Df & color, float intensity) : _color(color), _intensity(intensity) {
             setTrans(pos);
+            _samples.push_back(pos);
         }
     
-    inline Light (const Vec3Df & pos, const Mesh & mesh, const Vec3Df & color, float intensity) : Geometry(mesh), color (color), intensity (intensity) {
+    inline Light (const Vec3Df & pos, const Mesh & mesh, const Vec3Df & color, float intensity) : Geometry(mesh), _color(color), _intensity(intensity) {
         setTrans(pos);
+        sample(200,_samples);
     }
 
     virtual ~Light () {}
 
+    inline float getIntensity () const { return _intensity; }
     inline const Vec3Df & getPos () const { return getTrans(); }
-    inline const Vec3Df & getColor () const { return color; }
-    inline float getIntensity () const { return intensity; }
+    inline const Vec3Df & getColor () const { return _color; }
+    inline const vector<Vec3Df> & getSamples () const { return _samples; }
+
 
     inline void setPos (const Vec3Df & p) { setTrans(p); }
-    inline void setColor (const Vec3Df & c) { color = c; }
-    inline void setIntensity (float i) { intensity = i; }
+    inline void setColor (const Vec3Df & c) { _color = c; }
+    inline void setIntensity (float i) { _intensity = i; }
 
     
 private:
-    Vec3Df color;
-    float intensity;
+    Vec3Df _color;
+    float _intensity;
+    vector<Vec3Df> _samples;
 };
 
 

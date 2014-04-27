@@ -43,6 +43,8 @@ public:
     void computeDualEdgeMap (EdgeMapIndex & dualVMap1, EdgeMapIndex & dualVMap2);
     void markBorderEdges (EdgeMapIndex & edgeMap);
     void barycentricCoordinates(const Vec3Df pt, const Triangle& triangle, std::vector<float>& coords) const;
+    float area(const Triangle& triangle) const;
+    void sample(float density, std::vector<Vec3Df>& samples) const;
     
     void renderGL (bool flat) const;
     
