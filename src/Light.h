@@ -8,29 +8,34 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include <iostream>
-#include <vector>
+#include "Geometry.h"
 
 #include "Vec3D.h"
 
-class Light {
+class Light : public Geometry {
 public:
+    
     inline Light () : color (Vec3Df (1.0f, 1.0f, 1.0f)), intensity (1.0f) {}
-    inline Light (const Vec3Df & pos, const Vec3Df & color, float intensity)
-        : pos (pos), color (color), intensity (intensity) {}
+    inline Light (const Vec3Df & pos, const Vec3Df & color, float intensity) : color (color), intensity (intensity) {
+            setTrans(pos);
+        }
+    
+    inline Light (const Vec3Df & pos, const Mesh & mesh, const Vec3Df & color, float intensity) : Geometry(mesh), color (color), intensity (intensity) {
+        setTrans(pos);
+    }
+
     virtual ~Light () {}
 
-    inline const Vec3Df & getPos () const { return pos; }
+    inline const Vec3Df & getPos () const { return getTrans(); }
     inline const Vec3Df & getColor () const { return color; }
     inline float getIntensity () const { return intensity; }
 
-    inline void setPos (const Vec3Df & p) { pos = p; }
+    inline void setPos (const Vec3Df & p) { setTrans(p); }
     inline void setColor (const Vec3Df & c) { color = c; }
     inline void setIntensity (float i) { intensity = i; }
 
     
 private:
-    Vec3Df pos;
     Vec3Df color;
     float intensity;
 };

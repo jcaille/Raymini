@@ -72,7 +72,7 @@ class KDTree {
         inline KDTree(){};
         inline ~KDTree(){};
     
-        KDTree(const Mesh& mesh, int maxDepth);
+        KDTree(const Mesh& mesh, int maxDepth = -1);
     
         inline const Mesh& getMesh() const { return _mesh; }
         inline Mesh& getMesh() { return _mesh; }

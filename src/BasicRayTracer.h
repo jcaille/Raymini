@@ -19,11 +19,11 @@ public :
     /**
      *  A basic intersection finder that loops over all triangles of the given object
      */
-    virtual bool rayObjectIntersection(const Ray& ray,
-                                       const Object& object,
-                                       float& intersectionDistance,
-                                       Vec3Df& intersectionPoint,
-                                       Triangle& intersectionTriangle);
+    virtual bool rayGeometryIntersection(const Ray& ray,
+                                         const Geometry& geometry,
+                                         float& intersectionDistance,
+                                         Vec3Df& intersectionPoint,
+                                         Triangle& intersectionTriangle);
     
     /**
      *  Default Phong BRDF shading

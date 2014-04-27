@@ -34,10 +34,10 @@ void BasicRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& in
 }
 
 
-bool BasicRayTracer::rayObjectIntersection(const Ray& ray, const Object& object, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle)
+bool BasicRayTracer::rayGeometryIntersection(const Ray& ray, const Geometry& geometry, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle)
 {
 
-    if (!ray.intersect(object.getBoundingBox(), intersectionPoint)) {
+    if (!ray.intersect(geometry.getBoundingBox(), intersectionPoint)) {
         return false;
     }
     
@@ -46,8 +46,8 @@ bool BasicRayTracer::rayObjectIntersection(const Ray& ray, const Object& object,
     
     bool intersection = false;
     
-    const std::vector<Triangle>& triangles = object.getMesh().getTriangles();
-    const std::vector<Vertex>& vertices = object.getMesh().getVertices();
+    const std::vector<Triangle>& triangles = geometry.getMesh().getTriangles();
+    const std::vector<Vertex>& vertices = geometry.getMesh().getVertices();
     
     for(const Triangle& triangle : triangles)
     {

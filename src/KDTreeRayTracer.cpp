@@ -25,13 +25,12 @@ void KDTreeRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& i
         // Let's see if direct light from the light can go through to the intersectionPoint
         Ray lightRay(intersectionPoint, direction);
         
+        float obstructionDistance;
         Vec3Df obstructionPoint;
         Triangle obstructionTriangle;
         const Object* obstructionObject;
         
-        bool intersection = raySceneIntersection(lightRay, scene, obstructionPoint, obstructionTriangle, obstructionObject);
-        
-        float obstructionDistance = Vec3Df::distance(intersectionPoint, obstructionPoint);
+        bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
         
         if (!intersection || obstructionDistance >= lightDistance){
             intersectionColor += BRDF::phong(intersectionPoint, intersectionNormal, pov, intersectionObject, light);
@@ -42,7 +41,7 @@ void KDTreeRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& i
 }
 
 
-bool KDTreeRayTracer::rayObjectIntersection(const Ray& ray, const Object& object, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle)
+bool KDTreeRayTracer::rayGeometryIntersection(const Ray& ray, const Geometry& geometry, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle)
 {
-    return object.getKDTree().intersectRay(ray, intersectionDistance, intersectionPoint, intersectionTriangle);
+    return geometry.getKDTree().intersectRay(ray, intersectionDistance, intersectionPoint, intersectionTriangle);
 }
