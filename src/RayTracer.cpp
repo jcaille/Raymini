@@ -43,7 +43,7 @@ static inline int clamp (float f, int inf, int sup) {
     return (v < inf ? inf : (v > sup ? sup : v));
 }
 
-bool RayTracer::raySceneIntersection(const Ray& ray, const Scene& scene, Vec3Df& intersectionPoint, Triangle& intersectionTriangle, const Object* &intersectionObject)
+bool RayTracer::raySceneIntersection(const Ray& ray, const Scene& scene, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle, const Object* &intersectionObject)
 {
     
     const BoundingBox& sceneBoundingBox = scene.getBoundingBox();
@@ -56,7 +56,7 @@ bool RayTracer::raySceneIntersection(const Ray& ray, const Scene& scene, Vec3Df&
     bool intersection = false;
     
     // Determine the first point of intersection between the ray and the scene
-    float intersectionDistance = std::numeric_limits<float>::max();
+    intersectionDistance = std::numeric_limits<float>::max();
     
     float objectIntersectionDistance;
     Vec3Df objectIntersectionPoint;
@@ -71,7 +71,7 @@ bool RayTracer::raySceneIntersection(const Ray& ray, const Scene& scene, Vec3Df&
         // the ray by the -object.trans.
         Ray correctedRay(ray.getOrigin() - object.getTrans(), ray.getDirection());
         
-        bool objectIntersection = rayObjectIntersection(correctedRay, object, objectIntersectionDistance, objectIntersectionPoint, objectIntersectionTriangle);
+        bool objectIntersection = rayGeometryIntersection(correctedRay, object, objectIntersectionDistance, objectIntersectionPoint, objectIntersectionTriangle);
         
         if (objectIntersection && objectIntersectionDistance < intersectionDistance) {
             
@@ -87,46 +87,109 @@ bool RayTracer::raySceneIntersection(const Ray& ray, const Scene& scene, Vec3Df&
     return intersection;
 }
 
+bool RayTracer::raySceneIntersection(const Ray& ray, const Scene& scene, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle, const Light* &intersectionLight)
+{
+    
+    const BoundingBox& sceneBoundingBox = scene.getBoundingBox();
+    
+    if(!ray.intersect(sceneBoundingBox, intersectionPoint)){
+        // The ray does not intersect with the bouding box of the scene.
+        return false;
+    }
+    
+    bool intersection = false;
+    
+    // Determine the first point of intersection between the ray and the scene
+    intersectionDistance = std::numeric_limits<float>::max();
+    
+    float lightIntersectionDistance;
+    Vec3Df lightIntersectionPoint;
+    Triangle lightIntersectionTriangle;
+    
+    // For each object in the scene, check if intersection exists and remember point of intersection
+    const vector<Light>& lights = scene.getLights();
+    
+    for (const Light& light : lights) {
+        
+        // Instead of translating the object by object.trans, we translate
+        // the ray by the -object.trans.
+        Ray correctedRay(ray.getOrigin() - light.getTrans(), ray.getDirection());
+        
+        bool objectIntersection = rayGeometryIntersection(correctedRay, light, lightIntersectionDistance, lightIntersectionPoint, lightIntersectionTriangle);
+        
+        if (objectIntersection && lightIntersectionDistance < intersectionDistance) {
+            
+            // Keep the intersection if it is closer to the camera
+            intersectionDistance = lightIntersectionDistance;
+            intersectionPoint = lightIntersectionPoint;
+            intersectionTriangle = lightIntersectionTriangle;
+            intersectionLight = &light;
+            intersection = true;
+        }
+    }
+    
+    return intersection;
+}
+
 
 
 void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor)
 {
     
     // Determine where the ray intersects the scene
-    const Object* intersectionObject;
-    Vec3Df intersectionPoint;
-    Triangle intersectionTriangle;
-    bool intersection = raySceneIntersection(ray, scene, intersectionPoint, intersectionTriangle, intersectionObject);
+    
+    float objectIntersectionDistance;
+    Vec3Df objectIntersectionPoint;
+    Triangle objectIntersectionTriangle;
+    const Object* objectIntersectionObject;
+    
+    bool objectIntersection = raySceneIntersection(ray, scene, objectIntersectionDistance, objectIntersectionPoint, objectIntersectionTriangle, objectIntersectionObject);
+    
+    float lightIntersectionDistance;
+    Vec3Df lightIntersectionPoint;
+    Triangle lightIntersectionTriangle;
+    const Light* lightIntersectionObject;
+    
+    bool lightIntersection = raySceneIntersection(ray, scene, lightIntersectionDistance, lightIntersectionPoint, lightIntersectionTriangle, lightIntersectionObject);
+
     
     // No ray / scene intersection => background color
-    if (!intersection){
+    if (!objectIntersection && !lightIntersection){
         intersectionColor = _backgroundColor;
         return;
     }
     
-    
-    // We need to compute the normal on the object at the intersection point
-    const Mesh& mesh = intersectionObject->getMesh();
-    
-    // Get barycentric coordinates
-    std::vector<float> coords;
-    mesh.barycentricCoordinates(intersectionPoint, intersectionTriangle, coords);
-    
-    // Compute normal at intersection
-    Vertex p0 = mesh.getVertices()[intersectionTriangle.getVertex(0)];
-    Vertex p1 = mesh.getVertices()[intersectionTriangle.getVertex(1)];
-    Vertex p2 = mesh.getVertices()[intersectionTriangle.getVertex(2)];
-    
-    Vec3Df n0 = p0.getNormal();
-    Vec3Df n1 = p1.getNormal();
-    Vec3Df n2 = p2.getNormal();
-    
-    Vec3Df norm = coords[0] * n0 + coords[1] * n1 + coords[2] * n2;
-    norm.normalize();
+    if (lightIntersectionDistance <= objectIntersectionDistance){
+        
+        intersectionColor = lightIntersectionObject->getColor();
+        
+    } else {
+        
+        // We need to compute the normal on the object at the intersection point
+        const Mesh& mesh = objectIntersectionObject->getMesh();
+        
+        // Get barycentric coordinates
+        std::vector<float> coords;
+        mesh.barycentricCoordinates(objectIntersectionPoint, objectIntersectionTriangle, coords);
+        
+        // Compute normal at intersection
+        Vertex p0 = mesh.getVertices()[objectIntersectionTriangle.getVertex(0)];
+        Vertex p1 = mesh.getVertices()[objectIntersectionTriangle.getVertex(1)];
+        Vertex p2 = mesh.getVertices()[objectIntersectionTriangle.getVertex(2)];
+        
+        Vec3Df n0 = p0.getNormal();
+        Vec3Df n1 = p1.getNormal();
+        Vec3Df n2 = p2.getNormal();
+        
+        Vec3Df norm = coords[0] * n0 + coords[1] * n1 + coords[2] * n2;
+        norm.normalize();
+        
+        
+        // Now that we have that point of intersection, let's compute the color it is supposed to have
+        rayColorForIntersection(ray.getOrigin(), objectIntersectionPoint + objectIntersectionObject->getTrans(), norm, *objectIntersectionObject, scene, intersectionColor);
+        
 
-    
-    // Now that we have that point of intersection, let's compute the color it is supposed to have
-    rayColorForIntersection(ray.getOrigin(), intersectionPoint + intersectionObject->getTrans(), norm, *intersectionObject, scene, intersectionColor);
+    }
     
 }
 

@@ -20,9 +20,11 @@
 #include "Vec3D.h"
 
 // Forward declaration
+class Geometry;
 class Object;
 class Ray;
 class Scene;
+class Light;
 
 class RayTracer {
 public:
@@ -69,24 +71,24 @@ protected:
 
     
     /**
-     *  Determines if a ray intersects a given object
+     *  Determines if a ray intersects a given geometry
      *
      *  @param ray                  the ray
-     *  @param object               the object against which to check if it crosses the path of the ray
+     *  @param geometry             the geometry against which to check if it crosses the path of the ray
      *  @param intersectionDistance if there is intersection, will contain the position of intersection
      *  @param intersectionPoint    if there is intersection, will contain the position of intersection
      *  @param intersectionTriangle if there is intersection, will contain the triangle with which there is intersection
      *
      *  @return A boolean determining if the ray intersects a given object
      */
-    virtual bool rayObjectIntersection(const Ray& ray,
-                                       const Object& object,
-                                       float& intersectionDistance,
-                                       Vec3Df& intersectionPoint,
-                                       Triangle& intersectionTriangle) = 0;
+    virtual bool rayGeometryIntersection(const Ray& ray,
+                                         const Geometry& geometry,
+                                         float& intersectionDistance,
+                                         Vec3Df& intersectionPoint,
+                                         Triangle& intersectionTriangle) = 0;
     
     /**
-     *  Determines if a ray intersects a scene
+     *  Determines if a ray intersects objects/lights on a scene
      *
      *  @param ray                  the ray
      *  @param scene                the scene against which to check if it crosses the path of the ray
@@ -98,9 +100,17 @@ protected:
      */
     bool raySceneIntersection(const Ray& ray,
                               const Scene& scene,
+                              float& intersectionDistance,
                               Vec3Df& intersectionPoint,
                               Triangle& intersectionTriangle,
                               const Object* &intersectionObject);
+    
+    bool raySceneIntersection(const Ray& ray,
+                              const Scene& scene,
+                              float& intersectionDistance,
+                              Vec3Df& intersectionPoint,
+                              Triangle& intersectionTriangle,
+                              const Light* &intersectionLight);
     
     /**
      *  Get the color to assign to a given ray given its intersection with the scene

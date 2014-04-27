@@ -87,8 +87,11 @@ void Scene::buildCornellBox(float scale){
 
 
     /* Ceiling light - slightly yellowish */
-    Light l (scale*Vec3Df (0.0, 0.0, 0.99), Vec3Df (1.0f, .85f, .7f), 1.0f);
-    lights.push_back(l);
+    Mesh ceilingLightMesh;
+    ceilingLightMesh.makePlane(Vec3Df (0.0, 0.0, 0.0), Vec3Df(0,0,-1), Vec3Df(0,1,0), .2*scale, .2*scale);
+    Light ceilingLight (scale*Vec3Df (0.0, 0.0, 0.99), ceilingLightMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
+    lights.push_back(ceilingLight);
+    
 }
 
 

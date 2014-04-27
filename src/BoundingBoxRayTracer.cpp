@@ -17,9 +17,9 @@ void BoundingBoxRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3
 }
 
 
-bool BoundingBoxRayTracer::rayObjectIntersection(const Ray& ray, const Object& object, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle)
+bool BoundingBoxRayTracer::rayGeometryIntersection(const Ray& ray, const Geometry& geometry, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle)
 {
-    bool intersection = ray.intersect(object.getBoundingBox(), intersectionPoint);
+    bool intersection = ray.intersect(geometry.getBoundingBox(), intersectionPoint);
     if (intersection) {
         intersectionDistance = Vec3Df::squaredDistance(intersectionPoint, ray.getOrigin());
     }

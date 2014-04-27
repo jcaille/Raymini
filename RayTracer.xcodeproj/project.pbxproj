@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A19E6BF190C6EC9003489AF /* BasicRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FBF0825190572B700584DCE /* BasicRayTracer.cpp */; };
-		1A19E6C0190CEBA3003489AF /* KDTreeRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AA67213190A7CA900745C48 /* KDTreeRayTracer.cpp */; };
+		1A19E6C3190CF8D5003489AF /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A19E6C1190CF8D5003489AF /* Geometry.cpp */; };
+		1A19E6C4190D03F5003489AF /* BasicRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FBF0825190572B700584DCE /* BasicRayTracer.cpp */; };
+		1A19E6C5190D044D003489AF /* KDTreeRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AA67213190A7CA900745C48 /* KDTreeRayTracer.cpp */; };
 		1A65B286190BF214001F07D0 /* BoundingBoxRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AA67216190A9B6F00745C48 /* BoundingBoxRayTracer.cpp */; };
 		1A71DE3819079CB700BB58C8 /* BRDF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A71DE3619079CB700BB58C8 /* BRDF.cpp */; };
 		1A71DE3C1907A6E600BB58C8 /* RayIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A71DE3A1907A6E600BB58C8 /* RayIterator.cpp */; };
@@ -54,6 +55,8 @@
 /* Begin PBXFileReference section */
 		0FBF0825190572B700584DCE /* BasicRayTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BasicRayTracer.cpp; path = src/BasicRayTracer.cpp; sourceTree = SOURCE_ROOT; };
 		0FBF0826190572B700584DCE /* BasicRayTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasicRayTracer.h; path = src/BasicRayTracer.h; sourceTree = SOURCE_ROOT; };
+		1A19E6C1190CF8D5003489AF /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
+		1A19E6C2190CF8D5003489AF /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
 		1A71DE3619079CB700BB58C8 /* BRDF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BRDF.cpp; path = src/BRDF.cpp; sourceTree = SOURCE_ROOT; };
 		1A71DE3719079CB700BB58C8 /* BRDF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRDF.h; path = src/BRDF.h; sourceTree = SOURCE_ROOT; };
 		1A71DE3A1907A6E600BB58C8 /* RayIterator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RayIterator.cpp; path = src/RayIterator.cpp; sourceTree = SOURCE_ROOT; };
@@ -179,19 +182,21 @@
 			isa = PBXGroup;
 			children = (
 				1A73A77519051BE500B6A310 /* Vec3D.h */,
-				1A73A77419051BE500B6A310 /* Triangle.h */,
-				1A73A77319051BE500B6A310 /* Triangle.cpp */,
+				1A73A75F19051BE500B6A310 /* Edge.h */,
 				1A73A77719051BE500B6A310 /* Vertex.h */,
 				1A73A77619051BE500B6A310 /* Vertex.cpp */,
-				1A73A76E19051BE500B6A310 /* Ray.h */,
-				1A73A76D19051BE500B6A310 /* Ray.cpp */,
-				1A73A75F19051BE500B6A310 /* Edge.h */,
+				1A73A77419051BE500B6A310 /* Triangle.h */,
+				1A73A77319051BE500B6A310 /* Triangle.cpp */,
 				1A73A76819051BE500B6A310 /* Mesh.h */,
 				1A73A76719051BE500B6A310 /* Mesh.cpp */,
 				1A73A75E19051BE500B6A310 /* BoundingBox.h */,
 				1A73A75D19051BE500B6A310 /* BoundingBox.cpp */,
+				1A73A76E19051BE500B6A310 /* Ray.h */,
+				1A73A76D19051BE500B6A310 /* Ray.cpp */,
 				7627F8EC1907103200121E57 /* KDTree.h */,
 				7627F8EB1907103100121E57 /* KDTree.cpp */,
+				1A19E6C2190CF8D5003489AF /* Geometry.h */,
+				1A19E6C1190CF8D5003489AF /* Geometry.cpp */,
 			);
 			name = Geometry;
 			sourceTree = "<group>";
@@ -331,9 +336,7 @@
 				1A73A77C19051BE500B6A310 /* Light.cpp in Sources */,
 				1A73A78119051BE500B6A310 /* QTUtils.cpp in Sources */,
 				1A73A7A5190527C300B6A310 /* moc_Window.cpp in Sources */,
-				1A19E6BF190C6EC9003489AF /* BasicRayTracer.cpp in Sources */,
 				1A73A7A4190527C300B6A310 /* moc_QTUtils.cpp in Sources */,
-				1A19E6C0190CEBA3003489AF /* KDTreeRayTracer.cpp in Sources */,
 				1A73A77B19051BE500B6A310 /* GLViewer.cpp in Sources */,
 				1A73A77D19051BE500B6A310 /* main.cpp in Sources */,
 				1A65B286190BF214001F07D0 /* BoundingBoxRayTracer.cpp in Sources */,
@@ -342,11 +345,14 @@
 				1A73A78719051BE500B6A310 /* Window.cpp in Sources */,
 				1A73A78519051BE500B6A310 /* Triangle.cpp in Sources */,
 				1A71DE3C1907A6E600BB58C8 /* RayIterator.cpp in Sources */,
+				1A19E6C3190CF8D5003489AF /* Geometry.cpp in Sources */,
 				1A73A78019051BE500B6A310 /* Object.cpp in Sources */,
 				1A73A78319051BE500B6A310 /* RayTracer.cpp in Sources */,
+				1A19E6C4190D03F5003489AF /* BasicRayTracer.cpp in Sources */,
 				1A73A77E19051BE500B6A310 /* Material.cpp in Sources */,
 				1A73A77A19051BE500B6A310 /* BoundingBox.cpp in Sources */,
 				1A73A78619051BE500B6A310 /* Vertex.cpp in Sources */,
+				1A19E6C5190D044D003489AF /* KDTreeRayTracer.cpp in Sources */,
 				1A71DE3819079CB700BB58C8 /* BRDF.cpp in Sources */,
 				7627F8ED1907103400121E57 /* KDTree.cpp in Sources */,
 			);
