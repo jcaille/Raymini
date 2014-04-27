@@ -195,7 +195,7 @@ void Window::exportRayImage () {
 void Window::about () {
     QMessageBox::about (this, 
                         "About This Program", 
-                        "<b>RayMini</b> <br> by <i>Tamy Boubekeur</i>.");
+                        "<b>RayMini</b> <br> by <i>Jean Caille, Florian Denis, Audrey Fourneret & Simon Martin</i>.");
 }
 
 void Window::initControlWidget () {
