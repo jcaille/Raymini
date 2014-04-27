@@ -53,7 +53,7 @@ void Scene::buildCornellBox(float scale){
     /* White, ground */
     Mesh groundMesh;
     groundMesh.makePlane(scale*Vec3Df(0,0,0), Vec3Df(0,0,1), Vec3Df(0,1,0), scale, scale);
-    Material groundMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.5);
+    Material groundMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
     Object ground (groundMesh, groundMat);
     objects.push_back (ground);
 
@@ -91,7 +91,6 @@ void Scene::buildCornellBox(float scale){
     ceilingLightMesh.makePlane(Vec3Df (0.0, 0.0, 0.0), Vec3Df(0,0,-1), Vec3Df(0,1,0), .2*scale, .2*scale);
     Light ceilingLight (scale*Vec3Df (0.0, 0.0, 0.99), ceilingLightMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
     lights.push_back(ceilingLight);
-    
 }
 
 
@@ -111,7 +110,7 @@ void Scene::buildDefaultScene () {
     
     Mesh tallBoxMesh;
     tallBoxMesh.makeBox(tallBoxCenter, tallBoxFront, tallBoxUp, tallBoxSize);
-    Material tallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
+    Material tallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), .75);
     Object tallBox (tallBoxMesh, tallBoxMat);
     objects.push_back (tallBox);
 
@@ -134,7 +133,7 @@ void Scene::buildDefaultScene () {
     
     
     /** Put objects in the scene here **/
-    
+
     Mesh ramMesh;
     ramMesh.loadOFF("models/ram.off");
     Material ramMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f), 0.0);
@@ -148,7 +147,7 @@ void Scene::buildDefaultScene () {
     Object rhino (rhinoMesh, rhinoMat);
     rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
     objects.push_back (rhino);
-    
+
 
 //    Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
 //    lights.push_back(ramLight);
