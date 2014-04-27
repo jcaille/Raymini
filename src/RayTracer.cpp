@@ -10,8 +10,8 @@
 #include "Scene.h"
 
 #include "BasicRayTracer.h"
+#include "ShadowRayTracer.h"
 #include "BoundingBoxRayTracer.h"
-#include "KDTreeRayTracer.h"
 #include "ExtendedLightSourcesRayTracer.h"
 
 #include "GridAARayIterator.h"
@@ -162,7 +162,26 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
     
     if (lightIntersectionDistance <= objectIntersectionDistance){
         
-        intersectionColor = lightIntersectionObject->getColor();
+        // We need to compute the normal on the object at the intersection point
+        const Mesh& mesh = lightIntersectionObject->getMesh();
+
+        // Get barycentric coordinates
+        std::vector<float> coords;
+        mesh.barycentricCoordinates(lightIntersectionPoint, lightIntersectionTriangle, coords);
+        
+        // Compute normal at intersection
+        Vertex p0 = mesh.getVertices()[objectIntersectionTriangle.getVertex(0)];
+        Vertex p1 = mesh.getVertices()[objectIntersectionTriangle.getVertex(1)];
+        Vertex p2 = mesh.getVertices()[objectIntersectionTriangle.getVertex(2)];
+        
+        Vec3Df n0 = p0.getNormal();
+        Vec3Df n1 = p1.getNormal();
+        Vec3Df n2 = p2.getNormal();
+        
+        Vec3Df norm = coords[0] * n0 + coords[1] * n1 + coords[2] * n2;
+        norm.normalize();
+        
+        rayColorForIntersection(ray.getOrigin(), lightIntersectionPoint + lightIntersectionObject->getTrans(), norm, *lightIntersectionObject, scene, intersectionColor);
         
     } else {
         

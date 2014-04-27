@@ -53,7 +53,7 @@ protected:
     
     
     /**
-     *  Determines the color a ray should take given the object it intersects and the point & triangle of intersection
+     *  Determines the color a ray should take given the object/light it intersects and the point & triangle of intersection
      *
      *  @param ray                  The ray
      *  @param intersectionPoint    The point of intersection
@@ -62,6 +62,13 @@ protected:
      *  @param scene                The scene being rendered
      *  @param intersectionColor    Output parameter : will contain the color the ray should take
      */
+    virtual void rayColorForIntersection(const Vec3Df& pov,
+                                         const Vec3Df& intersectionPoint,
+                                         const Vec3Df& intersectionNormal,
+                                         const Light& intersectionLight,
+                                         const Scene& scene,
+                                         Vec3Df& intersectionColor) = 0;
+    
     virtual void rayColorForIntersection(const Vec3Df& pov,
                                          const Vec3Df& intersectionPoint,
                                          const Vec3Df& intersectionNormal,

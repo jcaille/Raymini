@@ -33,6 +33,11 @@ void BasicRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& in
     
 }
 
+void BasicRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Light& intersectionLight, const Scene& scene, Vec3Df& intersectionColor)
+{
+    intersectionColor = intersectionLight.getColor();
+}
+
 
 bool BasicRayTracer::rayGeometryIntersection(const Ray& ray, const Geometry& geometry, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle)
 {

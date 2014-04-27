@@ -35,6 +35,14 @@ public :
                                          const Object& intersectionObject,
                                          const Scene& scene,
                                          Vec3Df& intersectionColor);
+    
+    virtual void rayColorForIntersection(const Vec3Df& pov,
+                                         const Vec3Df& intersectionPoint,
+                                         const Vec3Df& intersectionNormal,
+                                         const Light& intersectionObject,
+                                         const Scene& scene,
+                                         Vec3Df& intersectionColor);
+
 
 protected:
     friend RayTracer;

@@ -9,9 +9,9 @@
 #ifndef __RayTracer__SmoothShadowRayTracer__
 #define __RayTracer__SmoothShadowRayTracer__
 
-#include "KDTreeRayTracer.h"
+#include "ShadowRayTracer.h"
 
-class ExtendedLightSourcesRayTracer : public KDTreeRayTracer {
+class ExtendedLightSourcesRayTracer : public ShadowRayTracer {
     
     
     /**
@@ -25,9 +25,15 @@ class ExtendedLightSourcesRayTracer : public KDTreeRayTracer {
                                          const Scene& scene,
                                          Vec3Df& intersectionColor);
     
-    
-    
 protected:
+    
+    void directContributionToRayColorForIntersection(const Vec3Df& pov,
+                                                     const Vec3Df& intersectionPoint,
+                                                     const Vec3Df& intersectionNormal,
+                                                     const Object& intersectionObject,
+                                                     const Scene& scene,
+                                                     Vec3Df& directLightContribution);
+
     friend RayTracer;
     ExtendedLightSourcesRayTracer () {}
     virtual ~ExtendedLightSourcesRayTracer () {}
