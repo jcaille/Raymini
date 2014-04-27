@@ -12,7 +12,7 @@
 #include "BasicRayTracer.h"
 #include "BoundingBoxRayTracer.h"
 #include "KDTreeRayTracer.h"
-#include "SmoothShadowRayTracer.h"
+#include "ExtendedLightSourcesRayTracer.h"
 
 #include "GridAARayIterator.h"
 
@@ -25,7 +25,7 @@ static RayTracer * instance = NULL;
 
 RayTracer * RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new SmoothShadowRayTracer();
+        instance = new ExtendedLightSourcesRayTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;

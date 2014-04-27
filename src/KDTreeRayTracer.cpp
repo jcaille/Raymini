@@ -33,7 +33,7 @@ void KDTreeRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& i
         bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
         
         if (!intersection || obstructionDistance >= lightDistance){
-            intersectionColor += BRDF::phong(intersectionPoint, intersectionNormal, pov, intersectionObject, light);
+            intersectionColor += BRDF::phong(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
         }
         
     }

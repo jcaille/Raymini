@@ -28,7 +28,7 @@ void BasicRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& in
     
     const std::vector<Light>& lights = scene.getLights();
     for (const Light& light : lights){
-        intersectionColor += BRDF::phong(intersectionPoint, intersectionNormal, pov, intersectionObject, light);
+        intersectionColor += BRDF::phong(intersectionPoint, intersectionNormal, pov, light.getPos(), intersectionObject, light);
     }
     
 }

@@ -11,7 +11,7 @@
 #include "Light.h"
 #include "Object.h"
 
-Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Object& object, const Light& light)
+Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light)
 {
 
     const Material& material = object.getMaterial();
@@ -19,7 +19,7 @@ Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &p
     Vec3Df wo = pov - hitPoint ;// wi is camera-hitPoint direction
     wo.normalize();
 
-    Vec3Df wi = light.getPos() - hitPoint; // wi is light direction
+    Vec3Df wi = lightPos - hitPoint; // wi is light direction
     wi.normalize();
     
     float a = Vec3Df::dotProduct(normal, wi);
@@ -39,14 +39,14 @@ Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &p
 
 }
 
-Vec3Df BRDF::cook_torrance(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Object& object, const Light& light, float n1, float n2)
+Vec3Df BRDF::cook_torrance(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light, float n1, float n2)
 {
     const Material& material = object.getMaterial();
 
     Vec3Df wo = pov - hitPoint ; // wi is camera-hitPoint direction
     wo.normalize();
 
-    Vec3Df wi = light.getPos() - hitPoint; // wi is light direction
+    Vec3Df wi = lightPos - hitPoint; // wi is light direction
     wi.normalize();
 
     Vec3Df h = wi + wo; // half-vector

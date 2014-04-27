@@ -1,16 +1,16 @@
 //
-//  SmoothShadowRayTracer.cpp
+//  ExtendedLightSources.cpp
 //  RayTracer
 //
 //  Created by Florian Denis on 27/04/14.
 //  Copyright (c) 2014 Florian Denis. All rights reserved.
 //
 
-#include "SmoothShadowRayTracer.h"
+#include "ExtendedLightSourcesRayTracer.h"
 #include "Scene.h"
 #include "BRDF.h"
 
-void SmoothShadowRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+void ExtendedLightSourcesRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
     
     intersectionColor = Vec3Df(0,0,0);
@@ -38,7 +38,7 @@ void SmoothShadowRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec
             bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
             
             if (!intersection || obstructionDistance >= lightDistance){
-                lightContribution += BRDF::phong(intersectionPoint, intersectionNormal, pov, intersectionObject, light);
+                lightContribution += BRDF::phong(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
             }
             
 

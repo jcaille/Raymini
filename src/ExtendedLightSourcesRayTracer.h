@@ -1,5 +1,5 @@
 //
-//  SmoothShadowRayTracer.h
+//  ExtendedLightSources.h
 //  RayTracer
 //
 //  Created by Florian Denis on 27/04/14.
@@ -11,7 +11,7 @@
 
 #include "KDTreeRayTracer.h"
 
-class SmoothShadowRayTracer : public KDTreeRayTracer {
+class ExtendedLightSourcesRayTracer : public KDTreeRayTracer {
     
     
     /**
@@ -29,8 +29,8 @@ class SmoothShadowRayTracer : public KDTreeRayTracer {
     
 protected:
     friend RayTracer;
-    SmoothShadowRayTracer () {}
-    virtual ~SmoothShadowRayTracer () {}
+    ExtendedLightSourcesRayTracer () {}
+    virtual ~ExtendedLightSourcesRayTracer () {}
 
 };
 
