@@ -51,6 +51,14 @@ Window::Window () : QMainWindow (NULL) {
         exit (1);
     }
     setCentralWidget (viewer);
+
+#if DEBUG
+    cout << "Building in Debug mode" << endl << " Small window to allow easy testing" << endl;;
+    viewer->setFixedSize(150, 150);
+#else
+    cout << "Release" << endl;
+    viewer->setFixedSize(500, 500);
+#endif
     
     QDockWidget * controlDockWidget = new QDockWidget (this);
     initControlWidget ();
@@ -58,7 +66,11 @@ Window::Window () : QMainWindow (NULL) {
     controlDockWidget->setWidget (controlWidget);
     controlDockWidget->adjustSize ();
     addDockWidget (Qt::RightDockWidgetArea, controlDockWidget);
+    controlDockWidget->setFloating(true);
     controlDockWidget->setFeatures (QDockWidget::AllDockWidgetFeatures);
+    controlDockWidget->setGeometry(frameGeometry().x() - 200, frameGeometry().y() - 28, 0, 0);
+    controlDockWidget->adjustSize();
+    
     statusBar()->showMessage("");
 }
 
