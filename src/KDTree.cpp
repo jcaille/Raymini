@@ -14,10 +14,29 @@
 
 #pragma mark - KDTree
 
+static inline int32_t intlog2(size_t n)
+{
+    if (n==0) return -1;
+    
+    int32_t logValue = -1;
+    
+    while (n) {
+        logValue++;
+        n >>= 1;
+    }
+    
+    return logValue;
+}
 
 KDTree::KDTree(const Mesh& mesh, int maxDepth)
  :  _mesh(mesh)
 {
+    if (maxDepth < 0){
+        
+        // if no maxdepth specified, let's make it so that ~ 50 items are in the leaves
+        maxDepth = 1+intlog2(mesh.getTriangles().size()/50);
+    }
+    
     buildRootNode(maxDepth);
 }
 
