@@ -333,3 +333,17 @@ void Mesh::makeBox(const Vec3Df& center, const Vec3Df& front, const Vec3Df& up, 
     makePlane(center + .5 * u,   u,   w, size[1], size[2]);
 
 }
+
+Vec3Df Mesh::getNormal(const Triangle &triangle, const std::vector<float> &barycentricCoordinates) const {
+    Vertex p0 = vertices[triangle.getVertex(0)];
+    Vertex p1 = vertices[triangle.getVertex(1)];
+    Vertex p2 = vertices[triangle.getVertex(2)];
+    
+    Vec3Df n0 = p0.getNormal();
+    Vec3Df n1 = p1.getNormal();
+    Vec3Df n2 = p2.getNormal();
+    
+    Vec3Df norm = barycentricCoordinates[0] * n0 + barycentricCoordinates[1] * n1 + barycentricCoordinates[2] * n2;
+    norm.normalize();
+    return norm;
+}

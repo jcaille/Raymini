@@ -53,35 +53,35 @@ void Scene::buildCornellBox(float scale){
     /* White, ground */
     Mesh groundMesh;
     groundMesh.makePlane(scale*Vec3Df(0,0,0), Vec3Df(0,0,1), Vec3Df(0,1,0), scale, scale);
-    Material groundMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f));
+    Material groundMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
     Object ground (groundMesh, groundMat);
     objects.push_back (ground);
 
     /* Red, left wall */
     Mesh leftWallMesh;
     leftWallMesh.makePlane(scale*Vec3Df(-.5,0,.5), Vec3Df(1,0,0), Vec3Df(0,1,0), scale, scale);
-    Material leftWallMat(.8f, .2f, 10, Vec3Df (1.f, 0.f, 0.f));
+    Material leftWallMat(.8f, .2f, 10, Vec3Df (1.f, 0.f, 0.f), 0.0);
     Object leftWall (leftWallMesh, leftWallMat);
     objects.push_back (leftWall);
 
     /* Green, right wall */
     Mesh rightWallMesh;
     rightWallMesh.makePlane(scale*Vec3Df(.5,0,.5), Vec3Df(-1,0,0), Vec3Df(0,1,0), scale, scale);
-    Material rightWallMat(.8f, .2f, 10, Vec3Df (0.f, 1.f, 0.f));
+    Material rightWallMat(.8f, .2f, 10, Vec3Df (0.f, 1.f, 0.f), 0.0);
     Object rightWall (rightWallMesh, rightWallMat);
     objects.push_back (rightWall);
 
     /* White, back wall */
     Mesh backWallMesh;
     backWallMesh.makePlane(scale*Vec3Df(.0,.5,.5), Vec3Df(0,-1,0), Vec3Df(0,0,1), scale, scale);
-    Material backtWallMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f));
+    Material backtWallMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
     Object backWall (backWallMesh, backtWallMat);
     objects.push_back (backWall);
 
     /* White, ceiling */
     Mesh ceilingMesh;
     ceilingMesh.makePlane(scale*Vec3Df(0, 0, 1), Vec3Df(0,0,-1), Vec3Df(0,1,0), scale, scale);
-    Material ceilingMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f));
+    Material ceilingMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
     Object ceiling (ceilingMesh, ceilingMat);
     objects.push_back (ceiling);
 
@@ -91,7 +91,7 @@ void Scene::buildCornellBox(float scale){
 //    ceilingLightMesh.makePlane(Vec3Df (0.0, 0.0, 0.0), Vec3Df(0,0,-1), Vec3Df(0,1,0), .2*scale, .2*scale);
 //    Light ceilingLight (scale*Vec3Df (0.0, 0.0, 0.99), ceilingLightMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
 //    lights.push_back(ceilingLight);
-    
+
 }
 
 
@@ -111,7 +111,7 @@ void Scene::buildDefaultScene () {
     
     Mesh tallBoxMesh;
     tallBoxMesh.makeBox(tallBoxCenter, tallBoxFront, tallBoxUp, tallBoxSize);
-    Material tallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f));
+    Material tallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), .5);
     Object tallBox (tallBoxMesh, tallBoxMat);
     objects.push_back (tallBox);
 
@@ -122,7 +122,7 @@ void Scene::buildDefaultScene () {
 
     Mesh smallBoxMesh;
     smallBoxMesh.makeBox(smallBoxCenter, smallBoxFront, smallBoxUp, smallBoxSize);
-    Material smallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f));
+    Material smallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
     Object smallBox (smallBoxMesh, smallBoxMat);
     objects.push_back (smallBox);
 
@@ -134,7 +134,7 @@ void Scene::buildDefaultScene () {
     
     
     /** Put objects in the scene here **/
-    
+
     Mesh ramMesh;
     ramMesh.loadOFF("models/ram.off");
 //    Material ramMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f));
@@ -144,11 +144,11 @@ void Scene::buildDefaultScene () {
     
     Mesh rhinoMesh;
     rhinoMesh.loadOFF ("models/rhino.off");
-    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f));
+    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f), 0.0);
     Object rhino (rhinoMesh, rhinoMat);
     rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
     objects.push_back (rhino);
-    
+
 
     Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
     lights.push_back(ramLight);
