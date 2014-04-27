@@ -44,6 +44,8 @@ public slots :
     void exportRayImage ();
     void about ();
     
+    bool getShadowBoxState();
+    
 private :
     void initControlWidget();
     RayIterator *getIterator();
@@ -53,6 +55,7 @@ private :
     QString currentDirectory;
 
     QComboBox* rayIteratorComboBox;
+    QCheckBox* shadowCheckBox;
     
     GLViewer * viewer;
 };

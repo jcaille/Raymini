@@ -8,6 +8,7 @@
 #include "RayTracer.h"
 #include "Ray.h"
 #include "Scene.h"
+#include "Window.h"
 
 #include "BasicRayTracer.h"
 #include "ShadowRayTracer.h"

@@ -19,12 +19,14 @@
 #include "RayIterator.h"
 #include "Vec3D.h"
 
+
 // Forward declaration
 class Geometry;
 class Object;
 class Ray;
 class Scene;
 class Light;
+class Window;
 
 class RayTracer {
 public:
@@ -33,6 +35,7 @@ public:
 
     inline const Vec3Df & getBackgroundColor () const { return _backgroundColor;}
     inline void setBackgroundColor (const Vec3Df & c) { _backgroundColor = c; }
+    void setWindow(Window* w){mainWindow = w;}
     
     QImage render (const Vec3Df & camPos,
                    const Vec3Df & viewDirection,
@@ -51,6 +54,7 @@ protected:
     RayTracer () {}
     virtual ~RayTracer () {}
     
+    Window* mainWindow;
     
     /**
      *  Determines the color a ray should take given the object/light it intersects and the point & triangle of intersection

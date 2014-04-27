@@ -78,6 +78,15 @@ Window::~Window () {
 
 }
 
+#pragma mark - Options methods
+
+// Those methods are public and might be called by outside objects to get user options.
+
+bool Window::getShadowCheckboxState()
+{
+    return shadowCheckBox->isChecked();
+}
+
 
 RayIterator* Window::getIterator()
 {
@@ -102,17 +111,9 @@ RayIterator* Window::getIterator()
 }
 
 void Window::renderRayImage () {
-    
-    std::cout << "The value of the dropdown is : " << std::endl;
-    // Get the value
-    
+        
+    // Get camera informations
     qglviewer::Camera * cam = viewer->camera ();
-    
-    // Switch between different renderer here.
-    // Might be useful to have some keybinding to do this !
-    RayTracer * rayTracer = RayTracer::getInstance ();
-    rayTracer->rayIterator = getIterator();
-    
     qglviewer::Vec p = cam->position ();
     qglviewer::Vec d = cam->viewDirection ();
     qglviewer::Vec u = cam->upVector ();
@@ -125,6 +126,13 @@ void Window::renderRayImage () {
     float aspectRatio = cam->aspectRatio ();
     unsigned int screenWidth = cam->screenWidth ();
     unsigned int screenHeight = cam->screenHeight ();
+    
+    // Render the image
+    
+    RayTracer * rayTracer = RayTracer::getInstance ();
+    rayTracer->rayIterator = getIterator();
+    rayTracer->setWindow(this);
+
     QTime timer;
     timer.start ();
     viewer->setRayImage(rayTracer->render (camPos, viewDirection, upVector, rightVector,
@@ -205,8 +213,17 @@ void Window::initControlWidget () {
     rayIteratorComboBox = new QComboBox;
     rayIteratorComboBox->addItem(tr("No AA"));
     rayIteratorComboBox->addItem(tr("AA : 4x"));
-    rayIteratorComboBox->addItem(tr("AA : 8x"));
+    rayIteratorComboBox->addItem(tr("AA : 9x"));
     rayLayout->addWidget(rayIteratorComboBox);
+    
+    shadowCheckBox = new QCheckBox;
+    shadowCheckBox->setText(QString("Cast Shadows"));
+    shadowCheckBox->setChecked(true);
+    rayLayout->addWidget(shadowCheckBox);
+    
+    lightSampleSlider = new DoubleWidget(QString("Light samples density"), 0.0, 500.0, 50, this);
+    rayLayout->addWidget(lightSampleSlider);
+    
     
     QPushButton * rayButton = new QPushButton ("Render", rayGroupBox);
     rayLayout->addWidget (rayButton);
