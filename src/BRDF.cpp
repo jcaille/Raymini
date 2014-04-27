@@ -48,10 +48,9 @@ Vec3Df Phong::brdf(const Vec3Df& hitPoint, const Vec3Df& pov, const std::vector<
         Vec3Df realHitPoint = hitPoint + object.getTrans();
         
         Vec3Df lightDirection = light.getPos() - realHitPoint;
-        lightDirection.normalize();
+        float maxDistance = lightDirection.normalize();
         
         Ray lightRay = Ray(realHitPoint, lightDirection);
-        
         // test lightray intersection with scene
         bool intersection = false;
         for (unsigned int k = 0; k < scene->getObjects().size(); k++) {
@@ -62,8 +61,9 @@ Vec3Df Phong::brdf(const Vec3Df& hitPoint, const Vec3Df& pov, const std::vector<
             Vec3Df should;
             std::vector<float> code_in;
             Triangle objective_c; // We don't care about return arguments
-            float epsilon = 10e-3;
-            intersection =  lightRay.intersect(o, you, should, code_in, objective_c , epsilon);
+            float epsilon = 10e-3; // Min intersection distance to avoid self intersection
+
+            intersection =  lightRay.intersect(o, you, should, code_in, objective_c , epsilon, maxDistance - epsilon);
             if (intersection) {
                 break;
             }
