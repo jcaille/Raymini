@@ -150,7 +150,9 @@ void Scene::buildDefaultScene () {
     objects.push_back (rhino);
     
 
-    
+//    Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
+//    lights.push_back(ramLight);
+
     
     
 //    Mesh groundMesh;
