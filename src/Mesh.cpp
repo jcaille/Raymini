@@ -209,3 +209,76 @@ void Mesh::loadOFF (const std::string & filename) {
     input.close ();
     recomputeSmoothVertexNormals (0);
 }
+
+void Mesh::makePlane(const Vec3Df& center, const Vec3Df& normal, const Vec3Df& up, float sizeX, float sizeY)
+{
+    Vec3Df u = -Vec3Df::crossProduct(normal, up);
+    u.normalize();
+    u *= sizeX;
+    
+    Vec3Df v = up;
+    v.normalize();
+    v *= sizeY;
+    
+    Vec3Df origin = center - .5*( u + v );
+    
+    vertices.push_back (Vertex (origin        , normal));
+    vertices.push_back (Vertex (origin + u    , normal));
+    vertices.push_back (Vertex (origin + v    , normal));
+    vertices.push_back (Vertex (origin + u + v, normal));
+    
+    triangles.push_back (Triangle (0,1,3));
+    triangles.push_back (Triangle (0,3,2));
+    
+    recomputeSmoothVertexNormals (0);
+}
+
+void Mesh::makeBox(const Vec3Df& center, const Vec3Df& front, const Vec3Df& up, const Vec3Df& size)
+{
+
+    Vec3Df u = -Vec3Df::crossProduct(front, up);
+    u.normalize();
+    u *= size[0];
+
+    Vec3Df v = -Vec3Df::crossProduct(u, up);
+    v.normalize();
+    v *= size[1];
+
+    Vec3Df w = up;
+    w.normalize();
+    w *= size[2];
+
+    Vec3Df origin = center - .5*( u + v + w );
+    
+    for (int i = 0; i < 2; ++i)
+    {
+        for (int j = 0; j < 2; ++j)
+        {
+            for (int k = 0; k < 2; ++k)
+            {
+                vertices.push_back( Vertex(origin + i*u + j*v + k*w, Vec3Df (1.0, 0.0, 0.0)) );
+            }
+        }
+    }
+    
+    
+    triangles.push_back(Triangle(0,1,2));
+    triangles.push_back(Triangle(1,3,2));
+    
+    triangles.push_back(Triangle(1,5,3));
+    triangles.push_back(Triangle(5,7,3));
+    
+    triangles.push_back(Triangle(2,3,6));
+    triangles.push_back(Triangle(3,7,6));
+    
+    triangles.push_back(Triangle(1,0,4));
+    triangles.push_back(Triangle(1,4,5));
+    
+    triangles.push_back(Triangle(5,4,7));
+    triangles.push_back(Triangle(4,6,7));
+    
+    triangles.push_back(Triangle(4,0,6));
+    triangles.push_back(Triangle(0,2,6));
+    
+    recomputeSmoothVertexNormals (0);
+}

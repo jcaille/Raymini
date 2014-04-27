@@ -46,7 +46,9 @@ public:
     void renderGL (bool flat) const;
     
     void loadOFF (const std::string & filename);
-    void makeCube();
+    
+    void makePlane(const Vec3Df& center, const Vec3Df& normal, const Vec3Df& up, float sizeX = 1, float sizeY = 1);
+    void makeBox(const Vec3Df& center, const Vec3Df& front, const Vec3Df& up, const Vec3Df& size = Vec3Df(1,1,1));
     
     class Exception {
     private: 

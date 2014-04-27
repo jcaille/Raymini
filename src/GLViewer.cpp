@@ -121,6 +121,12 @@ void GLViewer::init() {
     float r = sceneBBox.getRadius ();
     setSceneCenter (qglviewer::Vec (c[0], c[1], c[2]));
     setSceneRadius (r);
+    
+    qglviewer::Camera* cam = camera();
+    cam->setPosition( qglviewer::Vec(0,-r,0) );
+    cam->setViewDirection(qglviewer::Vec(0,r,0));
+    
+    
     showEntireScene ();
 }
 
