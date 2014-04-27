@@ -34,7 +34,10 @@ public:
     Window();
     virtual ~Window();
 
-    static void showStatusMessage (const QString & msg);  
+    // WTF does this do ? Why is it static ?
+    static void showStatusMessage (const QString & msg);
+    
+    bool getShadowCheckboxState();
     
 public slots :
     void renderRayImage ();
@@ -49,15 +52,17 @@ public slots :
 private :
     void initControlWidget();
     RayIterator *getIterator();
-    
+    void resampleScenesLights();
+
     QActionGroup * actionGroup;
     QGroupBox * controlWidget;
     QString currentDirectory;
 
     QComboBox* rayIteratorComboBox;
     QCheckBox* shadowCheckBox;
+    DoubleWidget* lightSampleSlider;
     
-    GLViewer * viewer;
+    GLViewer* viewer;
 };
 
 #endif // WINDOW_H

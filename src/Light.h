@@ -33,6 +33,11 @@ public:
     inline const Vec3Df & getPos () const { return getTrans(); }
     inline const Vec3Df & getColor () const { return _color; }
     inline const vector<Vec3Df> & getSamples () const { return _samples; }
+    inline void resample(float density){
+        _samples.clear();
+        _samples.push_back(getTrans());
+        sample(density, _samples);
+    }
 
 
     inline void setPos (const Vec3Df & p) { setTrans(p); }

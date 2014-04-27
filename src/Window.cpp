@@ -42,7 +42,6 @@
 
 using namespace std;
 
-
 Window::Window () : QMainWindow (NULL) {
     try {
         viewer = new GLViewer;
@@ -87,6 +86,11 @@ bool Window::getShadowCheckboxState()
     return shadowCheckBox->isChecked();
 }
 
+void Window::resampleScenesLights()
+{
+    Scene* scene = Scene::getInstance();
+    scene->resampleLights((float) lightSampleSlider->getValue());
+}
 
 RayIterator* Window::getIterator()
 {
@@ -111,6 +115,8 @@ RayIterator* Window::getIterator()
 }
 
 void Window::renderRayImage () {
+    // Modify scene to apply options if necessary
+    resampleScenesLights();
         
     // Get camera informations
     qglviewer::Camera * cam = viewer->camera ();

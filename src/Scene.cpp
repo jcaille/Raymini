@@ -45,6 +45,15 @@ void Scene::updateBoundingBox () {
     }
 }
 
+void Scene::resampleLights(float density)
+{
+    for (int i = 0; i < lights.size(); i++) {
+        cout << "# of samples before : " << lights[i].getSamples().size() << endl;
+        lights[i].resample(density);
+        cout << "Light has been resampled with density of " << density << " " << lights[i].getSamples().size() << endl;
+    }
+}
+
 void Scene::buildCornellBox(float scale){
     
     /* Do not modify */
@@ -142,14 +151,14 @@ void Scene::buildDefaultScene () {
 //    ram.setTrans (smallBoxTop);
 //    objects.push_back (ram);
     
-    Mesh rhinoMesh;
-    rhinoMesh.loadOFF ("models/rhino.off");
-    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f), 0.0);
-    Object rhino (rhinoMesh, rhinoMat);
-    rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
-    objects.push_back (rhino);
+//    Mesh rhinoMesh;
+//    rhinoMesh.loadOFF ("models/rhino.off");
+//    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f), 0.0);
+//    Object rhino (rhinoMesh, rhinoMat);
+//    rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
+//    objects.push_back (rhino);
 
-
+    // I AM RAM-GOD. I SHINE WITH THE POWER OF A THOUSANDS SUN. BOW BEFORE ME!
     Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
     lights.push_back(ramLight);
 
