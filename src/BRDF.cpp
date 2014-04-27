@@ -89,13 +89,19 @@ Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &p
     Vec3Df wi = light.getPos() - hitPoint; // wi is light direction
     wi.normalize();
     
-    Vec3Df r = 2 * normal * (Vec3Df::dotProduct(normal, wi)) - wi;
-
-    float f = 0;
-    f += max(material.getDiffuse() * Vec3Df::dotProduct(normal, wi), 0 );                                   // Diffuse
-    f += max(material.getSpecular() * powf( Vec3Df::dotProduct(r, wo) , material.getShininess()), 0);       // Specular
+    float a = Vec3Df::dotProduct(normal, wi);
+    if (a <= 0)
+        return Vec3Df(0,0,0);
     
-    return light.getIntensity()*f*material.getColor()*light.getColor();
+    Vec3Df r = 2 * a * normal - wi;
+    float b = Vec3Df::dotProduct(r, wo);
+    
+    float f = material.getDiffuse() * a;                                                // Diffuse
+    
+    if (b > 0)
+        f += material.getSpecular() * powf( b , material.getShininess());               // Specular
+    
+    return f * light.getIntensity() * material.getColor() * light.getColor();
 
 
 }
