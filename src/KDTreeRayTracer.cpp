@@ -17,7 +17,26 @@ void KDTreeRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& i
     
     const std::vector<Light>& lights = scene.getLights();
     for (const Light& light : lights){
-        intersectionColor += BRDF::phong(intersectionPoint, intersectionNormal, pov, intersectionObject, light);
+        
+        const Vec3Df& lightPos = light.getPos();
+        Vec3Df direction = lightPos-intersectionPoint;
+        float lightDistance = direction.normalize();
+        
+        // Let's see if direct light from the light can go through to the intersectionPoint
+        Ray lightRay(intersectionPoint, direction);
+        
+        Vec3Df obstructionPoint;
+        Triangle obstructionTriangle;
+        const Object* obstructionObject;
+        
+        bool intersection = raySceneIntersection(lightRay, scene, obstructionPoint, obstructionTriangle, obstructionObject);
+        
+        float obstructionDistance = Vec3Df::distance(intersectionPoint, obstructionPoint);
+        
+        if (!intersection || obstructionDistance >= lightDistance){
+            intersectionColor += BRDF::phong(intersectionPoint, intersectionNormal, pov, intersectionObject, light);
+        }
+        
     }
     
 }

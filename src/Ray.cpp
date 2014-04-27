@@ -112,11 +112,8 @@ bool Ray::intersect(const Triangle & tri, const vector<Vertex>& vertices, float&
     
     float t = Vec3Df::dotProduct(e1, r);
     
-    if (t>=0){
-//        coords.push_back(b2);
-//        coords.push_back(b0);
-//        coords.push_back(b1);
-//        
+    if (t>=1e-4)
+    {
 
         intersectionDistance = t;
         intersectionPoint = origin + t * direction;

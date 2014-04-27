@@ -24,7 +24,7 @@ class KDTreeRayTracer : public RayTracer
                                        Triangle& intersectionTriangle);
     
     /**
-     *  Default Phong BRDF shading
+     *  Default Phong BRDF shading, basic shadow casting
      */
     
     virtual void rayColorForIntersection(const Vec3Df& pov,

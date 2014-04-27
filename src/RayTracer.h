@@ -85,10 +85,6 @@ protected:
                                        Vec3Df& intersectionPoint,
                                        Triangle& intersectionTriangle) = 0;
     
-    
-private:
-    
-    
     /**
      *  Determines if a ray intersects a scene
      *
@@ -114,7 +110,9 @@ private:
      *  @param intersectionColor    The color that result from the interaction of the ray with the scene
      */
     void raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor);
-    
+
+private:
+
     
     Vec3Df _backgroundColor;
 };
