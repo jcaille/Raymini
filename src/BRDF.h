@@ -15,7 +15,7 @@
 
 //class Material;
 
-class Phong {
+class BRDF {
     
 public:
     
@@ -23,17 +23,15 @@ public:
      *  Compute the BRDF
      *
      *  @param hitPoint point of intersection between ray & mesh
+     *  @param normal   normal of the mesh at the hit point
      *  @param pov      point of view
-     *  @param coords   coordinates of the hitpoint in the barycentric coordinate frame
-     *  @param t        triangle of intersection
      *  @param object   object of intersection
-     *  @param scene    scene
+     *  @param light    light
      *
      *  @return Color
      */
-    static Vec3Df brdf(const Vec3Df& hitPoint, const Vec3Df& pov, const std::vector<float> coords, const Triangle& t, const Object &object, const Scene *scene);
+    static Vec3Df phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Object& object, const Light& light);
     
-    static Vec3Df singleLightBRDF(const Vec3Df &hitPoint, const Vec3Df &pov, const Vec3Df normal, Material material, Light light);
     
     
 };

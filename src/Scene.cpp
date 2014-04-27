@@ -131,23 +131,23 @@ void Scene::buildDefaultScene () {
     
     
     /** Put objects in the scene here **/
-//    
-//    Mesh ramMesh;
-//    ramMesh.loadOFF("models/ram.off");
-//    Material ramMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f));
-//    Object ram (ramMesh, ramMat);
-//    ram.setTrans (smallBoxTop);
-//    objects.push_back (ram);
-//    
-//    Mesh rhinoMesh;
-//    rhinoMesh.loadOFF ("models/rhino.off");
-//    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f));
-//    Object rhino (rhinoMesh, rhinoMat);
-//    rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
-//    objects.push_back (rhino);
-//    
-//
-//    
+    
+    Mesh ramMesh;
+    ramMesh.loadOFF("models/ram.off");
+    Material ramMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f));
+    Object ram (ramMesh, ramMat);
+    ram.setTrans (smallBoxTop);
+    objects.push_back (ram);
+    
+    Mesh rhinoMesh;
+    rhinoMesh.loadOFF ("models/rhino.off");
+    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f));
+    Object rhino (rhinoMesh, rhinoMat);
+    rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
+    objects.push_back (rhino);
+    
+
+    
     
     
 //    Mesh groundMesh;

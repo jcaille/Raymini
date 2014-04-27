@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A19E6BF190C6EC9003489AF /* BasicRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FBF0825190572B700584DCE /* BasicRayTracer.cpp */; };
+		1A19E6C0190CEBA3003489AF /* KDTreeRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AA67213190A7CA900745C48 /* KDTreeRayTracer.cpp */; };
 		1A65B286190BF214001F07D0 /* BoundingBoxRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AA67216190A9B6F00745C48 /* BoundingBoxRayTracer.cpp */; };
 		1A71DE3819079CB700BB58C8 /* BRDF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A71DE3619079CB700BB58C8 /* BRDF.cpp */; };
 		1A71DE3C1907A6E600BB58C8 /* RayIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A71DE3A1907A6E600BB58C8 /* RayIterator.cpp */; };
@@ -329,7 +331,9 @@
 				1A73A77C19051BE500B6A310 /* Light.cpp in Sources */,
 				1A73A78119051BE500B6A310 /* QTUtils.cpp in Sources */,
 				1A73A7A5190527C300B6A310 /* moc_Window.cpp in Sources */,
+				1A19E6BF190C6EC9003489AF /* BasicRayTracer.cpp in Sources */,
 				1A73A7A4190527C300B6A310 /* moc_QTUtils.cpp in Sources */,
+				1A19E6C0190CEBA3003489AF /* KDTreeRayTracer.cpp in Sources */,
 				1A73A77B19051BE500B6A310 /* GLViewer.cpp in Sources */,
 				1A73A77D19051BE500B6A310 /* main.cpp in Sources */,
 				1A65B286190BF214001F07D0 /* BoundingBoxRayTracer.cpp in Sources */,

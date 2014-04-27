@@ -42,6 +42,7 @@ public:
     void collectOrderedOneRing (std::vector<std::vector<unsigned int> > & oneRing) const;
     void computeDualEdgeMap (EdgeMapIndex & dualVMap1, EdgeMapIndex & dualVMap2);
     void markBorderEdges (EdgeMapIndex & edgeMap);
+    void barycentricCoordinates(const Vec3Df pt, const Triangle& triangle, std::vector<float>& coords) const;
     
     void renderGL (bool flat) const;
     

@@ -24,7 +24,7 @@ static RayTracer * instance = NULL;
 
 RayTracer * RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new BoundingBoxRayTracer ();
+        instance = new KDTreeRayTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
@@ -104,8 +104,29 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
         return;
     }
     
+    
+    // We need to compute the normal on the object at the intersection point
+    const Mesh& mesh = intersectionObject->getMesh();
+    
+    // Get barycentric coordinates
+    std::vector<float> coords;
+    mesh.barycentricCoordinates(intersectionPoint, intersectionTriangle, coords);
+    
+    // Compute normal at intersection
+    Vertex p0 = mesh.getVertices()[intersectionTriangle.getVertex(0)];
+    Vertex p1 = mesh.getVertices()[intersectionTriangle.getVertex(1)];
+    Vertex p2 = mesh.getVertices()[intersectionTriangle.getVertex(2)];
+    
+    Vec3Df n0 = p0.getNormal();
+    Vec3Df n1 = p1.getNormal();
+    Vec3Df n2 = p2.getNormal();
+    
+    Vec3Df norm = coords[0] * n0 + coords[1] * n1 + coords[2] * n2;
+    norm.normalize();
+
+    
     // Now that we have that point of intersection, let's compute the color it is supposed to have
-    rayColorForIntersection(ray, intersectionPoint, intersectionTriangle, *intersectionObject, intersectionColor);
+    rayColorForIntersection(ray.getOrigin(), intersectionPoint + intersectionObject->getTrans(), norm, *intersectionObject, scene, intersectionColor);
     
 }
 
@@ -146,7 +167,7 @@ QImage RayTracer::render (const Vec3Df & camPos,
                 raySceneInteraction(ray, *scene, rayColor);
                 pixelColor += rayColor;
             }
-            pixelColor /= rays.size();
+            pixelColor *= 255/float(rays.size());
             
             QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
 

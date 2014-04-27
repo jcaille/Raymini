@@ -64,7 +64,7 @@ class KDTree {
         Vec3Df getMedianPoint(const Mesh& mesh, Vec3Df normal);
         static bool compareTriangles(const int triangleIndex1, const int triangleIndex2);
 
-        bool intersectRay(const Ray& ray, const KDTree& tree, float& intersectionDistance, Triangle& intersectionTriangle) const;
+        bool intersectRay(const Ray& ray, const KDTree& tree, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle) const;
     };
     
     public :
@@ -77,7 +77,7 @@ class KDTree {
         inline const Mesh& getMesh() const { return _mesh; }
         inline Mesh& getMesh() { return _mesh; }
     
-        bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle) const;
+        bool intersectRay(const Ray& ray, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle) const;
     
     private :
     

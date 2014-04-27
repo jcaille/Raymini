@@ -11,9 +11,9 @@
 #include "Scene.h"
 
 
-void BoundingBoxRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Triangle& intersectionTriangle, const Object& intersectionObject, Vec3Df& intersectionColor)
+void BoundingBoxRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
-    intersectionColor = 255*intersectionObject.getMaterial().getColor();
+    intersectionColor = intersectionObject.getMaterial().getColor();
 }
 
 

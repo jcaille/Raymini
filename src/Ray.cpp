@@ -15,7 +15,7 @@ using namespace std;
 
 static const unsigned int NUMDIM = 3, RIGHT = 0, LEFT = 1, MIDDLE = 2;
 
-#pragma mark - Bouding box
+#pragma mark - Bounding box
 
 bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const {
     const Vec3Df & minBb = bbox.getMin ();
@@ -68,9 +68,9 @@ bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const
     return (true);			
 }
 
-#pragma mark - Triangle and triangle lists
+#pragma mark - Triangle
 
-bool Ray::intersect(const Triangle & tri, const vector<Vertex>& vertices, float& intersectionDistance, Vec3Df & intersectionPoint, vector<float>& coords) const
+bool Ray::intersect(const Triangle & tri, const vector<Vertex>& vertices, float& intersectionDistance, Vec3Df & intersectionPoint) const
 {
     
     Vec3Df p0 = vertices[tri.getVertex(0)].getPos();
@@ -113,95 +113,16 @@ bool Ray::intersect(const Triangle & tri, const vector<Vertex>& vertices, float&
     float t = Vec3Df::dotProduct(e1, r);
     
     if (t>=0){
-        coords.push_back(b2);
-        coords.push_back(b0);
-        coords.push_back(b1);
-        
+//        coords.push_back(b2);
+//        coords.push_back(b0);
+//        coords.push_back(b1);
+//        
+
+        intersectionDistance = t;
         intersectionPoint = origin + t * direction;
-        intersectionDistance = (origin - intersectionPoint).getLength();
+
         return true;
     }
     
     return false;
-}
-
-bool Ray::intersect(const vector<Triangle>& triangles,
-                    const vector<Vertex>& vertices,
-                    float& intersectionDistance,
-                    Vec3Df & intersectionPoint,
-                    vector<float>& coords,
-                    Triangle& intersectionTriangle,
-                    float minIntersectionDistance,
-                    float maxIntersectionDistance) const
-{
-    
-    // Find the triangle (if any) containing the closest intersection
-    intersectionDistance = std::numeric_limits<float>::max();
-    int minIntersectionIndex = -1;
-    Vec3Df minIntersectionPos;
-    vector<float> minCoords;
-    
-    for(int i = 0 ; i < triangles.size(); ++i)
-    {
-        Vec3Df intersectionPos;
-        Triangle t = triangles[i];
-        vector<float> coords;
-        float iDistance;
-        if (intersect(t, vertices, iDistance, intersectionPos, coords)) {
-            float triangleDistance =  Vec3Df::distance(intersectionPos, origin);
-            if(triangleDistance < intersectionDistance &&
-               triangleDistance < maxIntersectionDistance &&
-               triangleDistance > minIntersectionDistance)
-            {
-                intersectionDistance = triangleDistance;
-                minIntersectionPos = intersectionPos;
-                minCoords = coords;
-                minIntersectionIndex = i;
-            }
-        }
-    }
-    
-    if (minIntersectionIndex == -1) {
-        // No intersection
-        return false;
-    }
-    
-    intersectionPoint = minIntersectionPos;
-    coords = minCoords;
-    intersectionTriangle = triangles[minIntersectionIndex];
-    return true;
-}
-
-#pragma mark - Object
-
-bool Ray::intersect(const Object &object,
-                    float &intersectionDistance,
-                    Vec3Df &intersectionPoint,
-                    vector<float>& barycentricCoordinates,
-                    Triangle& intersectionTriangle,
-                    float minIntersectionDistance,
-                    float maxIntersectionDistance) const
-{
-
-    
-    // Instead of translating the object by object.trans, we translate
-    // the camera by the -object.trans. Clever, huh ?
-    Ray correctedRay(origin - object.getTrans(), direction);
-    
-    if (!correctedRay.intersect(object.getBoundingBox(), intersectionPoint))
-    {
-        // The ray does not intersect the bouding box, no need to go deeper
-        return false;
-    }
-    
-    // Object is basically just a list of triangles ! Yaaaaay
-    
-    return correctedRay.intersect(object.getMesh().getTriangles(),
-                                  object.getMesh().getVertices(),
-                                  intersectionDistance,
-                                  intersectionPoint,
-                                  barycentricCoordinates,
-                                  intersectionTriangle,
-                                  minIntersectionDistance,
-                                  maxIntersectionDistance);
 }

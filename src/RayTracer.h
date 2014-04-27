@@ -57,12 +57,14 @@ protected:
      *  @param intersectionPoint    The point of intersection
      *  @param intersectionTriangle The triangle the ray intersects
      *  @param intersectionObject   The object the ray intersects
+     *  @param scene                The scene being rendered
      *  @param intersectionColor    Output parameter : will contain the color the ray should take
      */
-    virtual void rayColorForIntersection(const Ray& ray,
+    virtual void rayColorForIntersection(const Vec3Df& pov,
                                          const Vec3Df& intersectionPoint,
-                                         const Triangle& intersectionTriangle,
+                                         const Vec3Df& intersectionNormal,
                                          const Object& intersectionObject,
+                                         const Scene& scene,
                                          Vec3Df& intersectionColor) = 0;
 
     

@@ -29,10 +29,11 @@ public:
      *  This is the default code from Boubekeur for the project : it affects the color of the material for the intersectionObject
      */
   
-    virtual void rayColorForIntersection(const Ray& ray,
+    virtual void rayColorForIntersection(const Vec3Df& pov,
                                          const Vec3Df& intersectionPoint,
-                                         const Triangle& intersectionTriangle,
+                                         const Vec3Df& intersectionNormal,
                                          const Object& intersectionObject,
+                                         const Scene& scene,
                                          Vec3Df& intersectionColor);
 
 protected:

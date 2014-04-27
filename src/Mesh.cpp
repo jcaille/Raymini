@@ -141,6 +141,33 @@ void Mesh::markBorderEdges (EdgeMapIndex & edgeMap) {
     } 
 }
 
+void Mesh::barycentricCoordinates(const Vec3Df pt, const Triangle& triangle, std::vector<float>& coords) const
+{
+    Vec3Df p0 = vertices[triangle.getVertex(0)].getPos();
+    Vec3Df p1 = vertices[triangle.getVertex(1)].getPos();
+    Vec3Df p2 = vertices[triangle.getVertex(2)].getPos();
+    
+    Vec3Df e0 = p1 - p0;
+    Vec3Df e1 = p2 - p0;
+    
+    float ne0 = e0.getSquaredLength();
+    float ne1 = e1.getSquaredLength();
+    float e0e1 = Vec3Df::dotProduct(e0, e1);
+    
+    float det = ne0*ne1 - e0e1 * e0e1;
+    
+    float a0 = Vec3Df::dotProduct(pt-p0, e0);
+    float a1 = Vec3Df::dotProduct(pt-p0, e1);
+    
+    float b0 = (ne1 * a0 - e0e1 * a1)/det;
+    float b1 = (ne0 * a1 - e0e1 * a0)/det;
+    
+    coords.clear();
+    coords.push_back(1-(b0+b1));
+    coords.push_back(b0);
+    coords.push_back(b1);
+}
+
 inline void glVertexVec3Df (const Vec3Df & v) {
     glVertex3f (v[0], v[1], v[2]);
 }
