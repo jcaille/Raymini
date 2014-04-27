@@ -189,11 +189,16 @@ static inline float random_float(float lo, float hi)
 void Mesh::sample(float density, std::vector<Vec3Df>& samples) const
 {
 
+    float acc = 0;
+    
     for (const Triangle& triangle : triangles){
         
         // Compute the number of samples we want for this triangle
-        float a = area(triangle);
-        int n = round(a * density);
+        acc += area(triangle) * density;
+        
+        int n = round(acc);
+        if (n>0)
+            acc -= n;
         
         Vec3Df p0 = vertices[triangle.getVertex(0)].getPos();
         Vec3Df p1 = vertices[triangle.getVertex(1)].getPos();

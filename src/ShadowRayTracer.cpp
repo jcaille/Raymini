@@ -11,6 +11,8 @@
 #include "BRDF.h"
 #include "Window.h"
 
+#define EPSILON 10e-4
+
 bool ShadowRayTracer::lightContributionToRayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Vec3Df& lightPos, const Light& light, const Object& intersectionObject, const Scene& scene, Vec3Df& lightContribution)
 {
     if(!enableCastShadows)
@@ -33,8 +35,7 @@ bool ShadowRayTracer::lightContributionToRayColorForIntersection(const Vec3Df& p
     
     bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
     
-#pragma warning epsilon here ?
-    if (!intersection || obstructionDistance >= lightDistance){
+    if (!intersection || obstructionDistance + EPSILON >= lightDistance){
         lightContribution = brdf(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
         return true;
     }

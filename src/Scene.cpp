@@ -50,7 +50,7 @@ void Scene::resampleLights(float density)
     for (int i = 0; i < lights.size(); i++) {
         cout << "# of samples before : " << lights[i].getSamples().size() << endl;
         lights[i].resample(density);
-        cout << "Light has been resampled with density of " << density << " " << lights[i].getSamples().size() << endl;
+        cout << "Light has been resampled with density of " << density << ": " << lights[i].getSamples().size() << " samples selected" << endl;
     }
 }
 
