@@ -21,6 +21,11 @@ class BRDF {
     
 public:
     
+    static inline Vec3Df constant(const Light& light, const Object& object)
+    {
+        return light.getIntensity() * object.getMaterial().getColor() * light.getColor();
+    }
+    
     /**
      *  Compute the Phong's BRDF (adapted to polished and plastic surfaces)
      *

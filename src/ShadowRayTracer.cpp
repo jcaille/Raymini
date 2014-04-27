@@ -13,10 +13,10 @@
 
 bool ShadowRayTracer::lightContributionToRayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Vec3Df& lightPos, const Light& light, const Object& intersectionObject, const Scene& scene, Vec3Df& lightContribution)
 {
-    if(!mainWindow->getShadowCheckboxState())
+    if(!enableCastShadows)
     {
         //User has decided to not use shadows. Light contribution is basic BRDF
-        lightContribution = BRDF::phong(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
+        lightContribution = userSelectedBRDF(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
         return true;
     } else {
         Vec3Df direction = lightPos-intersectionPoint;
@@ -32,8 +32,9 @@ bool ShadowRayTracer::lightContributionToRayColorForIntersection(const Vec3Df& p
         
         bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
         
+#pragma warning epsilon here ?
         if (!intersection || obstructionDistance >= lightDistance){
-            lightContribution = BRDF::phong(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
+            lightContribution = userSelectedBRDF(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
             return true;
         }
         

@@ -2,7 +2,7 @@
 #define WINDOW_H
 
 #include "GLViewer.h"
-
+#include "RayTracer.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
@@ -25,6 +25,7 @@
 #include <string>
 
 #include "QTUtils.h"
+
 
 class RayIterator;
 
@@ -54,11 +55,13 @@ private :
     void initControlWidget();
     RayIterator *getIterator();
     void resampleScenesLights();
+    ShadingFunction getShadingFunction();
 
     QActionGroup * actionGroup;
     QGroupBox * controlWidget;
     QString currentDirectory;
 
+    QComboBox* shadingComboBox;
     QComboBox* rayIteratorComboBox;
     QCheckBox* shadowCheckBox;
     DoubleWidget* lightSampleSlider;

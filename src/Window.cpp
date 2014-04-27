@@ -37,7 +37,6 @@
 #include <QStatusBar>
 #pragma clang diagnostic pop
 
-#include "RayTracer.h"
 #include "GridAARayIterator.h"
 
 using namespace std;
@@ -81,16 +80,6 @@ Window::~Window () {
 
 // Those methods are public and might be called by outside objects to get user options.
 
-bool Window::getShadowCheckboxState()
-{
-    return shadowCheckBox->isChecked();
-}
-
-bool Window::getMirrorCheckBoxState()
-{
-    return mirrorCheckBox->isChecked();
-}
-
 void Window::resampleScenesLights()
 {
     Scene* scene = Scene::getInstance();
@@ -119,6 +108,24 @@ RayIterator* Window::getIterator()
     return r;
 }
 
+ShadingFunction Window::getShadingFunction()
+{
+    switch (shadingComboBox->currentIndex()) {
+        case 0:
+            return CONSTANT;
+            break;
+        case 1 :
+            return PHONG;
+            break;
+        case 2 :
+            return COOK;
+            break;
+        default:
+            return CONSTANT;
+            break;
+    }
+}
+
 void Window::renderRayImage () {
     // Modify scene to apply options if necessary
     resampleScenesLights();
@@ -139,11 +146,13 @@ void Window::renderRayImage () {
     unsigned int screenHeight = cam->screenHeight ();
     
     // Render the image
-    
     RayTracer * rayTracer = RayTracer::getInstance ();
     rayTracer->rayIterator = getIterator();
-    rayTracer->setWindow(this);
-
+    
+    rayTracer->enableCastShadows = shadowCheckBox->isChecked();
+    rayTracer->enableMirrorEffet = mirrorCheckBox->isChecked();
+    rayTracer->shadingFunction = getShadingFunction();
+    
     QTime timer;
     timer.start ();
     viewer->setRayImage(rayTracer->render (camPos, viewDirection, upVector, rightVector,
@@ -219,6 +228,13 @@ void Window::initControlWidget () {
     
     QGroupBox * rayGroupBox = new QGroupBox ("Ray Tracing", controlWidget);
     QVBoxLayout * rayLayout = new QVBoxLayout (rayGroupBox);
+    
+    shadingComboBox = new QComboBox;
+    shadingComboBox->addItem(tr("Constant - No shading"));
+    shadingComboBox->addItem(tr("Phong"));
+    shadingComboBox->addItem(tr("Cook Torrance"));
+    shadingComboBox->setCurrentIndex(1);
+    rayLayout->addWidget(shadingComboBox);
     
     
     rayIteratorComboBox = new QComboBox;

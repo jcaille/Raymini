@@ -16,6 +16,8 @@ class BasicRayTracer : public RayTracer
 
 public :
     
+    virtual Vec3Df userSelectedBRDF(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light);
+    
     /**
      *  A basic intersection finder that loops over all triangles of the given object
      */

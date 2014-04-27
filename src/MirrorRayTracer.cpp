@@ -16,7 +16,7 @@
 void MirrorRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
     float reflectiveness = intersectionObject.getMaterial().getReflectiveness();
-    if(reflectiveness < EPSILON || !mainWindow->getMirrorCheckBoxState())
+    if(reflectiveness < EPSILON || !enableMirrorEffet)
     {
         directContributionToRayColorForIntersection(pov, intersectionPoint, intersectionNormal, intersectionObject, scene, intersectionColor);
         return;

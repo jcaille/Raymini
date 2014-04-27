@@ -28,14 +28,29 @@ class Scene;
 class Light;
 class Window;
 
+/* RAY TRACING USER ENUM */
+
+typedef enum ShadingFunction {
+    CONSTANT,
+    PHONG,
+    COOK,
+} ShadingFunction;
+
+
 class RayTracer {
 public:
+    
+    /* User defined options */
+    bool enableCastShadows;
+    bool enableMirrorEffet;
+    ShadingFunction shadingFunction;
+    
+    
     static RayTracer * getInstance ();
     static void destroyInstance ();
 
     inline const Vec3Df & getBackgroundColor () const { return _backgroundColor;}
     inline void setBackgroundColor (const Vec3Df & c) { _backgroundColor = c; }
-    void setWindow(Window* w){mainWindow = w;}
     
     QImage render (const Vec3Df & camPos,
                    const Vec3Df & viewDirection,
@@ -53,9 +68,7 @@ protected:
     
     RayTracer () {}
     virtual ~RayTracer () {}
-    
-    Window* mainWindow;
-    
+        
     /**
      *  Determines the color a ray should take given the object/light it intersects and the point & triangle of intersection
      *
