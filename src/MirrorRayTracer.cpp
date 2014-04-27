@@ -9,13 +9,14 @@
 #include "MirrorRayTracer.h"
 #include "Object.h"
 #include "BRDF.h"
+#include "Window.h"
 
 #define EPSILON 1e-6
 
 void MirrorRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
     float reflectiveness = intersectionObject.getMaterial().getReflectiveness();
-    if(reflectiveness < EPSILON)
+    if(reflectiveness < EPSILON || !mainWindow->getMirrorCheckBoxState())
     {
         directContributionToRayColorForIntersection(pov, intersectionPoint, intersectionNormal, intersectionObject, scene, intersectionColor);
         return;

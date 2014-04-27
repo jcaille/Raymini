@@ -86,6 +86,11 @@ bool Window::getShadowCheckboxState()
     return shadowCheckBox->isChecked();
 }
 
+bool Window::getMirrorCheckBoxState()
+{
+    return mirrorCheckBox->isChecked();
+}
+
 void Window::resampleScenesLights()
 {
     Scene* scene = Scene::getInstance();
@@ -230,6 +235,10 @@ void Window::initControlWidget () {
     lightSampleSlider = new DoubleWidget(QString("Light samples density"), 0.0, 500.0, 50, this);
     rayLayout->addWidget(lightSampleSlider);
     
+    mirrorCheckBox = new QCheckBox;
+    mirrorCheckBox->setText(QString("Effet miroir"));
+    mirrorCheckBox->setChecked(true);
+    rayLayout->addWidget(mirrorCheckBox);
     
     QPushButton * rayButton = new QPushButton ("Render", rayGroupBox);
     rayLayout->addWidget (rayButton);
