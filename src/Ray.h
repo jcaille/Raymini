@@ -34,30 +34,12 @@ public:
     bool intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const;
     
     // Intersection w/ a single triangle
-    bool intersect(const Triangle & tri,
+    bool intersect(const Triangle& tri,
                    const std::vector<Vertex>& vertices,
                    float& intersectionDistance,
-                   Vec3Df & intersectionPoint,
-                   std::vector<float>& coords) const;
+                   Vec3Df& intersectionPoint) const;
     
-    // intersect with an list of triangles
-    bool intersect(const std::vector<Triangle>& triangles,
-                   const std::vector<Vertex>& vertices,
-                   float& intersectionDistance,
-                   Vec3Df & intersectionPoint,
-                   std::vector<float>& coords,
-                   Triangle& intersectionTriangle,
-                   float minIntersectionDistance = 0,
-                   float maxIntersectionDistance = std::numeric_limits<float>::max()) const;
-
-    
-    bool intersect(const Object &object,
-                   float &intersectionDistance,
-                   Vec3Df &intersectionPoint,
-                   std::vector<float>& barycentricCoordinates,
-                   Triangle& intersectionTriangle,
-                   float minIntersectionDistance = 0,
-                   float maxIntersectionDistance = std::numeric_limits<float>::max()) const;
+  
 private:
     Vec3Df origin;
     Vec3Df direction;

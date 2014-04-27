@@ -18,20 +18,28 @@ public:
     
     /**
      *  This is the default code from Boubekeur for the project : it effectively computes the intersection between the object and a bounding box
-     *
-     *  @param ray                  The ray
-     *  @param object               The object
-     *  @param intersectionDistance If the function returns true, contains the distance between the ray origin and the intersection point
-     *  @param intersectionColor    The color of the ray after meeting with the object
-     *
-     *  @return true if there is an intersection between the object and the ray;
      */
-    virtual bool rayObjectIntersection(const Ray &ray, const Object &object, const Scene* scene, float &intersectionDistance, Vec3Df &intersectionColor);
+    virtual bool rayObjectIntersection(const Ray& ray,
+                                       const Object& object,
+                                       float& intersectionDistance,
+                                       Vec3Df& intersectionPoint,
+                                       Triangle& intersectionTriangle);
+    
+    /**
+     *  This is the default code from Boubekeur for the project : it affects the color of the material for the intersectionObject
+     */
   
+    virtual void rayColorForIntersection(const Vec3Df& pov,
+                                         const Vec3Df& intersectionPoint,
+                                         const Vec3Df& intersectionNormal,
+                                         const Object& intersectionObject,
+                                         const Scene& scene,
+                                         Vec3Df& intersectionColor);
+
 protected:
     friend RayTracer;
-    inline BoundingBoxRayTracer () {}
-    inline virtual ~BoundingBoxRayTracer () {}
+    BoundingBoxRayTracer () {}
+    virtual ~BoundingBoxRayTracer () {}
 
     
 };

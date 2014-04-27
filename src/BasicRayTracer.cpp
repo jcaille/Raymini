@@ -21,20 +21,50 @@ using std::vector;
 
 #pragma mark - Overloading
 
-// This class implements the simplest BRDF there is.
-// We simply overload the rayObjectIntersection method, as there is no
-// need to change the way we go through the scene
-
-bool BasicRayTracer::rayObjectIntersection(const Ray &ray, const Object &object, const Scene* scene, float &intersectionDistance, Vec3Df &intersectionColor)
+void BasicRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
+
+    intersectionColor = Vec3Df(0,0,0);
     
-    Vec3Df intersectionPoint;
-    vector<float> barycentricCoordinates;
-    Triangle intersectionTriangle;
-    bool intersection = ray.intersect(object, intersectionDistance, intersectionPoint, barycentricCoordinates, intersectionTriangle);
-    if(!intersection){
+    const std::vector<Light>& lights = scene.getLights();
+    for (const Light& light : lights){
+        intersectionColor += BRDF::phong(intersectionPoint, intersectionNormal, pov, intersectionObject, light);
+    }
+    
+}
+
+
+bool BasicRayTracer::rayObjectIntersection(const Ray& ray, const Object& object, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle)
+{
+
+    if (!ray.intersect(object.getBoundingBox(), intersectionPoint)) {
         return false;
     }
-    intersectionColor = Phong::brdf(intersectionPoint, ray.getOrigin(), barycentricCoordinates, intersectionTriangle, object, scene);
-    return true;
+    
+    // Find the triangle (if any) containing the closest intersection
+    intersectionDistance = std::numeric_limits<float>::max();
+    
+    bool intersection = false;
+    
+    const std::vector<Triangle>& triangles = object.getMesh().getTriangles();
+    const std::vector<Vertex>& vertices = object.getMesh().getVertices();
+    
+    for(const Triangle& triangle : triangles)
+    {
+        
+        float triangleIntersectionDistance;
+        Vec3Df triangleIntersectionPoint;
+        
+        if (ray.intersect(triangle, vertices, triangleIntersectionDistance, triangleIntersectionPoint) && triangleIntersectionDistance < intersectionDistance)
+        {
+            intersectionDistance = triangleIntersectionDistance;
+            intersectionPoint = triangleIntersectionPoint;
+            intersectionTriangle = triangle;
+            intersection = true;
+
+        }
+    }
+    
+    return intersection;
+    
 }

@@ -11,7 +11,7 @@
 using namespace std;
 
 void Object::updateBoundingBox () {
-    const vector<Vertex> & V = mesh.getVertices ();
+    const vector<Vertex> & V = getMesh().getVertices ();
     if (V.empty ())
         bbox = BoundingBox ();
     else {

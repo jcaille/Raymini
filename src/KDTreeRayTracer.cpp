@@ -10,26 +10,39 @@
 #include "Object.h"
 #include "BRDF.h"
 
-bool KDTreeRayTracer::rayObjectIntersection(const Ray &ray, const Object &object, const Scene* scene, float &intersectionDistance, Vec3Df &intersectionColor)
+void KDTreeRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
+    
+    intersectionColor = Vec3Df(0,0,0);
+    
+    const std::vector<Light>& lights = scene.getLights();
+    for (const Light& light : lights){
+        
+        const Vec3Df& lightPos = light.getPos();
+        Vec3Df direction = lightPos-intersectionPoint;
+        float lightDistance = direction.normalize();
+        
+        // Let's see if direct light from the light can go through to the intersectionPoint
+        Ray lightRay(intersectionPoint, direction);
+        
+        Vec3Df obstructionPoint;
+        Triangle obstructionTriangle;
+        const Object* obstructionObject;
+        
+        bool intersection = raySceneIntersection(lightRay, scene, obstructionPoint, obstructionTriangle, obstructionObject);
+        
+        float obstructionDistance = Vec3Df::distance(intersectionPoint, obstructionPoint);
+        
+        if (!intersection || obstructionDistance >= lightDistance){
+            intersectionColor += BRDF::phong(intersectionPoint, intersectionNormal, pov, intersectionObject, light);
+        }
+        
+    }
+    
+}
 
-    Ray correctedRay(ray.getOrigin() - object.getTrans(), ray.getDirection());
-    
-    Triangle intersectionTriangle;
-    bool intersection = object.getKDTree().intersectRay(correctedRay, intersectionDistance, intersectionTriangle);
-    
-    if (!intersection)
-        return false;
-    
-    // Get the intersection point
-    Vec3Df hitPoint;
-    std::vector<float> coords;
-    
-    float a;
-    correctedRay.intersect(intersectionTriangle, object.getMesh().getVertices(), a, hitPoint, coords);
-    
-    intersectionColor = Phong::brdf(hitPoint, correctedRay.getOrigin(), coords, intersectionTriangle, object, scene);
-    
-    return true;
-    
+
+bool KDTreeRayTracer::rayObjectIntersection(const Ray& ray, const Object& object, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle)
+{
+    return object.getKDTree().intersectRay(ray, intersectionDistance, intersectionPoint, intersectionTriangle);
 }

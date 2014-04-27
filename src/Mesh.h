@@ -27,7 +27,7 @@ public:
         : vertices (mesh.vertices), 
           triangles (mesh.triangles) {}
         
-    inline virtual ~Mesh () {}
+    inline ~Mesh () {}
     std::vector<Vertex> & getVertices () { return vertices; }
     const std::vector<Vertex> & getVertices () const { return vertices; }
     std::vector<Triangle> & getTriangles () { return triangles; }
@@ -42,6 +42,7 @@ public:
     void collectOrderedOneRing (std::vector<std::vector<unsigned int> > & oneRing) const;
     void computeDualEdgeMap (EdgeMapIndex & dualVMap1, EdgeMapIndex & dualVMap2);
     void markBorderEdges (EdgeMapIndex & edgeMap);
+    void barycentricCoordinates(const Vec3Df pt, const Triangle& triangle, std::vector<float>& coords) const;
     
     void renderGL (bool flat) const;
     

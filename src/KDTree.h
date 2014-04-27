@@ -22,9 +22,6 @@ class Ray;
 
 class KDTree {
 
-    protected :
-    
-    Mesh mesh;
     
     struct Plan{
         
@@ -40,8 +37,11 @@ class KDTree {
         
         Node();
         ~Node();
+        
         Node(const Node& node);
-                
+        Node& operator= (const Node& node);
+
+        
         // The depth of the node - If 0, node is root
         unsigned int depth;
         // The indices of node triangles in the tree->triangle vector.
@@ -64,19 +64,27 @@ class KDTree {
         Vec3Df getMedianPoint(const Mesh& mesh, Vec3Df normal);
         static bool compareTriangles(const int triangleIndex1, const int triangleIndex2);
 
-        bool intersectRay(const Ray& ray, const KDTree& tree, float& intersectionDistance, Triangle& intersectionTriangle) const;
+        bool intersectRay(const Ray& ray, const KDTree& tree, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle) const;
     };
     
     public :
     
+        inline KDTree(){};
+        inline ~KDTree(){};
+    
         KDTree(const Mesh& mesh, int maxDepth);
-        bool intersectRay(const Ray& ray, float& intersectionDistance, Triangle& intersectionTriangle) const;
+    
+        inline const Mesh& getMesh() const { return _mesh; }
+        inline Mesh& getMesh() { return _mesh; }
+    
+        bool intersectRay(const Ray& ray, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle) const;
     
     private :
     
         void buildRootNode(int maxDepth);
     
-        Node root;
+        Node _root;
+        Mesh _mesh;
     
 };
 

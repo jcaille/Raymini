@@ -24,7 +24,7 @@ static RayTracer * instance = NULL;
 
 RayTracer * RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new KDTreeRayTracer ();
+        instance = new KDTreeRayTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
@@ -43,42 +43,91 @@ static inline int clamp (float f, int inf, int sup) {
     return (v < inf ? inf : (v > sup ? sup : v));
 }
 
-bool RayTracer::raySceneIntersection(const Ray& ray, const Scene* scene, float& intersectionDistance, Vec3Df& intersectionColor)
+bool RayTracer::raySceneIntersection(const Ray& ray, const Scene& scene, Vec3Df& intersectionPoint, Triangle& intersectionTriangle, const Object* &intersectionObject)
 {
     
-    const BoundingBox & sceneBoundingBox = scene->getBoundingBox ();
+    const BoundingBox& sceneBoundingBox = scene.getBoundingBox();
     
-    if( !ray.intersect(sceneBoundingBox, intersectionColor) )
-    {
-        // The base ray does not intersect with the bouding box of the scene.
-        // No need to explore further.
+    if(!ray.intersect(sceneBoundingBox, intersectionPoint)){
+        // The ray does not intersect with the bouding box of the scene.
         return false;
     }
     
     bool intersection = false;
-    intersectionDistance = std::numeric_limits<float>::max();
-   
-    float objectIntersectionDistance;
-    Vec3Df objectIntersectionColor;
     
-    // For each object in the scene, check if intersection exists
-    for (unsigned int k = 0; k < scene->getObjects().size(); k++) {
+    // Determine the first point of intersection between the ray and the scene
+    float intersectionDistance = std::numeric_limits<float>::max();
+    
+    float objectIntersectionDistance;
+    Vec3Df objectIntersectionPoint;
+    Triangle objectIntersectionTriangle;
+    
+    // For each object in the scene, check if intersection exists and remember point of intersection
+    const vector<Object>& objects = scene.getObjects();
+    
+    for (const Object& object : objects) {
         
-        const Object& o = scene->getObjects()[k];
+        // Instead of translating the object by object.trans, we translate
+        // the ray by the -object.trans.
+        Ray correctedRay(ray.getOrigin() - object.getTrans(), ray.getDirection());
         
-        bool objectIntersection = rayObjectIntersection(ray, o, scene, objectIntersectionDistance, objectIntersectionColor);
+        bool objectIntersection = rayObjectIntersection(correctedRay, object, objectIntersectionDistance, objectIntersectionPoint, objectIntersectionTriangle);
         
         if (objectIntersection && objectIntersectionDistance < intersectionDistance) {
-            // Keep the intersection if it is closer to the camera
             
+            // Keep the intersection if it is closer to the camera
             intersectionDistance = objectIntersectionDistance;
-            intersectionColor = objectIntersectionColor;
+            intersectionPoint = objectIntersectionPoint;
+            intersectionTriangle = objectIntersectionTriangle;
+            intersectionObject = &object;
             intersection = true;
         }
     }
-
-    // Return if there actually was an intersection
+    
     return intersection;
+}
+
+
+
+void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor)
+{
+    
+    // Determine where the ray intersects the scene
+    const Object* intersectionObject;
+    Vec3Df intersectionPoint;
+    Triangle intersectionTriangle;
+    bool intersection = raySceneIntersection(ray, scene, intersectionPoint, intersectionTriangle, intersectionObject);
+    
+    // No ray / scene intersection => background color
+    if (!intersection){
+        intersectionColor = _backgroundColor;
+        return;
+    }
+    
+    
+    // We need to compute the normal on the object at the intersection point
+    const Mesh& mesh = intersectionObject->getMesh();
+    
+    // Get barycentric coordinates
+    std::vector<float> coords;
+    mesh.barycentricCoordinates(intersectionPoint, intersectionTriangle, coords);
+    
+    // Compute normal at intersection
+    Vertex p0 = mesh.getVertices()[intersectionTriangle.getVertex(0)];
+    Vertex p1 = mesh.getVertices()[intersectionTriangle.getVertex(1)];
+    Vertex p2 = mesh.getVertices()[intersectionTriangle.getVertex(2)];
+    
+    Vec3Df n0 = p0.getNormal();
+    Vec3Df n1 = p1.getNormal();
+    Vec3Df n2 = p2.getNormal();
+    
+    Vec3Df norm = coords[0] * n0 + coords[1] * n1 + coords[2] * n2;
+    norm.normalize();
+
+    
+    // Now that we have that point of intersection, let's compute the color it is supposed to have
+    rayColorForIntersection(ray.getOrigin(), intersectionPoint + intersectionObject->getTrans(), norm, *intersectionObject, scene, intersectionColor);
+    
 }
 
 
@@ -91,7 +140,6 @@ QImage RayTracer::render (const Vec3Df & camPos,
                           unsigned int screenWidth,
                           unsigned int screenHeight) {
     
-    QImage image (QSize (screenWidth, screenHeight), QImage::Format_RGB888);
 
     QProgressDialog progressDialog ("Raytracing...", "Cancel", 0, 100);
     progressDialog.show ();
@@ -99,6 +147,9 @@ QImage RayTracer::render (const Vec3Df & camPos,
     Scene* scene = Scene::getInstance();
     
     rayIterator->setCameraInformation(camPos, direction, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
+    
+    QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
+    
     std::vector<Ray> rays;
     for (unsigned int i = 0; i < screenWidth; i++) {
         
@@ -109,22 +160,21 @@ QImage RayTracer::render (const Vec3Df & camPos,
             
             rayIterator->raysForPixel(i, j, rays);
             
-            Vec3Df color;
-            Vec3Df c;
-            float distance;
+            Vec3Df pixelColor;
+            Vec3Df rayColor;
             
-            for (int r = 0; r < rays.size(); r++) {
-                if (!raySceneIntersection(rays[r], scene, distance, c)) {
-                    // No intersection, get a default value for c
-                    c = backgroundColor;
-                }
-                color += c;
+            for (const Ray& ray : rays) {
+                raySceneInteraction(ray, *scene, rayColor);
+                pixelColor += rayColor;
             }
-            color /= rays.size();
-            image.setPixel (i, j, qRgb (clamp (color[0], 0, 255), clamp (color[1], 0, 255), clamp (color[2], 0, 255)));
+            pixelColor *= 255/float(rays.size());
+            
+            QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
+
+            image.setPixel(i, j, rgb);
         }
     }
-    progressDialog.setValue (100);
+    progressDialog.setValue(100);
     return image;
 
 }
