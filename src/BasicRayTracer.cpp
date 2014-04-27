@@ -19,7 +19,7 @@ using std::vector;
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
-Vec3Df BasicRayTracer::userSelectedBRDF(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light)
+Vec3Df BasicRayTracer::brdf(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light)
 {
     switch (shadingFunction) {
         case CONSTANT:
@@ -45,7 +45,7 @@ void BasicRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& in
     
     const std::vector<Light>& lights = scene.getLights();
     for (const Light& light : lights){
-        intersectionColor += userSelectedBRDF(intersectionPoint, intersectionNormal, pov, light.getPos(), intersectionObject, light);
+        intersectionColor += brdf(intersectionPoint, intersectionNormal, pov, light.getPos(), intersectionObject, light);
     }
     
 }

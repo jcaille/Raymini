@@ -32,7 +32,7 @@ void MirrorRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& i
     Vec3Df reflectedColor;
     raySceneInteraction(reflectedRay, scene, reflectedColor);
     
-    if(reflectiveness == 1.0){
+    if(reflectiveness >= 1.0 - EPSILON){
         intersectionColor = reflectedColor;
         return;
     }

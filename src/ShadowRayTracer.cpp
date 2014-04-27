@@ -16,30 +16,31 @@ bool ShadowRayTracer::lightContributionToRayColorForIntersection(const Vec3Df& p
     if(!enableCastShadows)
     {
         //User has decided to not use shadows. Light contribution is basic BRDF
-        lightContribution = userSelectedBRDF(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
+        lightContribution = brdf(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
         return true;
-    } else {
-        Vec3Df direction = lightPos-intersectionPoint;
-        float lightDistance = direction.normalize();
-        
-        // Let's see if direct light from the light can go through to the intersectionPoint
-        Ray lightRay(intersectionPoint, direction);
-        
-        float obstructionDistance;
-        Vec3Df obstructionPoint;
-        Triangle obstructionTriangle;
-        const Object* obstructionObject;
-        
-        bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
-        
-#pragma warning epsilon here ?
-        if (!intersection || obstructionDistance >= lightDistance){
-            lightContribution = userSelectedBRDF(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
-            return true;
-        }
-        
-        return false;
     }
+    
+    Vec3Df direction = lightPos-intersectionPoint;
+    float lightDistance = direction.normalize();
+    
+    // Let's see if direct light from the light can go through to the intersectionPoint
+    Ray lightRay(intersectionPoint, direction);
+    
+    float obstructionDistance;
+    Vec3Df obstructionPoint;
+    Triangle obstructionTriangle;
+    const Object* obstructionObject;
+    
+    bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
+    
+#pragma warning epsilon here ?
+    if (!intersection || obstructionDistance >= lightDistance){
+        lightContribution = brdf(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
+        return true;
+    }
+    
+    return false;
+
 }
 
 void ShadowRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)

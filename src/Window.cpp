@@ -252,7 +252,7 @@ void Window::initControlWidget () {
     rayLayout->addWidget(lightSampleSlider);
     
     mirrorCheckBox = new QCheckBox;
-    mirrorCheckBox->setText(QString("Effet miroir"));
+    mirrorCheckBox->setText(QString("Mirror"));
     mirrorCheckBox->setChecked(true);
     rayLayout->addWidget(mirrorCheckBox);
     
