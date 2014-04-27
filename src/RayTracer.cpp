@@ -10,9 +10,10 @@
 #include "Scene.h"
 
 #include "BasicRayTracer.h"
+#include "ShadowRayTracer.h"
 #include "BoundingBoxRayTracer.h"
-#include "KDTreeRayTracer.h"
 #include "ExtendedLightSourcesRayTracer.h"
+#include "MirrorRayTracer.h"
 
 #include "GridAARayIterator.h"
 
@@ -25,7 +26,7 @@ static RayTracer * instance = NULL;
 
 RayTracer * RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new ExtendedLightSourcesRayTracer();
+        instance = new MirrorRayTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
@@ -162,7 +163,17 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
     
     if (lightIntersectionDistance <= objectIntersectionDistance){
         
-        intersectionColor = lightIntersectionObject->getColor();
+        // We need to compute the normal on the object at the intersection point
+        const Mesh& mesh = lightIntersectionObject->getMesh();
+
+        // Get barycentric coordinates
+        std::vector<float> coords;
+        mesh.barycentricCoordinates(lightIntersectionPoint, lightIntersectionTriangle, coords);
+        
+        Vec3Df norm = mesh.getNormal(lightIntersectionTriangle, coords);
+        
+        // Now that we have that point of intersection, let's compute the color it is supposed to have
+        rayColorForIntersection(ray.getOrigin(), lightIntersectionPoint + lightIntersectionObject->getTrans(), norm, *lightIntersectionObject, scene, intersectionColor);
         
     } else {
         

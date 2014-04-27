@@ -23,6 +23,7 @@ public:
     
     inline Light (const Vec3Df & pos, const Mesh & mesh, const Vec3Df & color, float intensity) : Geometry(mesh), _color(color), _intensity(intensity) {
         setTrans(pos);
+        _samples.push_back(pos);
         sample(200,_samples);
     }
 

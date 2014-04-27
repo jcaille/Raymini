@@ -9,10 +9,9 @@
 #ifndef __RayTracer__MirrorRayTracer__
 #define __RayTracer__MirrorRayTracer__
 
-#include <iostream>
-#include "KDTreeRayTracer.h"
+#include "ExtendedLightSourcesRayTracer.h"
 
-class MirrorRayTracer : public KDTreeRayTracer
+class MirrorRayTracer : public ExtendedLightSourcesRayTracer
 {
     
     /**
@@ -28,16 +27,7 @@ class MirrorRayTracer : public KDTreeRayTracer
     
 protected:
     
-    virtual void rayColorWithoutReflection(const Vec3Df& pov,
-                                           const Vec3Df intersectionPoint,
-                                           const Vec3Df intersectionNormal,
-                                           const Object& intersectionObject,
-                                           const Scene& scene,
-                                           Vec3Df& intersectionColor);
-    
-    friend KDTreeRayTracer;
     friend RayTracer;
-    
     MirrorRayTracer () {}
     virtual ~MirrorRayTracer () {}
   
