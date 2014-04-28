@@ -119,7 +119,7 @@ protected:
      *  @param scene                The scene to render
      *  @param intersectionColor    The color that result from the interaction of the ray with the scene
      */
-    void raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor);
+    virtual void raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor);
 
 private:
 

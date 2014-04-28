@@ -8,6 +8,7 @@
 #include "RayTracer.h"
 #include "Ray.h"
 #include "Scene.h"
+#include "PathTracer.h"
 
 #include "BasicRayTracer.h"
 #include "BoundingBoxRayTracer.h"
@@ -25,7 +26,7 @@ static RayTracer * instance = NULL;
 
 RayTracer * RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new ExtendedLightSourcesRayTracer();
+        instance = new PathTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
