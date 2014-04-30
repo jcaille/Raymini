@@ -39,30 +39,6 @@ Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &p
 
 }
 
-//Phong for Path Tracing
-Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &nextDirection, const Object& object)
-{
-    
-    const Material& material = object.getMaterial();
-    
-    Vec3Df wo = pov - hitPoint ;// wi is camera-hitPoint direction
-    wo.normalize();
-    
-    Vec3Df wi = nextDirection; // wi is light direction
-    wi.normalize();
-    
-    float a = Vec3Df::dotProduct(normal, wi);
-    if (a <= 0)
-        return Vec3Df(0,0,0);
-    
-    Vec3Df r = 2 * a * normal - wi;
-    
-    float f = material.getDiffuse() * a;    // Diffuse
-    
-    return f * material.getColor();
-    
-    
-}
 
 Vec3Df BRDF::cook_torrance(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light, float n1, float n2)
 {

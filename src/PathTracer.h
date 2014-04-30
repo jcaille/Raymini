@@ -38,6 +38,13 @@ protected:
                                                        const Scene& scene,
                                                        Vec3Df& indirectLightContribution);
 
+    void allDiffuseContributionToRayColorForIntersection(const Ray& ray,
+                                                         const Vec3Df& intersectionPoint,
+                                                         const Vec3Df& intersectionNormal,
+                                                         const Object& intersectionObject,
+                                                         const Scene& scene,
+                                                         Vec3Df& diffuseLightContribution);
+
     
 };
 
