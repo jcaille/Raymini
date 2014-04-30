@@ -23,6 +23,9 @@
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
+
+#import <Foundation/Foundation.h>
+
 static RayTracer * instance = NULL;
 
 RayTracer * RayTracer::getInstance () {
@@ -204,24 +207,24 @@ QImage RayTracer::render (const Vec3Df & camPos,
                           unsigned int screenHeight) {
     
 
+    __block QImage image (QSize (screenWidth, screenHeight), QImage::Format_RGB888);
     QProgressDialog progressDialog ("Raytracing...", "Cancel", 0, 100);
     progressDialog.show ();
     
     Scene* scene = Scene::getInstance();
     
     rayIterator->setCameraInformation(camPos, direction, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
-    
-    QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
-    
-    std::vector<Ray> rays;
     for (unsigned int i = 0; i < screenWidth; i++) {
         
         std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
+
+        dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+//        dispatch_queue_t aQueue = dispatch_queue_create("com.Raymini.queue", NULL);
         
-        for (unsigned int j = 0; j < screenHeight; j++) {
-            
-            rayIterator->raysForPixel(i, j, rays);
+        dispatch_apply(screenHeight, aQueue, ^(size_t j) {
+            std::vector<Ray> rays;
+            rayIterator->raysForPixel(i, (int) j, rays);
             
             Vec3Df pixelColor;
             Vec3Df rayColor;
@@ -233,9 +236,8 @@ QImage RayTracer::render (const Vec3Df & camPos,
             pixelColor *= 255/float(rays.size());
             
             QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
-
-            image.setPixel(i, j, rgb);
-        }
+            image.setPixel(i, (int) j, rgb);
+        });
     }
     progressDialog.setValue(100);
     return image;
