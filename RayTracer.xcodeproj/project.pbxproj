@@ -14,7 +14,6 @@
 		1A19E6CD190D4A5B003489AF /* KDTreeRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A19E6CB190D4A5B003489AF /* KDTreeRayTracer.cpp */; };
 		1A19E6CE190D4E32003489AF /* ExtendedLightSourcesRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A19E6C6190D122F003489AF /* ExtendedLightSourcesRayTracer.cpp */; };
 		1A65B286190BF214001F07D0 /* BoundingBoxRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AA67216190A9B6F00745C48 /* BoundingBoxRayTracer.cpp */; };
-		0F1B97D7190BA950000167CE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F1B97D6190BA950000167CE /* Foundation.framework */; };
 		1A71DE3819079CB700BB58C8 /* BRDF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A71DE3619079CB700BB58C8 /* BRDF.cpp */; };
 		1A71DE3C1907A6E600BB58C8 /* RayIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A71DE3A1907A6E600BB58C8 /* RayIterator.cpp */; };
 		1A71DE401907B44900BB58C8 /* GridAARayIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A71DE3E1907B44900BB58C8 /* GridAARayIterator.cpp */; };
@@ -27,7 +26,7 @@
 		1A73A78019051BE500B6A310 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A76919051BE500B6A310 /* Object.cpp */; };
 		1A73A78119051BE500B6A310 /* QTUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A76B19051BE500B6A310 /* QTUtils.cpp */; };
 		1A73A78219051BE500B6A310 /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A76D19051BE500B6A310 /* Ray.cpp */; };
-		1A73A78319051BE500B6A310 /* RayTracer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A76F19051BE500B6A310 /* RayTracer.mm */; };
+		1A73A78319051BE500B6A310 /* RayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A76F19051BE500B6A310 /* RayTracer.cpp */; };
 		1A73A78419051BE500B6A310 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A77119051BE500B6A310 /* Scene.cpp */; };
 		1A73A78519051BE500B6A310 /* Triangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A77319051BE500B6A310 /* Triangle.cpp */; };
 		1A73A78619051BE500B6A310 /* Vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A73A77619051BE500B6A310 /* Vertex.cpp */; };
@@ -57,9 +56,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0F1B97D6190BA950000167CE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0F1B97D8190CFD58000167CE /* MirrorRayTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MirrorRayTracer.cpp; sourceTree = "<group>"; };
 		0F1B97D9190CFD58000167CE /* MirrorRayTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MirrorRayTracer.h; sourceTree = "<group>"; };
-		0F1B97D6190BA950000167CE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0FBF0825190572B700584DCE /* BasicRayTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BasicRayTracer.cpp; path = src/BasicRayTracer.cpp; sourceTree = SOURCE_ROOT; };
 		0FBF0826190572B700584DCE /* BasicRayTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasicRayTracer.h; path = src/BasicRayTracer.h; sourceTree = SOURCE_ROOT; };
 		1A19E6C1190CF8D5003489AF /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
@@ -93,7 +92,7 @@
 		1A73A76C19051BE500B6A310 /* QTUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QTUtils.h; path = src/QTUtils.h; sourceTree = SOURCE_ROOT; };
 		1A73A76D19051BE500B6A310 /* Ray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Ray.cpp; path = src/Ray.cpp; sourceTree = SOURCE_ROOT; };
 		1A73A76E19051BE500B6A310 /* Ray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Ray.h; path = src/Ray.h; sourceTree = SOURCE_ROOT; };
-		1A73A76F19051BE500B6A310 /* RayTracer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RayTracer.mm; path = src/RayTracer.mm; sourceTree = SOURCE_ROOT; };
+		1A73A76F19051BE500B6A310 /* RayTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RayTracer.cpp; path = src/RayTracer.cpp; sourceTree = SOURCE_ROOT; };
 		1A73A77019051BE500B6A310 /* RayTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RayTracer.h; path = src/RayTracer.h; sourceTree = SOURCE_ROOT; };
 		1A73A77119051BE500B6A310 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scene.cpp; path = src/Scene.cpp; sourceTree = SOURCE_ROOT; };
 		1A73A77219051BE500B6A310 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene.h; path = src/Scene.h; sourceTree = SOURCE_ROOT; };
@@ -126,7 +125,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0F1B97D7190BA950000167CE /* Foundation.framework in Frameworks */,
 				1A73A7A71905280400B6A310 /* QtOpenGL.framework in Frameworks */,
 				1A73A797190525D600B6A310 /* OpenGL.framework in Frameworks */,
 				1A73A78E1905202500B6A310 /* QtCore.framework in Frameworks */,
@@ -254,7 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				1A73A77019051BE500B6A310 /* RayTracer.h */,
-				1A73A76F19051BE500B6A310 /* RayTracer.mm */,
+				1A73A76F19051BE500B6A310 /* RayTracer.cpp */,
 				1AA67217190A9B6F00745C48 /* BoundingBoxRayTracer.h */,
 				1AA67216190A9B6F00745C48 /* BoundingBoxRayTracer.cpp */,
 				0FBF0826190572B700584DCE /* BasicRayTracer.h */,

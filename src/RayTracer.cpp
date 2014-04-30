@@ -23,8 +23,7 @@
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
-
-#import <Foundation/Foundation.h>
+#include <dispatch/dispatch.h>
 
 static RayTracer * instance = NULL;
 
@@ -219,10 +218,9 @@ QImage RayTracer::render (const Vec3Df & camPos,
         std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
 
-        dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-//        dispatch_queue_t aQueue = dispatch_queue_create("com.Raymini.queue", NULL);
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         
-        dispatch_apply(screenHeight, aQueue, ^(size_t j) {
+        dispatch_apply(screenHeight, queue, ^(size_t j) {
             std::vector<Ray> rays;
             rayIterator->raysForPixel(i, (int) j, rays);
             
