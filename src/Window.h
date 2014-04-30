@@ -65,6 +65,7 @@ private :
     QComboBox* rayIteratorComboBox;
     QCheckBox* shadowCheckBox;
     DoubleWidget* lightSampleSlider;
+    DoubleWidget* bouncesSlider;
     QCheckBox* mirrorCheckBox;
     
     GLViewer* viewer;

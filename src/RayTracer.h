@@ -68,7 +68,7 @@ public:
 
 protected:
     
-    RayTracer () : bounces(100) {}
+    RayTracer () : bounces(1000) {}
     virtual ~RayTracer () {}
         
     /**
