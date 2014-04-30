@@ -19,35 +19,41 @@ public:
     inline Light (const Vec3Df & pos, const Vec3Df & color, float intensity) : _color(color), _intensity(intensity) {
             setTrans(pos);
             _samples.push_back(pos);
+            _density = 0;
         }
     
     inline Light (const Vec3Df & pos, const Mesh & mesh, const Vec3Df & color, float intensity) : Geometry(mesh), _color(color), _intensity(intensity) {
         setTrans(pos);
         _samples.push_back(pos);
         sample(200,_samples);
+        _density = 200;
     }
 
     virtual ~Light () {}
 
     inline float getIntensity () const { return _intensity; }
+    inline float getDensity() const {return _density;}
     inline const Vec3Df & getPos () const { return getTrans(); }
     inline const Vec3Df & getColor () const { return _color; }
     inline const vector<Vec3Df> & getSamples () const { return _samples; }
+
     inline void resample(float density){
         _samples.clear();
         _samples.push_back(getTrans());
         sample(density, _samples);
+        _density = density;
     }
 
 
     inline void setPos (const Vec3Df & p) { setTrans(p); }
     inline void setColor (const Vec3Df & c) { _color = c; }
     inline void setIntensity (float i) { _intensity = i; }
-
+    inline void setDensity (float d) {_density = d;}
     
 private:
     Vec3Df _color;
     float _intensity;
+    float _density;
     vector<Vec3Df> _samples;
 };
 

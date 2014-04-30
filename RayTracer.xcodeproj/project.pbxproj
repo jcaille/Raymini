@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0F1B97DA190CFD58000167CE /* MirrorRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F1B97D8190CFD58000167CE /* MirrorRayTracer.cpp */; };
+		0FE3FE711910E1E80067E815 /* MovementBlurIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FE3FE6F1910E1E80067E815 /* MovementBlurIterator.cpp */; };
+		0FE3FE741910E6070067E815 /* TimeAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FE3FE721910E6070067E815 /* TimeAnimator.cpp */; };
 		1A19E6C3190CF8D5003489AF /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A19E6C1190CF8D5003489AF /* Geometry.cpp */; };
 		1A19E6C9190D40CC003489AF /* BasicRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0FBF0825190572B700584DCE /* BasicRayTracer.cpp */; };
 		1A19E6CA190D4132003489AF /* ShadowRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AA67213190A7CA900745C48 /* ShadowRayTracer.cpp */; };
@@ -61,6 +63,10 @@
 		0F1B97D9190CFD58000167CE /* MirrorRayTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MirrorRayTracer.h; sourceTree = "<group>"; };
 		0FBF0825190572B700584DCE /* BasicRayTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BasicRayTracer.cpp; path = src/BasicRayTracer.cpp; sourceTree = SOURCE_ROOT; };
 		0FBF0826190572B700584DCE /* BasicRayTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasicRayTracer.h; path = src/BasicRayTracer.h; sourceTree = SOURCE_ROOT; };
+		0FE3FE6F1910E1E80067E815 /* MovementBlurIterator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MovementBlurIterator.cpp; sourceTree = "<group>"; };
+		0FE3FE701910E1E80067E815 /* MovementBlurIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovementBlurIterator.h; sourceTree = "<group>"; };
+		0FE3FE721910E6070067E815 /* TimeAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeAnimator.cpp; sourceTree = "<group>"; };
+		0FE3FE731910E6070067E815 /* TimeAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeAnimator.h; sourceTree = "<group>"; };
 		1A19E6C1190CF8D5003489AF /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
 		1A19E6C2190CF8D5003489AF /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
 		1A19E6C6190D122F003489AF /* ExtendedLightSourcesRayTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtendedLightSourcesRayTracer.cpp; sourceTree = "<group>"; };
@@ -153,6 +159,10 @@
 				1A71DE3A1907A6E600BB58C8 /* RayIterator.cpp */,
 				1A71DE3F1907B44900BB58C8 /* GridAARayIterator.h */,
 				1A71DE3E1907B44900BB58C8 /* GridAARayIterator.cpp */,
+				0FE3FE6F1910E1E80067E815 /* MovementBlurIterator.cpp */,
+				0FE3FE701910E1E80067E815 /* MovementBlurIterator.h */,
+				0FE3FE721910E6070067E815 /* TimeAnimator.cpp */,
+				0FE3FE731910E6070067E815 /* TimeAnimator.h */,
 			);
 			name = RayIterator;
 			sourceTree = "<group>";
@@ -350,6 +360,7 @@
 				1A73A78219051BE500B6A310 /* Ray.cpp in Sources */,
 				1A73A77F19051BE500B6A310 /* Mesh.cpp in Sources */,
 				1A71DE401907B44900BB58C8 /* GridAARayIterator.cpp in Sources */,
+				0FE3FE711910E1E80067E815 /* MovementBlurIterator.cpp in Sources */,
 				1A73A77C19051BE500B6A310 /* Light.cpp in Sources */,
 				1A73A78119051BE500B6A310 /* QTUtils.cpp in Sources */,
 				1A73A7A5190527C300B6A310 /* moc_Window.cpp in Sources */,
@@ -367,6 +378,7 @@
 				1A73A78019051BE500B6A310 /* Object.cpp in Sources */,
 				1A73A78319051BE500B6A310 /* RayTracer.cpp in Sources */,
 				1A19E6C9190D40CC003489AF /* BasicRayTracer.cpp in Sources */,
+				0FE3FE741910E6070067E815 /* TimeAnimator.cpp in Sources */,
 				1A73A77E19051BE500B6A310 /* Material.cpp in Sources */,
 				1A19E6CD190D4A5B003489AF /* KDTreeRayTracer.cpp in Sources */,
 				1A73A77A19051BE500B6A310 /* BoundingBox.cpp in Sources */,
