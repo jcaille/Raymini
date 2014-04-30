@@ -10,6 +10,8 @@
 #include "Scene.h"
 #include "BRDF.h"
 
+#define EPSILON 1e-6
+
 static inline float random_float(float lo, float hi)
 {
     return lo + static_cast<float>( rand() ) / ( static_cast <float> (RAND_MAX/(hi-lo)));
@@ -28,8 +30,10 @@ void PathTracer::indirectContributionToRayColorForIntersection(const Ray& ray, c
         return;
     }
     
+    int n = ceil(bounces/(depth+1));
+    
     Vec3Df bounceContribution;
-    for (int i = 0; i < bounces; ++i)
+    for (int i = 0; i < n; ++i)
     {
         // Indirect contribution : draw n random paths and average their contributions
         float theta = random_float(0, 2*M_PI);
@@ -49,21 +53,45 @@ void PathTracer::indirectContributionToRayColorForIntersection(const Ray& ray, c
         indirectLightContribution += bounceContribution;
     }
     
-    indirectLightContribution /= float(bounces);
+    indirectLightContribution /= float(n);
     
 }
 
-void PathTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+void PathTracer::allDiffuseContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& diffuseLightContribution)
 {
-    
     Vec3Df directContribution;
     directContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, directContribution);
     
     Vec3Df indirectContribution;
     indirectContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, indirectContribution);
     
-    intersectionColor = directContribution + 0.2*indirectContribution;
+    diffuseLightContribution = directContribution + .5* indirectContribution;
+
+}
+
+void PathTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+{
     
+    float reflectiveness = intersectionObject.getMaterial().getReflectiveness();
+    if(reflectiveness < EPSILON || !enableMirrorEffet)
+    {
+        allDiffuseContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, intersectionColor);
+        return;
+    }
+    
+    Vec3Df reflectedColor;
+    mirrorContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, reflectedColor);
+    
+    if(reflectiveness >= 1.0 - EPSILON){
+        intersectionColor = reflectedColor;
+        return;
+    }
+    
+    Vec3Df baseColor;
+    allDiffuseContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, baseColor);
+    
+    intersectionColor = reflectiveness * reflectedColor + (1 - reflectiveness) * baseColor;
+
 }
 
 
