@@ -50,10 +50,9 @@ void PathTracer::indirectContributionToRayColorForIntersection(const Ray& ray, c
         
         raySceneInteraction(newRay, scene, bounceContribution);
         
-        indirectLightContribution += bounceContribution;
+        indirectLightContribution += bounceContribution/float(n);
     }
     
-    indirectLightContribution /= float(n);
     
 }
 

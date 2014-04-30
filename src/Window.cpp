@@ -152,6 +152,7 @@ void Window::renderRayImage () {
     rayTracer->enableCastShadows = shadowCheckBox->isChecked();
     rayTracer->enableMirrorEffet = mirrorCheckBox->isChecked();
     rayTracer->shadingFunction = getShadingFunction();
+    rayTracer->bounces = (int)bouncesSlider->getValue();
     
     QTime timer;
     timer.start ();
@@ -250,6 +251,9 @@ void Window::initControlWidget () {
     
     lightSampleSlider = new DoubleWidget(QString("Light samples density"), 0.0, 500.0, 50, this);
     rayLayout->addWidget(lightSampleSlider);
+
+    bouncesSlider = new DoubleWidget(QString("Ray bounces number"), 0.0, 1000.0, 0, this);
+    rayLayout->addWidget(bouncesSlider);
     
     mirrorCheckBox = new QCheckBox;
     mirrorCheckBox->setText(QString("Mirror"));
