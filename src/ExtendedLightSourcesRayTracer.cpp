@@ -10,10 +10,10 @@
 #include "Scene.h"
 #include "BRDF.h"
 
-void ExtendedLightSourcesRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+void ExtendedLightSourcesRayTracer::directContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& directContribution)
 {
-    
-    intersectionColor = Vec3Df(0,0,0);
+
+    directContribution = Vec3Df(0,0,0);
     
     const std::vector<Light>& lights = scene.getLights();
     for (const Light& light : lights){
@@ -23,30 +23,24 @@ void ExtendedLightSourcesRayTracer::rayColorForIntersection(const Vec3Df& pov, c
         const std::vector<Vec3Df>& lightSamples = light.getSamples();
         
         for (const Vec3Df& lightPos : lightSamples){
-         
-            Vec3Df direction = lightPos-intersectionPoint;
-            float lightDistance = direction.normalize();
             
-            // Let's see if direct light from the light can go through to the intersectionPoint
-            Ray lightRay(intersectionPoint, direction);
+            Vec3Df rayContribution;
             
-            float obstructionDistance;
-            Vec3Df obstructionPoint;
-            Triangle obstructionTriangle;
-            const Object* obstructionObject;
-            
-            bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
-            
-            if (!intersection || obstructionDistance >= lightDistance){
-                lightContribution += BRDF::phong(intersectionPoint, intersectionNormal, pov, lightPos, intersectionObject, light);
+            if (lightContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, lightPos, light, intersectionObject, scene, rayContribution)){
+                lightContribution += rayContribution;
             }
             
-
         }
         
-        intersectionColor += lightContribution/lightSamples.size();
+        directContribution += lightContribution/lightSamples.size();
     }
     
+}
+
+void ExtendedLightSourcesRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+{
+    
+    directContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, intersectionColor);
 
 }
 

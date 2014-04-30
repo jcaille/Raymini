@@ -21,15 +21,18 @@ class Object;
 class Ray {
 public:
     inline Ray () {}
-    inline Ray (const Vec3Df & origin, const Vec3Df & direction)
-        : origin (origin), direction (direction) {}
+    inline Ray (const Vec3Df & origin, const Vec3Df & direction) : _depth(0), _origin(origin), _direction(direction) {}
     inline virtual ~Ray () {}
 
-    inline const Vec3Df & getOrigin () const { return origin; }
-    inline Vec3Df & getOrigin () { return origin; }
-    inline const Vec3Df & getDirection () const { return direction; }
-    inline Vec3Df & getDirection () { return direction; }
+    inline const Vec3Df & getOrigin () const { return _origin; }
+    inline Vec3Df & getOrigin () { return _origin; }
+    inline const Vec3Df & getDirection () const { return _direction; }
+    inline Vec3Df & getDirection () { return _direction; }
 
+    inline const int getDepth () const { return _depth; }
+    inline void setDepth (int depth) { _depth = depth; }
+
+    
     // Intersection w/ a bounding box
     bool intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const;
     
@@ -41,8 +44,9 @@ public:
     
   
 private:
-    Vec3Df origin;
-    Vec3Df direction;
+    int _depth;
+    Vec3Df _origin;
+    Vec3Df _direction;
 };
 
 

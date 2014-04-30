@@ -9,21 +9,36 @@
 #ifndef __RayTracer__PathTracer__
 #define __RayTracer__PathTracer__
 
-#include <iostream>
-#include "Path.h"
-#include "KDTreeRayTracer.h"
+#include "MirrorRayTracer.h"
 
-#endif /* defined(__RayTracer__PathTracer__) */
-
-class PathTracer : public KDTreeRayTracer{
+class PathTracer : public MirrorRayTracer{
 public:
     
-    void raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor);
-    void buildRecursivePath(const Ray& ray, const Scene& scene, Vec3Df &intersectionColor);
+//    void raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor);
+//    void buildRecursivePath(const Ray& ray, const Scene& scene, Vec3Df &intersectionColor);
+
+    /**
+     *  Direct + indirect light contribution by path tracing
+     */
     
-private:
+    virtual void rayColorForIntersection(const Ray& ray,
+                                         const Vec3Df& intersectionPoint,
+                                         const Vec3Df& intersectionNormal,
+                                         const Object& intersectionObject,
+                                         const Scene& scene,
+                                         Vec3Df& intersectionColor);
 
-    Path _path;
-    Vec3Df _directIntersectionColor;
+    
+protected:
+    
+    void indirectContributionToRayColorForIntersection(const Ray& ray,
+                                                       const Vec3Df& intersectionPoint,
+                                                       const Vec3Df& intersectionNormal,
+                                                       const Object& intersectionObject,
+                                                       const Scene& scene,
+                                                       Vec3Df& indirectLightContribution);
 
+    
 };
+
+#endif /* defined(__RayTracer__PathTracer__) */

@@ -1,21 +1,21 @@
 //
-//  ExtendedLightSources.h
+//  MirrorRayTracer.h
 //  RayTracer
 //
-//  Created by Florian Denis on 27/04/14.
+//  Created by Jean Caillé on 27/04/2014.
 //  Copyright (c) 2014 Florian Denis. All rights reserved.
 //
 
-#ifndef __RayTracer__SmoothShadowRayTracer__
-#define __RayTracer__SmoothShadowRayTracer__
+#ifndef __RayTracer__MirrorRayTracer__
+#define __RayTracer__MirrorRayTracer__
 
-#include "ShadowRayTracer.h"
+#include "ExtendedLightSourcesRayTracer.h"
 
-class ExtendedLightSourcesRayTracer : public ShadowRayTracer {
-    
+class MirrorRayTracer : public ExtendedLightSourcesRayTracer
+{
     
     /**
-     *  Default shading with smooth shadows & BRDF taking into account extended light
+     *  Default shading, basic shadow casting, Mirroring with 1-depth path tracing
      */
     
     virtual void rayColorForIntersection(const Ray& ray,
@@ -27,17 +27,17 @@ class ExtendedLightSourcesRayTracer : public ShadowRayTracer {
     
 protected:
     
-    void directContributionToRayColorForIntersection(const Ray& ray,
+    void mirrorContributionToRayColorForIntersection(const Ray& ray,
                                                      const Vec3Df& intersectionPoint,
                                                      const Vec3Df& intersectionNormal,
                                                      const Object& intersectionObject,
                                                      const Scene& scene,
-                                                     Vec3Df& directLightContribution);
+                                                     Vec3Df& reflectedColor);
 
+    
     friend RayTracer;
-    ExtendedLightSourcesRayTracer () {}
-    virtual ~ExtendedLightSourcesRayTracer () {}
-
+    MirrorRayTracer () {}
+    virtual ~MirrorRayTracer () {}
+  
 };
-
-#endif /* defined(__RayTracer__SmoothShadowRayTracer__) */
+#endif /* defined(__RayTracer__MirrorRayTracer__) */

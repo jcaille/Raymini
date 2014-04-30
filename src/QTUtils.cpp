@@ -11,6 +11,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QVBoxLayout>
 #pragma clang diagnostic pop
 
 IntegerWidget::IntegerWidget (const QString & name,
@@ -54,22 +55,26 @@ DoubleWidget::DoubleWidget (const QString & name,
     label = new QLabel (name, parent);
     
     slider = new QSlider (Qt::Horizontal, this);
-    slider->setMinimum (1000*minValue);
-    slider->setMaximum (1000*maxValue);
-    slider->setValue (1000*value);
+    slider->setMinimum (minValue);
+    slider->setMaximum (maxValue);
+    slider->setValue (value);
         
-    unsigned int numOfDigits = 3; 
+    unsigned int numOfDigits = 5;
     LCDNumber = new QLCDNumber (numOfDigits, this);
     LCDNumber->setSegmentStyle (QLCDNumber::Flat);
     LCDNumber->setFrameShape (QFrame::NoFrame);
-    LCDNumber->setSmallDecimalPoint (true);
+    LCDNumber->setSmallDecimalPoint (false);
     LCDNumber->display (value);
     
+    QVBoxLayout* stackedLayout = new QVBoxLayout(this);
     QHBoxLayout * layout = new QHBoxLayout (this);
-    layout->addWidget (label);
+//    layout->addWidget (label);
     layout->addWidget (slider);
     layout->addWidget (LCDNumber);
 
+    stackedLayout->addWidget(label);
+    stackedLayout->addLayout(layout);
+    
     connect (slider, SIGNAL (valueChanged (int)),
              this, SLOT (changeValue (int)));
 }
@@ -79,7 +84,7 @@ DoubleWidget::~DoubleWidget () {
 }
 
 void DoubleWidget::changeValue (int i) {
-    double s = i/1000.0;
+    double s = i;
     LCDNumber->display (s);
     emit valueChanged (s);
 }

@@ -254,7 +254,8 @@ bool KDTree::Node::intersectRay(const Ray& ray, const KDTree& tree, float& inter
         
         for (int index : triangleIndexes) {
 
-            if (ray.intersect(triangles[index], vertices, triangleIntersectionDistance, triangleIntersectionPoint) && triangleIntersectionDistance < intersectionDistance) {
+            if (ray.intersect(triangles[index], vertices, triangleIntersectionDistance, triangleIntersectionPoint)
+                && triangleIntersectionDistance < intersectionDistance) {
                 intersectionDistance = triangleIntersectionDistance;
                 intersectionPoint = triangleIntersectionPoint;
                 intersectionTriangle = triangles[index];

@@ -8,12 +8,16 @@
 #include "RayTracer.h"
 #include "Ray.h"
 #include "Scene.h"
-#include "PathTracer.h"
+
+
+#include "Window.h"
 
 #include "BasicRayTracer.h"
+#include "ShadowRayTracer.h"
 #include "BoundingBoxRayTracer.h"
-#include "KDTreeRayTracer.h"
 #include "ExtendedLightSourcesRayTracer.h"
+#include "MirrorRayTracer.h"
+#include "PathTracer.h"
 
 #include "GridAARayIterator.h"
 
@@ -24,7 +28,7 @@
 
 static RayTracer * instance = NULL;
 
-RayTracer * RayTracer::getInstance () {
+RayTracer* RayTracer::getInstance () {
     if (instance == NULL){
         instance = new PathTracer();
         std::cout << "Creating raytracer" << std::endl;
@@ -163,7 +167,17 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
     
     if (lightIntersectionDistance <= objectIntersectionDistance){
         
-        intersectionColor = lightIntersectionObject->getColor();
+        // We need to compute the normal on the object at the intersection point
+        const Mesh& mesh = lightIntersectionObject->getMesh();
+
+        // Get barycentric coordinates
+        std::vector<float> coords;
+        mesh.barycentricCoordinates(lightIntersectionPoint, lightIntersectionTriangle, coords);
+        
+        Vec3Df norm = mesh.getNormal(lightIntersectionTriangle, coords);
+        
+        // Now that we have that point of intersection, let's compute the color it is supposed to have
+        rayColorForIntersection(ray, lightIntersectionPoint + lightIntersectionObject->getTrans(), norm, *lightIntersectionObject, scene, intersectionColor);
         
     } else {
         
@@ -173,26 +187,13 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
         // Get barycentric coordinates
         std::vector<float> coords;
         mesh.barycentricCoordinates(objectIntersectionPoint, objectIntersectionTriangle, coords);
-        
-        // Compute normal at intersection
-        Vertex p0 = mesh.getVertices()[objectIntersectionTriangle.getVertex(0)];
-        Vertex p1 = mesh.getVertices()[objectIntersectionTriangle.getVertex(1)];
-        Vertex p2 = mesh.getVertices()[objectIntersectionTriangle.getVertex(2)];
-        
-        Vec3Df n0 = p0.getNormal();
-        Vec3Df n1 = p1.getNormal();
-        Vec3Df n2 = p2.getNormal();
-        
-        Vec3Df norm = coords[0] * n0 + coords[1] * n1 + coords[2] * n2;
-        norm.normalize();
-        
+        Vec3Df norm = mesh.getNormal(objectIntersectionTriangle, coords);
         
         // Now that we have that point of intersection, let's compute the color it is supposed to have
-        rayColorForIntersection(ray.getOrigin(), objectIntersectionPoint + objectIntersectionObject->getTrans(), norm, *objectIntersectionObject, scene, intersectionColor);
+        rayColorForIntersection(ray, objectIntersectionPoint + objectIntersectionObject->getTrans(), norm, *objectIntersectionObject, scene, intersectionColor);
         
 
     }
-    
 }
 
 

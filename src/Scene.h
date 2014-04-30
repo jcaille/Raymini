@@ -28,7 +28,7 @@ public:
     
     inline const BoundingBox & getBoundingBox () const { return bbox; }
     void updateBoundingBox ();
-    
+    void resampleLights(float density);
 protected:
     Scene ();
     virtual ~Scene ();

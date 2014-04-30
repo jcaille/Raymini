@@ -16,6 +16,8 @@ class BasicRayTracer : public RayTracer
 
 public :
     
+    virtual Vec3Df brdf(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light);
+    
     /**
      *  A basic intersection finder that loops over all triangles of the given object
      */
@@ -29,12 +31,20 @@ public :
      *  Default Phong BRDF shading
      */
     
-    virtual void rayColorForIntersection(const Vec3Df& pov,
+    virtual void rayColorForIntersection(const Ray& ray,
                                          const Vec3Df& intersectionPoint,
                                          const Vec3Df& intersectionNormal,
                                          const Object& intersectionObject,
                                          const Scene& scene,
                                          Vec3Df& intersectionColor);
+    
+    virtual void rayColorForIntersection(const Ray& ray,
+                                         const Vec3Df& intersectionPoint,
+                                         const Vec3Df& intersectionNormal,
+                                         const Light& intersectionObject,
+                                         const Scene& scene,
+                                         Vec3Df& intersectionColor);
+
 
 protected:
     friend RayTracer;

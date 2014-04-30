@@ -19,15 +19,35 @@
 #include "RayIterator.h"
 #include "Vec3D.h"
 
+
 // Forward declaration
 class Geometry;
 class Object;
 class Ray;
 class Scene;
 class Light;
+class Window;
+
+/* RAY TRACING USER ENUM */
+
+typedef enum ShadingFunction {
+    CONSTANT,
+    PHONG,
+    COOK,
+} ShadingFunction;
+
 
 class RayTracer {
 public:
+    
+    /* User defined options */
+    int maxRayDepth;
+    int bounces;
+    bool enableCastShadows;
+    bool enableMirrorEffet;
+    ShadingFunction shadingFunction;
+    
+    
     static RayTracer * getInstance ();
     static void destroyInstance ();
 
@@ -48,12 +68,11 @@ public:
 
 protected:
     
-    RayTracer () {}
+    RayTracer () : bounces(20) {}
     virtual ~RayTracer () {}
-    
-    
+        
     /**
-     *  Determines the color a ray should take given the object it intersects and the point & triangle of intersection
+     *  Determines the color a ray should take given the object/light it intersects and the point & triangle of intersection
      *
      *  @param ray                  The ray
      *  @param intersectionPoint    The point of intersection
@@ -62,7 +81,14 @@ protected:
      *  @param scene                The scene being rendered
      *  @param intersectionColor    Output parameter : will contain the color the ray should take
      */
-    virtual void rayColorForIntersection(const Vec3Df& pov,
+    virtual void rayColorForIntersection(const Ray& ray,
+                                         const Vec3Df& intersectionPoint,
+                                         const Vec3Df& intersectionNormal,
+                                         const Light& intersectionLight,
+                                         const Scene& scene,
+                                         Vec3Df& intersectionColor) = 0;
+    
+    virtual void rayColorForIntersection(const Ray& ray,
                                          const Vec3Df& intersectionPoint,
                                          const Vec3Df& intersectionNormal,
                                          const Object& intersectionObject,

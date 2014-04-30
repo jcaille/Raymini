@@ -2,7 +2,7 @@
 #define WINDOW_H
 
 #include "GLViewer.h"
-
+#include "RayTracer.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
@@ -26,6 +26,7 @@
 
 #include "QTUtils.h"
 
+
 class RayIterator;
 
 class Window : public QMainWindow {
@@ -34,7 +35,10 @@ public:
     Window();
     virtual ~Window();
 
-    static void showStatusMessage (const QString & msg);  
+    // WTF does this do ? Why is it static ?
+    static void showStatusMessage (const QString & msg);
+    
+    bool getShadowCheckboxState();
     
 public slots :
     void renderRayImage ();
@@ -44,17 +48,26 @@ public slots :
     void exportRayImage ();
     void about ();
     
+    bool getShadowCheckBoxState();
+    bool getMirrorCheckBoxState();
+    
 private :
     void initControlWidget();
     RayIterator *getIterator();
-    
+    void resampleScenesLights();
+    ShadingFunction getShadingFunction();
+
     QActionGroup * actionGroup;
     QGroupBox * controlWidget;
     QString currentDirectory;
 
+    QComboBox* shadingComboBox;
     QComboBox* rayIteratorComboBox;
+    QCheckBox* shadowCheckBox;
+    DoubleWidget* lightSampleSlider;
+    QCheckBox* mirrorCheckBox;
     
-    GLViewer * viewer;
+    GLViewer* viewer;
 };
 
 #endif // WINDOW_H

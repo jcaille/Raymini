@@ -37,11 +37,9 @@
 #include <QStatusBar>
 #pragma clang diagnostic pop
 
-#include "RayTracer.h"
 #include "GridAARayIterator.h"
 
 using namespace std;
-
 
 Window::Window () : QMainWindow (NULL) {
     try {
@@ -51,6 +49,14 @@ Window::Window () : QMainWindow (NULL) {
         exit (1);
     }
     setCentralWidget (viewer);
+
+#if DEBUG
+    cout << "Building in Debug mode" << endl << " Small window to allow easy testing" << endl;;
+    viewer->setBaseSize(150, 150);
+#else
+    cout << "Release" << endl;
+    viewer->setBaseSize(500, 500);
+#endif
     
     QDockWidget * controlDockWidget = new QDockWidget (this);
     initControlWidget ();
@@ -58,7 +64,11 @@ Window::Window () : QMainWindow (NULL) {
     controlDockWidget->setWidget (controlWidget);
     controlDockWidget->adjustSize ();
     addDockWidget (Qt::RightDockWidgetArea, controlDockWidget);
+    controlDockWidget->setFloating(true);
     controlDockWidget->setFeatures (QDockWidget::AllDockWidgetFeatures);
+    controlDockWidget->setGeometry(frameGeometry().x() - 200, frameGeometry().y() - 28, 0, 0);
+    controlDockWidget->adjustSize();
+    
     statusBar()->showMessage("");
 }
 
@@ -66,6 +76,15 @@ Window::~Window () {
 
 }
 
+#pragma mark - Options methods
+
+// Those methods are public and might be called by outside objects to get user options.
+
+void Window::resampleScenesLights()
+{
+    Scene* scene = Scene::getInstance();
+    scene->resampleLights((float) lightSampleSlider->getValue());
+}
 
 RayIterator* Window::getIterator()
 {
@@ -89,18 +108,30 @@ RayIterator* Window::getIterator()
     return r;
 }
 
+ShadingFunction Window::getShadingFunction()
+{
+    switch (shadingComboBox->currentIndex()) {
+        case 0:
+            return CONSTANT;
+            break;
+        case 1 :
+            return PHONG;
+            break;
+        case 2 :
+            return COOK;
+            break;
+        default:
+            return CONSTANT;
+            break;
+    }
+}
+
 void Window::renderRayImage () {
-    
-    std::cout << "The value of the dropdown is : " << std::endl;
-    // Get the value
-    
+    // Modify scene to apply options if necessary
+    resampleScenesLights();
+        
+    // Get camera informations
     qglviewer::Camera * cam = viewer->camera ();
-    
-    // Switch between different renderer here.
-    // Might be useful to have some keybinding to do this !
-    RayTracer * rayTracer = RayTracer::getInstance ();
-    rayTracer->rayIterator = getIterator();
-    
     qglviewer::Vec p = cam->position ();
     qglviewer::Vec d = cam->viewDirection ();
     qglviewer::Vec u = cam->upVector ();
@@ -113,6 +144,15 @@ void Window::renderRayImage () {
     float aspectRatio = cam->aspectRatio ();
     unsigned int screenWidth = cam->screenWidth ();
     unsigned int screenHeight = cam->screenHeight ();
+    
+    // Render the image
+    RayTracer * rayTracer = RayTracer::getInstance ();
+    rayTracer->rayIterator = getIterator();
+    
+    rayTracer->enableCastShadows = shadowCheckBox->isChecked();
+    rayTracer->enableMirrorEffet = mirrorCheckBox->isChecked();
+    rayTracer->shadingFunction = getShadingFunction();
+    
     QTime timer;
     timer.start ();
     viewer->setRayImage(rayTracer->render (camPos, viewDirection, upVector, rightVector,
@@ -155,7 +195,7 @@ void Window::exportRayImage () {
 void Window::about () {
     QMessageBox::about (this, 
                         "About This Program", 
-                        "<b>RayMini</b> <br> by <i>Tamy Boubekeur</i>.");
+                        "<b>RayMini</b> <br> by <i>Jean Caille, Florian Denis, Audrey Fourneret & Simon Martin</i>.");
 }
 
 void Window::initControlWidget () {
@@ -189,12 +229,32 @@ void Window::initControlWidget () {
     QGroupBox * rayGroupBox = new QGroupBox ("Ray Tracing", controlWidget);
     QVBoxLayout * rayLayout = new QVBoxLayout (rayGroupBox);
     
+    shadingComboBox = new QComboBox;
+    shadingComboBox->addItem(tr("Constant - No shading"));
+    shadingComboBox->addItem(tr("Phong"));
+    shadingComboBox->addItem(tr("Cook Torrance"));
+    shadingComboBox->setCurrentIndex(1);
+    rayLayout->addWidget(shadingComboBox);
+    
     
     rayIteratorComboBox = new QComboBox;
     rayIteratorComboBox->addItem(tr("No AA"));
     rayIteratorComboBox->addItem(tr("AA : 4x"));
-    rayIteratorComboBox->addItem(tr("AA : 8x"));
+    rayIteratorComboBox->addItem(tr("AA : 9x"));
     rayLayout->addWidget(rayIteratorComboBox);
+    
+    shadowCheckBox = new QCheckBox;
+    shadowCheckBox->setText(QString("Cast Shadows"));
+    shadowCheckBox->setChecked(true);
+    rayLayout->addWidget(shadowCheckBox);
+    
+    lightSampleSlider = new DoubleWidget(QString("Light samples density"), 0.0, 500.0, 50, this);
+    rayLayout->addWidget(lightSampleSlider);
+    
+    mirrorCheckBox = new QCheckBox;
+    mirrorCheckBox->setText(QString("Mirror"));
+    mirrorCheckBox->setChecked(true);
+    rayLayout->addWidget(mirrorCheckBox);
     
     QPushButton * rayButton = new QPushButton ("Render", rayGroupBox);
     rayLayout->addWidget (rayButton);
