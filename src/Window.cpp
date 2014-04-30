@@ -38,6 +38,7 @@
 #pragma clang diagnostic pop
 
 #include "GridAARayIterator.h"
+#include "LensBlurIterator.h"
 
 using namespace std;
 
@@ -89,7 +90,9 @@ void Window::resampleScenesLights()
 RayIterator* Window::getIterator()
 {
 
-    RayIterator *r = NULL;
+    LensBlurIterator* r = new LensBlurIterator;
+    return r;
+#if 0
     
     switch (rayIteratorComboBox->currentIndex()) {
             
@@ -106,6 +109,7 @@ RayIterator* Window::getIterator()
     }
     
     return r;
+#endif
 }
 
 ShadingFunction Window::getShadingFunction()
