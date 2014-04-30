@@ -20,8 +20,6 @@ public:
     static Scene * getInstance ();
     static void destroyInstance ();
     
-    void buildCornellBoxScene();
-    
     inline std::vector<Object> & getObjects () { return objects; }
     inline const std::vector<Object> & getObjects () const { return objects; }
     
@@ -38,6 +36,7 @@ protected:
 private:
     
     void buildCornellBox(float scale = 1);
+    void buildDefaultScene ();
     
     std::vector<Object> objects;
     std::vector<Light> lights;
