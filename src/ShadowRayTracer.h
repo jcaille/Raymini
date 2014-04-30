@@ -15,10 +15,10 @@ class ShadowRayTracer : public KDTreeRayTracer
 {
         
     /**
-     *  Default Phong BRDF shading, basic shadow casting
+     *  Default shading, basic shadow casting
      */
     
-    virtual void rayColorForIntersection(const Vec3Df& pov,
+    virtual void rayColorForIntersection(const Ray& ray,
                                          const Vec3Df& intersectionPoint,
                                          const Vec3Df& intersectionNormal,
                                          const Object& intersectionObject,
@@ -27,7 +27,7 @@ class ShadowRayTracer : public KDTreeRayTracer
     
 protected:
     
-    bool lightContributionToRayColorForIntersection(const Vec3Df& pov,
+    bool lightContributionToRayColorForIntersection(const Ray& ray,
                                                     const Vec3Df& intersectionPoint,
                                                     const Vec3Df& intersectionNormal,
                                                     const Vec3Df& lightPos,

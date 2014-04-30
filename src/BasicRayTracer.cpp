@@ -38,9 +38,11 @@ Vec3Df BasicRayTracer::brdf(const Vec3Df &hitPoint, const Vec3Df& normal, const 
 
 #pragma mark - Overloading
 
-void BasicRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+void BasicRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
 
+    const Vec3Df& pov = ray.getOrigin();
+    
     intersectionColor = Vec3Df(0,0,0);
     
     const std::vector<Light>& lights = scene.getLights();
@@ -50,7 +52,7 @@ void BasicRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& in
     
 }
 
-void BasicRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Light& intersectionLight, const Scene& scene, Vec3Df& intersectionColor)
+void BasicRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Light& intersectionLight, const Scene& scene, Vec3Df& intersectionColor)
 {
     intersectionColor = intersectionLight.getColor();
 }

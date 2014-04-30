@@ -8,6 +8,8 @@
 #include "RayTracer.h"
 #include "Ray.h"
 #include "Scene.h"
+
+
 #include "Window.h"
 
 #include "BasicRayTracer.h"
@@ -15,6 +17,7 @@
 #include "BoundingBoxRayTracer.h"
 #include "ExtendedLightSourcesRayTracer.h"
 #include "MirrorRayTracer.h"
+#include "PathTracer.h"
 
 #include "GridAARayIterator.h"
 
@@ -27,9 +30,9 @@
 
 static RayTracer * instance = NULL;
 
-RayTracer * RayTracer::getInstance () {
+RayTracer* RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new MirrorRayTracer();
+        instance = new PathTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
@@ -176,7 +179,7 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
         Vec3Df norm = mesh.getNormal(lightIntersectionTriangle, coords);
         
         // Now that we have that point of intersection, let's compute the color it is supposed to have
-        rayColorForIntersection(ray.getOrigin(), lightIntersectionPoint + lightIntersectionObject->getTrans(), norm, *lightIntersectionObject, scene, intersectionColor);
+        rayColorForIntersection(ray, lightIntersectionPoint + lightIntersectionObject->getTrans(), norm, *lightIntersectionObject, scene, intersectionColor);
         
     } else {
         
@@ -189,7 +192,7 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
         Vec3Df norm = mesh.getNormal(objectIntersectionTriangle, coords);
         
         // Now that we have that point of intersection, let's compute the color it is supposed to have
-        rayColorForIntersection(ray.getOrigin(), objectIntersectionPoint + objectIntersectionObject->getTrans(), norm, *objectIntersectionObject, scene, intersectionColor);
+        rayColorForIntersection(ray, objectIntersectionPoint + objectIntersectionObject->getTrans(), norm, *objectIntersectionObject, scene, intersectionColor);
         
 
     }

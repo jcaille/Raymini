@@ -39,6 +39,8 @@ public:
      */
     static Vec3Df phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light);
     
+    static Vec3Df phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &nextDirection, const Object& object);
+    
     /**
      *  Compute the Cook-Torrance's BRDF (adapted to shading metal or other shiny and highly reflective surfaces )
      *

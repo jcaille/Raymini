@@ -10,7 +10,7 @@
 #include "Scene.h"
 #include "BRDF.h"
 
-void ExtendedLightSourcesRayTracer::directContributionToRayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& directContribution)
+void ExtendedLightSourcesRayTracer::directContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& directContribution)
 {
 
     directContribution = Vec3Df(0,0,0);
@@ -26,7 +26,7 @@ void ExtendedLightSourcesRayTracer::directContributionToRayColorForIntersection(
             
             Vec3Df rayContribution;
             
-            if (lightContributionToRayColorForIntersection(pov, intersectionPoint, intersectionNormal, lightPos, light, intersectionObject, scene, rayContribution)){
+            if (lightContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, lightPos, light, intersectionObject, scene, rayContribution)){
                 lightContribution += rayContribution;
             }
             
@@ -37,10 +37,10 @@ void ExtendedLightSourcesRayTracer::directContributionToRayColorForIntersection(
     
 }
 
-void ExtendedLightSourcesRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+void ExtendedLightSourcesRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
     
-    directContributionToRayColorForIntersection(pov, intersectionPoint, intersectionNormal, intersectionObject, scene, intersectionColor);
+    directContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, intersectionColor);
 
 }
 

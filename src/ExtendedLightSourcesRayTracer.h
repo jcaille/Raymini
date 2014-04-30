@@ -15,10 +15,10 @@ class ExtendedLightSourcesRayTracer : public ShadowRayTracer {
     
     
     /**
-     *  Default Phong BRDF shading with smooth shadows
+     *  Default shading with smooth shadows & BRDF taking into account extended light
      */
     
-    virtual void rayColorForIntersection(const Vec3Df& pov,
+    virtual void rayColorForIntersection(const Ray& ray,
                                          const Vec3Df& intersectionPoint,
                                          const Vec3Df& intersectionNormal,
                                          const Object& intersectionObject,
@@ -27,7 +27,7 @@ class ExtendedLightSourcesRayTracer : public ShadowRayTracer {
     
 protected:
     
-    void directContributionToRayColorForIntersection(const Vec3Df& pov,
+    void directContributionToRayColorForIntersection(const Ray& ray,
                                                      const Vec3Df& intersectionPoint,
                                                      const Vec3Df& intersectionNormal,
                                                      const Object& intersectionObject,

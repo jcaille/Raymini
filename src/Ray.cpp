@@ -28,11 +28,11 @@ bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const
     Vec3Df candidatePlane;
     
     for (i=0; i<NUMDIM; i++)
-        if (origin[i] < minBb[i]) {
+        if (_origin[i] < minBb[i]) {
             quadrant[i] = LEFT;
             candidatePlane[i] = minBb[i];
             inside = false;
-        } else if (origin[i] > maxBb[i]) {
+        } else if (_origin[i] > maxBb[i]) {
             quadrant[i] = RIGHT;
             candidatePlane[i] = maxBb[i];
             inside = false;
@@ -41,13 +41,13 @@ bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const
         }
 
     if (inside)	{
-        intersectionPoint = origin;
+        intersectionPoint = _origin;
         return (true);
     }
 
     for (i = 0; i < NUMDIM; i++)
-        if (quadrant[i] != MIDDLE && direction[i] !=0.)
-            maxT[i] = (candidatePlane[i]-origin[i]) / direction[i];
+        if (quadrant[i] != MIDDLE && _direction[i] !=0.)
+            maxT[i] = (candidatePlane[i]-_origin[i]) / _direction[i];
         else
             maxT[i] = -1.;
 
@@ -59,7 +59,7 @@ bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const
     if (maxT[whichPlane] < 0.) return (false);
     for (i = 0; i < NUMDIM; i++)
         if (whichPlane != i) {
-            intersectionPoint[i] = origin[i] + maxT[whichPlane] *direction[i];
+            intersectionPoint[i] = _origin[i] + maxT[whichPlane] * _direction[i];
             if (intersectionPoint[i] < minBb[i] || intersectionPoint[i] > maxBb[i])
                 return (false);
         } else {
@@ -83,14 +83,14 @@ bool Ray::intersect(const Triangle & tri, const vector<Vertex>& vertices, float&
     Vec3Df n = Vec3Df::crossProduct(e0, e1);
     n.normalize();
     
-    Vec3Df q = Vec3Df::crossProduct(direction, e1);
+    Vec3Df q = Vec3Df::crossProduct(_direction, e1);
     
     float a = Vec3Df::dotProduct(e0, q);
     
     if(abs(a) <= ACCURACY)
         return false;
     
-    Vec3Df s = (origin-p0)/a;
+    Vec3Df s = (_origin-p0)/a;
     
     Vec3Df r = Vec3Df::crossProduct(s, e0);
     
@@ -99,7 +99,7 @@ bool Ray::intersect(const Triangle & tri, const vector<Vertex>& vertices, float&
     if (b0 < 0)
         return false;
     
-    float b1 = Vec3Df::dotProduct(r, direction);
+    float b1 = Vec3Df::dotProduct(r, _direction);
     
     if (b1 < 0)
         return false;
@@ -116,7 +116,7 @@ bool Ray::intersect(const Triangle & tri, const vector<Vertex>& vertices, float&
     {
 
         intersectionDistance = t;
-        intersectionPoint = origin + t * direction;
+        intersectionPoint = _origin + t * _direction;
 
         return true;
     }

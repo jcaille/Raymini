@@ -97,7 +97,7 @@ void Scene::buildCornellBox(float scale){
 
     /* Ceiling light - slightly yellowish */
     Mesh ceilingLightMesh;
-    ceilingLightMesh.makePlane(Vec3Df (0.0, 0.0, 0.0), Vec3Df(0,0,-1), Vec3Df(0,1,0), .2*scale, .2*scale);
+    ceilingLightMesh.makePlane(Vec3Df (0.0, 0.0, 0.0), Vec3Df(0,0,-1), Vec3Df(0,1,0), 0.2*scale, 0.2*scale);
     Light ceilingLight (scale*Vec3Df (0.0, 0.0, 0.99), ceilingLightMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
     lights.push_back(ceilingLight);
 
@@ -146,10 +146,10 @@ void Scene::buildDefaultScene () {
 
     Mesh ramMesh;
     ramMesh.loadOFF("models/ram.off");
-//    Material ramMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f));
-//    Object ram (ramMesh, ramMat);
-//    ram.setTrans (smallBoxTop);
-//    objects.push_back (ram);
+    Material ramMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f), 0.0);
+    Object ram (ramMesh, ramMat);
+    ram.setTrans (smallBoxTop);
+    objects.push_back (ram);
     
     Mesh rhinoMesh;
     rhinoMesh.loadOFF ("models/rhino.off");
@@ -159,8 +159,8 @@ void Scene::buildDefaultScene () {
     objects.push_back (rhino);
 
     // I AM RAM-GOD. I SHINE WITH THE POWER OF A THOUSANDS SUN. BOW BEFORE ME!
-    Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
-    lights.push_back(ramLight);
+//    Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
+//    lights.push_back(ramLight);
 
     
     
