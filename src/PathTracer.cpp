@@ -11,6 +11,9 @@
 #include "Path.h"
 #include "BRDF.h"
 
+
+#define MAX_DEPTH 8
+
 static inline float random_float(float lo, float hi)
 {
     return lo + static_cast<float>( rand() ) / ( static_cast <float> (RAND_MAX/(hi-lo)));
@@ -18,7 +21,7 @@ static inline float random_float(float lo, float hi)
 
 void PathTracer::buildRecursivePath(const Ray &ray, const Scene& scene, Vec3Df& intersectionColor){
     
-    if(path.getRays().size() == depth_max){
+    if(_path.getRays().size() == MAX_DEPTH){
         intersectionColor = getBackgroundColor();
         return;
     }
@@ -48,11 +51,11 @@ void PathTracer::buildRecursivePath(const Ray &ray, const Scene& scene, Vec3Df& 
     if (lightIntersectionDistance <= objectIntersectionDistance){
         //on n'ajoute plus dans le path et on peut remonter le path pour calculer les brdf
         //car on a une light !
-        path.setContainsLight(true);
+        _path.setContainsLight(true);
         
         //si on touche directement la lumière sans toucher de points, alors on donne la couleur de la lumière
         //sinon on multiplie seulement par sa couleur
-        if (path.getRays().size() == 0){
+        if (_path.getRays().size() == 0){
             intersectionColor = lightIntersectionObject->getColor();
         }else{
             intersectionColor *= lightIntersectionObject->getColor();
@@ -106,7 +109,7 @@ void PathTracer::buildRecursivePath(const Ray &ray, const Scene& scene, Vec3Df& 
                 bool direct_lightIntersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
                 
                 if (!direct_lightIntersection || obstructionDistance> distanceSample){
-                    this->directIntersectionColor += BRDF::phong(objectIntersectionPoint, norm, ray.getOrigin(), light.getSamples()[index_sampleLight], *objectIntersectionObject, light);
+                    _directIntersectionColor += BRDF::phong(objectIntersectionPoint, norm, ray.getOrigin(), light.getSamples()[index_sampleLight], *objectIntersectionObject, light);
                 }
                 
             }
@@ -127,7 +130,7 @@ void PathTracer::buildRecursivePath(const Ray &ray, const Scene& scene, Vec3Df& 
         direction = cos(theta)* sin(phi) * u + sin(theta)*sin(phi)*v + cos(phi)*norm;
         direction.normalize();
         Ray ray_new = Ray(objectIntersectionPoint +0.01*direction, direction);
-        path.addRay(ray_new);
+        _path.addRay(ray_new);
         
         intersectionColor += BRDF::phong(objectIntersectionPoint, norm, ray.getOrigin(), direction, *objectIntersectionObject);
         buildRecursivePath(ray_new, scene, intersectionColor );
@@ -140,15 +143,14 @@ void PathTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df&
     
     //d'après http://www.inf.ed.ac.uk/teaching/courses/cg/lectures/cg15_2013.pdf
 
-    depth_max = 8;
-    path.setRays(vector<Ray>());
-    path.setContainsLight(false);
+    _path.setRays(vector<Ray>());
+    _path.setContainsLight(false);
     intersectionColor = Vec3Df(0,0,0);
-    this->directIntersectionColor = Vec3Df(0,0,0);
+    _directIntersectionColor = Vec3Df(0,0,0);
     buildRecursivePath(ray, scene, intersectionColor);
-    intersectionColor += directIntersectionColor;
-    if (path.getRays().size() !=0){
-        intersectionColor /= path.getRays().size();
+    intersectionColor += _directIntersectionColor;
+    if (_path.getRays().size() !=0){
+        intersectionColor /= _path.getRays().size();
     }
     //intersectionColor.normalize();
 

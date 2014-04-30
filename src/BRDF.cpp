@@ -56,7 +56,6 @@ Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &p
         return Vec3Df(0,0,0);
     
     Vec3Df r = 2 * a * normal - wi;
-    float b = Vec3Df::dotProduct(r, wo);
     
     float f = material.getDiffuse() * a;    // Diffuse
     

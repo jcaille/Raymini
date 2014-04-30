@@ -253,8 +253,6 @@
 			isa = PBXGroup;
 			children = (
 				1A73A77019051BE500B6A310 /* RayTracer.h */,
-				7690310E190D45CA0011872C /* PathTracer.cpp */,
-				7690310F190D45CA0011872C /* PathTracer.h */,
 				1A73A76F19051BE500B6A310 /* RayTracer.cpp */,
 				1AA67217190A9B6F00745C48 /* BoundingBoxRayTracer.h */,
 				1AA67216190A9B6F00745C48 /* BoundingBoxRayTracer.cpp */,
@@ -264,6 +262,8 @@
 				1AA67213190A7CA900745C48 /* KDTreeRayTracer.cpp */,
 				1A19E6C7190D122F003489AF /* ExtendedLightSourcesRayTracer.h */,
 				1A19E6C6190D122F003489AF /* ExtendedLightSourcesRayTracer.cpp */,
+				7690310F190D45CA0011872C /* PathTracer.h */,
+				7690310E190D45CA0011872C /* PathTracer.cpp */,
 				1A71DE3D1907B3AE00BB58C8 /* RayIterator */,
 			);
 			name = RayTracing;

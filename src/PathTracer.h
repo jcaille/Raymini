@@ -22,9 +22,8 @@ public:
     void buildRecursivePath(const Ray& ray, const Scene& scene, Vec3Df &intersectionColor);
     
 private:
-    //depth max of paths used in PathTracer
-    int depth_max;
-    Path path;
-    Vec3Df directIntersectionColor;
+
+    Path _path;
+    Vec3Df _directIntersectionColor;
 
 };
