@@ -88,7 +88,7 @@ void Scene::buildCornellBox(float scale){
 
     /* Ceiling light - slightly yellowish */
     Mesh ceilingLightMesh;
-    ceilingLightMesh.makePlane(Vec3Df (0.0, 0.0, 0.0), Vec3Df(0,0,-1), Vec3Df(0,1,0), 0.8*scale, 0.8*scale);
+    ceilingLightMesh.makePlane(Vec3Df (0.0, 0.0, 0.0), Vec3Df(0,0,-1), Vec3Df(0,1,0), 0.2*scale, 0.2*scale);
     Light ceilingLight (scale*Vec3Df (0.0, 0.0, 0.99), ceilingLightMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
     lights.push_back(ceilingLight);
     
@@ -142,12 +142,12 @@ void Scene::buildDefaultScene () {
     ram.setTrans (smallBoxTop);
     objects.push_back (ram);
     
-    Mesh rhinoMesh;
+    /*Mesh rhinoMesh;
     rhinoMesh.loadOFF ("models/rhino.off");
     Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f));
     Object rhino (rhinoMesh, rhinoMat);
     rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
-    objects.push_back (rhino);
+    objects.push_back (rhino);*/
     
 
 //    Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);

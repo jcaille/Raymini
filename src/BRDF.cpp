@@ -60,9 +60,6 @@ Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &p
     
     float f = material.getDiffuse() * a;    // Diffuse
     
-    if (b > 0)
-        f += material.getSpecular() * powf( b , material.getShininess());               // Specular
-    
     return f * material.getColor();
     
     

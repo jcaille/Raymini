@@ -40,7 +40,7 @@
 		7627F8ED1907103400121E57 /* KDTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7627F8EB1907103100121E57 /* KDTree.cpp */; };
 		7670A94D19067AD000509C5E /* QGLViewer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7670A94C19067AD000509C5E /* QGLViewer.framework */; };
 		76903110190D45CA0011872C /* PathTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7690310E190D45CA0011872C /* PathTracer.cpp */; };
-		769C51F2190D515F00995D5F /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 769C51F0190D515F00995D5F /* Path.cpp */; };
+		76CC00FA190FCB4F0045E5CA /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 76CC00F8190FCB4F0045E5CA /* Path.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -115,8 +115,8 @@
 		7670A94C19067AD000509C5E /* QGLViewer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QGLViewer.framework; path = /usr/local/lib/QGLViewer.framework; sourceTree = "<absolute>"; };
 		7690310E190D45CA0011872C /* PathTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PathTracer.cpp; sourceTree = "<group>"; };
 		7690310F190D45CA0011872C /* PathTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathTracer.h; sourceTree = "<group>"; };
-		769C51F0190D515F00995D5F /* Path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Path.cpp; sourceTree = "<group>"; };
-		769C51F1190D515F00995D5F /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Path.h; sourceTree = "<group>"; };
+		76CC00F8190FCB4F0045E5CA /* Path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Path.cpp; sourceTree = "<group>"; };
+		76CC00F9190FCB4F0045E5CA /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Path.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,11 +198,11 @@
 				1A73A77319051BE500B6A310 /* Triangle.cpp */,
 				1A73A76819051BE500B6A310 /* Mesh.h */,
 				1A73A76719051BE500B6A310 /* Mesh.cpp */,
-				769C51F0190D515F00995D5F /* Path.cpp */,
-				769C51F1190D515F00995D5F /* Path.h */,
 				1A73A75E19051BE500B6A310 /* BoundingBox.h */,
 				1A73A75D19051BE500B6A310 /* BoundingBox.cpp */,
 				1A73A76E19051BE500B6A310 /* Ray.h */,
+				76CC00F8190FCB4F0045E5CA /* Path.cpp */,
+				76CC00F9190FCB4F0045E5CA /* Path.h */,
 				1A73A76D19051BE500B6A310 /* Ray.cpp */,
 				7627F8EC1907103200121E57 /* KDTree.h */,
 				7627F8EB1907103100121E57 /* KDTree.cpp */,
@@ -372,7 +372,7 @@
 				1A71DE3819079CB700BB58C8 /* BRDF.cpp in Sources */,
 				7627F8ED1907103400121E57 /* KDTree.cpp in Sources */,
 				76903110190D45CA0011872C /* PathTracer.cpp in Sources */,
-				769C51F2190D515F00995D5F /* Path.cpp in Sources */,
+				76CC00FA190FCB4F0045E5CA /* Path.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

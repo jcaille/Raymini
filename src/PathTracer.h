@@ -25,6 +25,6 @@ private:
     //depth max of paths used in PathTracer
     int depth_max;
     Path path;
-    int count;
+    Vec3Df directIntersectionColor;
 
 };

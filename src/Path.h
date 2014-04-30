@@ -19,6 +19,7 @@ public :
     inline Path(){ depth = 0; contains_light = false;}
     void addRay(Ray ray);
     inline std::vector<Ray> getRays(){ return rays;}
+    inline void setRays(std::vector<Ray> _rays){ rays = _rays;}
     inline void setContainsLight(bool _light){ contains_light = _light;}
     inline bool getContainsLight(){ return contains_light; }
     
