@@ -48,8 +48,8 @@ public slots :
     void exportRayImage ();
     void about ();
     
-    bool getShadowCheckBoxState();
-    bool getMirrorCheckBoxState();
+   // bool getShadowCheckBoxState();
+    //bool getMirrorCheckBoxState();
     
 private :
     void initControlWidget();

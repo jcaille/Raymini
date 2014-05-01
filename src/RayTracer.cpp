@@ -26,6 +26,8 @@
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
+#include <omp.h>
+
 static RayTracer * instance = NULL;
 
 RayTracer* RayTracer::getInstance () {
@@ -197,14 +199,15 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
 }
 
 
-QImage RayTracer::render (const Vec3Df & camPos,
+bool RayTracer::render (const Vec3Df & camPos,
                           const Vec3Df & direction,
                           const Vec3Df & upVector,
                           const Vec3Df & rightVector,
                           float fieldOfView,
                           float aspectRatio,
                           unsigned int screenWidth,
-                          unsigned int screenHeight) {
+                          unsigned int screenHeight,
+                          QImage & image) {
     
 
     QProgressDialog progressDialog ("Raytracing...", "Cancel", 0, 100);
@@ -214,16 +217,19 @@ QImage RayTracer::render (const Vec3Df & camPos,
     
     rayIterator->setCameraInformation(camPos, direction, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
     
-    QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
+    //QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
     
-    std::vector<Ray> rays;
+
+
     for (unsigned int i = 0; i < screenWidth; i++) {
         
         std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
-        
+
+        //Multithreading
+#pragma omp parallel for
         for (unsigned int j = 0; j < screenHeight; j++) {
-            
+            std::vector<Ray> rays;
             rayIterator->raysForPixel(i, j, rays);
             
             Vec3Df pixelColor;
@@ -241,6 +247,6 @@ QImage RayTracer::render (const Vec3Df & camPos,
         }
     }
     progressDialog.setValue(100);
-    return image;
+    return true;
 
 }

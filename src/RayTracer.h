@@ -39,7 +39,6 @@ typedef enum ShadingFunction {
 
 class RayTracer {
 public:
-    
     /* User defined options */
     int maxRayDepth;
     int bounces;
@@ -54,17 +53,20 @@ public:
     inline const Vec3Df & getBackgroundColor () const { return _backgroundColor;}
     inline void setBackgroundColor (const Vec3Df & c) { _backgroundColor = c; }
     
-    QImage render (const Vec3Df & camPos,
+
+    bool render(const Vec3Df & camPos,
                    const Vec3Df & viewDirection,
                    const Vec3Df & upVector,
                    const Vec3Df & rightVector,
                    float fieldOfView,
                    float aspectRatio,
                    unsigned int screenWidth,
-                   unsigned int screenHeight);
+                   unsigned int screenHeight,
+                   QImage &image);
     
 
     RayIterator *rayIterator;
+
 
 protected:
     
@@ -146,6 +148,7 @@ protected:
      *  @param intersectionColor    The color that result from the interaction of the ray with the scene
      */
     virtual void raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor);
+
 
 private:
 
