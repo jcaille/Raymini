@@ -67,7 +67,7 @@ DoubleWidget::DoubleWidget (const QString & name,
     LCDNumber->display (value);
     
     QVBoxLayout* stackedLayout = new QVBoxLayout(this);
-    QHBoxLayout * layout = new QHBoxLayout (this);
+    QHBoxLayout * layout = new QHBoxLayout ();
 //    layout->addWidget (label);
     layout->addWidget (slider);
     layout->addWidget (LCDNumber);
@@ -106,13 +106,13 @@ void setBoubekQTStyle (QApplication & app) {
 #else
     p.setColor (QPalette::Background, QColor (48, 48, 48/*39, 39, 39*/)); // general background
     p.setColor (QPalette::WindowText, QColor (203, 203, 203)); // general foreground
-    p.setColor (QPalette::Base, QColor (60, 60, 60)); // text entry widget
+    p.setColor (QPalette::Base, QColor (255, 255, 255)); // text entry widget
     p.setColor (QPalette::AlternateBase, QColor (238, 112, 0)); // Text used on 'Base'
     p.setColor (QPalette::ToolTipBase, QColor (48, 48, 48));
-    p.setColor (QPalette::ToolTipText, QColor (48, 48, 48));
-    p.setColor (QPalette::Text, QColor (145, 145, 145)); // Text used on 'Base'
+    p.setColor (QPalette::ToolTipText, QColor (255, 255, 255));
+    p.setColor (QPalette::Text, QColor (255, 255, 255)); // Text used on 'Base'
     p.setColor (QPalette::Button, QColor (48, 48, 48)); // general bg button color
-    p.setColor (QPalette::ButtonText, QColor (203, 203, 203)); // general foreground button color
+    p.setColor (QPalette::ButtonText, QColor (255, 255, 255)); // general foreground button color
     p.setColor (QPalette::BrightText, QColor (238, 112, 0)); // to ensure contrast
     p.setColor (QPalette::Highlight, QColor (238, 112, 0)); // marked element
     p.setColor (QPalette::HighlightedText, QColor (31, 13, 0)); // marked element text

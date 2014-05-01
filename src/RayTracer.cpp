@@ -28,6 +28,8 @@
 
 #include <dispatch/dispatch.h>
 
+#define PROGRESS_BAR_SIZE 50
+
 static RayTracer * instance = NULL;
 
 RayTracer* RayTracer::getInstance () {
@@ -209,17 +211,27 @@ QImage RayTracer::render (const Vec3Df & camPos,
                           unsigned int screenHeight) {
     
 
+    
     __block QImage image (QSize (screenWidth, screenHeight), QImage::Format_RGB888);
     QProgressDialog progressDialog ("Raytracing...", "Cancel", 0, 100);
     progressDialog.show ();
     
     Scene* scene = Scene::getInstance();
     
-    rayIterator->setCameraInformation(camPos, direction, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
+    // Progress bar initialization
+    cout << endl << "|" ;
+    for(int i = 0; i < PROGRESS_BAR_SIZE - 1 ; i++ )
+    {
+        cout << "-";
+    }
+    cout << endl << "|";
+    float milestone = screenWidth / PROGRESS_BAR_SIZE ;
     for (unsigned int i = 0; i < screenWidth; i++) {
-        
-        std::cout << i << " " << screenWidth << std::endl;
-        progressDialog.setValue ((100*i)/screenWidth);
+        if (i >= milestone) {
+            milestone += screenWidth / PROGRESS_BAR_SIZE;
+            cout << "#" ;
+        }
+//        progressDialog.setValue ((100*i)/screenWidth);
 
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         

@@ -25,7 +25,7 @@ int main (int argc, char **argv)
 {
   QApplication raymini (argc, argv);
   setBoubekQTStyle (raymini);
-  QApplication::setStyle (new QPlastiqueStyle);
+//  QApplication::setStyle (new QPlastiqueStyle);
   Window * window = new Window ();
   window->setWindowTitle ("RayMini: A minimal raytracer.");
   window->show();

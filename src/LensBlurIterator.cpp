@@ -32,51 +32,39 @@ void LensBlurIterator::setCameraInformation(Vec3Df cameraPosition,
     _aspectRatio = ar;
     _screenHeight = screenHeight;
     _screenWidth = screenWidth;
-    
-    // Focus on Rhino
-    Scene* scene = Scene::getInstance();
-    Vec3Df rhinoCenter = scene->getObjects()[scene->getObjects().size() -1].getTrans();
-    
-    apertureRadius = 0.000001;
-    focalLength = Vec3Df::distance(_camPos, rhinoCenter);
-    samples = 1;
-    
-    for (int i = 0; i < samples; i++) {
-        radiuses.push_back(random_float(0, apertureRadius));
-        thetas.push_back(random_float(0, M_PI * 2));
-    }
-    
 }
 
 void LensBlurIterator::raysForPixel(int i, int j, std::vector<Ray>& res){
+    
+    res.clear();
+    
     float tanX = tan (_fieldOfView)*_aspectRatio;
     float tanY = tan (_fieldOfView);
-    Vec3Df stepX = ((float) i - _screenWidth/2.f)/(_screenWidth) * tanX * _rightVector;
-    Vec3Df stepY = ((float) j - _screenHeight/2.f)/(_screenHeight) * tanY * _upVector;
-    Vec3Df step = stepX + stepY;
     
-    Vec3Df dir = _direction + step;
-    dir.normalize ();
-    
-    Ray originRay = Ray(_camPos, dir);
-    Vec3Df focalPoint = _camPos + focalLength * dir;
-    res.clear();
-    res.push_back(originRay);
-    
+    for (int k = 0; k < gridSize; k++) {
+        for(int l = 0; l < gridSize; l++)
+        {
+            Vec3Df stepX = (float (k+gridSize*i) - gridSize*_screenWidth/2.f)/(gridSize * _screenWidth) * tanX * _rightVector;
+            Vec3Df stepY = (float (l+gridSize*j) - gridSize*_screenHeight/2.f)/(gridSize * _screenHeight) * tanY * _upVector;
+            Vec3Df step = stepX + stepY;
+            Vec3Df dir = _direction + step;
+            dir.normalize ();
+            
+            // At least one center ray;
+            res.push_back(Ray(_camPos, dir));
+            
+            Vec3Df focalPoint = _camPos + _focalLength * dir;
+            for(int p = 0; p < _samples.size() ; p++)
+            {
+                Vec3Df s = _samples[p];
+                Vec3Df origin = _camPos + _upVector * s[0] + _rightVector * s[1];
+                Vec3Df rayDir = focalPoint - origin;
+                rayDir.normalize();
+                res.push_back(Ray(origin, rayDir));
+            }
 
-    for(int i = 0; i < samples ; i++)
-    {
-        float theta = thetas[i];
-        float r = radiuses[i];
-        
-        Vec3Df origin = _camPos + r * _upVector * cos(theta) + r * _rightVector * sin(theta);
-        Vec3Df rayDir = focalPoint - origin;
-        rayDir.normalize();
-        res.push_back(Ray(origin, rayDir));
+        }
     }
-    
-    
-    res.push_back(Ray(_camPos, dir));
 
 }
 

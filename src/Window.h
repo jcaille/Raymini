@@ -53,16 +53,25 @@ public slots :
     
 private :
     void initControlWidget();
-    RayIterator *getIterator();
+    void setRayIteratorOptions(RayIterator *r);
     void resampleScenesLights();
     ShadingFunction getShadingFunction();
 
     QActionGroup * actionGroup;
+    
     QGroupBox * controlWidget;
+    QGroupBox * focalWidget;
+    QGroupBox * rayTracerWidget;
+    
     QString currentDirectory;
 
     QComboBox* shadingComboBox;
     QComboBox* rayIteratorComboBox;
+    QComboBox* apertureComboBox;
+    QComboBox* focusOnComboBox;
+    
+    DoubleWidget* focalLengthSlider;
+    DoubleWidget* lensBlurDensitySlider;
     QCheckBox* shadowCheckBox;
     DoubleWidget* lightSampleSlider;
     DoubleWidget* bouncesSlider;
