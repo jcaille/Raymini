@@ -34,6 +34,7 @@ typedef enum ShadingFunction {
     CONSTANT,
     PHONG,
     COOK,
+    CARTOON
 } ShadingFunction;
 
 

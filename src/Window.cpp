@@ -121,6 +121,9 @@ ShadingFunction Window::getShadingFunction()
     case 2 :
         return COOK;
         break;
+    case 3 :
+        return CARTOON;
+        break;
     default:
         return CONSTANT;
         break;
@@ -263,6 +266,7 @@ void Window::initControlWidget () {
     shadingComboBox->addItem(tr("Constant - No shading"));
     shadingComboBox->addItem(tr("Phong"));
     shadingComboBox->addItem(tr("Cook Torrance"));
+    shadingComboBox->addItem(tr("Cartoon"));
     shadingComboBox->setCurrentIndex(1);
     rayLayout->addWidget(shadingComboBox);
     

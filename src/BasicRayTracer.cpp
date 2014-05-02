@@ -22,16 +22,18 @@ using std::vector;
 Vec3Df BasicRayTracer::brdf(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light)
 {
     switch (shadingFunction) {
-        case CONSTANT:
-            return BRDF::constant(light, object);
-            break;
-        case PHONG:
-            return BRDF::phong(hitPoint, normal, pov, lightPos, object, light);
-            break;
-        case COOK:
-            return BRDF::cook_torrance(hitPoint, normal, pov, lightPos, object, light);
-        default:
-            return Vec3Df(0, 0, 0);
+    case CONSTANT:
+        return BRDF::constant(light, object);
+        break;
+    case PHONG:
+        return BRDF::phong(hitPoint, normal, pov, lightPos, object, light);
+        break;
+    case COOK:
+        return BRDF::cook_torrance(hitPoint, normal, pov, lightPos, object, light);
+    case CARTOON:
+        return BRDF::cartoon(hitPoint, normal, pov, lightPos, object, light);
+    default:
+        return Vec3Df(0, 0, 0);
     }
     
 }
