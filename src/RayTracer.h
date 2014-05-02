@@ -34,13 +34,15 @@ typedef enum ShadingFunction {
     CONSTANT,
     PHONG,
     COOK,
+    CARTOON
 } ShadingFunction;
 
 
 class RayTracer {
 public:
-    
     /* User defined options */
+    int maxRayDepth;
+    int bounces;
     bool enableCastShadows;
     bool enableMirrorEffet;
     ShadingFunction shadingFunction;
@@ -52,21 +54,24 @@ public:
     inline const Vec3Df & getBackgroundColor () const { return _backgroundColor;}
     inline void setBackgroundColor (const Vec3Df & c) { _backgroundColor = c; }
     
-    QImage render (const Vec3Df & camPos,
+
+    bool render(const Vec3Df & camPos,
                    const Vec3Df & viewDirection,
                    const Vec3Df & upVector,
                    const Vec3Df & rightVector,
                    float fieldOfView,
                    float aspectRatio,
                    unsigned int screenWidth,
-                   unsigned int screenHeight);
+                   unsigned int screenHeight,
+                   QImage &image);
     
 
     RayIterator *rayIterator;
 
+
 protected:
     
-    RayTracer () {}
+    RayTracer () : bounces(1000) {}
     virtual ~RayTracer () {}
         
     /**
@@ -79,14 +84,14 @@ protected:
      *  @param scene                The scene being rendered
      *  @param intersectionColor    Output parameter : will contain the color the ray should take
      */
-    virtual void rayColorForIntersection(const Vec3Df& pov,
+    virtual void rayColorForIntersection(const Ray& ray,
                                          const Vec3Df& intersectionPoint,
                                          const Vec3Df& intersectionNormal,
                                          const Light& intersectionLight,
                                          const Scene& scene,
                                          Vec3Df& intersectionColor) = 0;
     
-    virtual void rayColorForIntersection(const Vec3Df& pov,
+    virtual void rayColorForIntersection(const Ray& ray,
                                          const Vec3Df& intersectionPoint,
                                          const Vec3Df& intersectionNormal,
                                          const Object& intersectionObject,
@@ -143,7 +148,8 @@ protected:
      *  @param scene                The scene to render
      *  @param intersectionColor    The color that result from the interaction of the ray with the scene
      */
-    void raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor);
+    virtual void raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor);
+
 
 private:
 

@@ -13,24 +13,38 @@
 
 #define EPSILON 1e-6
 
-void MirrorRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+void MirrorRayTracer::mirrorContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& reflectedColor)
 {
-    float reflectiveness = intersectionObject.getMaterial().getReflectiveness();
-    if(reflectiveness < EPSILON || !enableMirrorEffet)
-    {
-        directContributionToRayColorForIntersection(pov, intersectionPoint, intersectionNormal, intersectionObject, scene, intersectionColor);
+    
+    if (ray.getDepth() > maxRayDepth){
+        // The ray is too deep, we don't want to risk infinite loop, let's back out
+        reflectedColor = Vec3Df(0,0,0);
         return;
     }
     
     // Cast a new ray, reflected of the surface and get its intersection with the scene.
-    Vec3Df incidentRayDirection = (intersectionPoint - pov);
+    Vec3Df incidentRayDirection = (intersectionPoint - ray.getOrigin());
     incidentRayDirection.normalize();
     
     Vec3Df reflecteRayDirection = incidentRayDirection - 2 * intersectionNormal * (Vec3Df::dotProduct(incidentRayDirection, intersectionNormal));
     Ray reflectedRay(intersectionPoint, reflecteRayDirection);
+    reflectedRay.setDepth(ray.getDepth()+1);
+    
+    raySceneInteraction(reflectedRay, scene, reflectedColor);
+    
+}
+
+void MirrorRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+{
+    float reflectiveness = intersectionObject.getMaterial().getReflectiveness();
+    if(reflectiveness < EPSILON || !enableMirrorEffet)
+    {
+        directContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, intersectionColor);
+        return;
+    }
     
     Vec3Df reflectedColor;
-    raySceneInteraction(reflectedRay, scene, reflectedColor);
+    mirrorContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, reflectedColor);
     
     if(reflectiveness >= 1.0 - EPSILON){
         intersectionColor = reflectedColor;
@@ -38,7 +52,7 @@ void MirrorRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& i
     }
         
     Vec3Df baseColor;
-    directContributionToRayColorForIntersection(pov, intersectionPoint, intersectionNormal, intersectionObject, scene, baseColor);
+    directContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, baseColor);
     
     intersectionColor = reflectiveness * reflectedColor + (1 - reflectiveness) * baseColor;
 

@@ -15,10 +15,10 @@ class MirrorRayTracer : public ExtendedLightSourcesRayTracer
 {
     
     /**
-     *  Default Phong BRDF shading, basic shadow casting, Mirroring with 1-depth path tracing
+     *  Default shading, basic shadow casting, Mirroring with 1-depth path tracing
      */
     
-    virtual void rayColorForIntersection(const Vec3Df& pov,
+    virtual void rayColorForIntersection(const Ray& ray,
                                          const Vec3Df& intersectionPoint,
                                          const Vec3Df& intersectionNormal,
                                          const Object& intersectionObject,
@@ -26,6 +26,14 @@ class MirrorRayTracer : public ExtendedLightSourcesRayTracer
                                          Vec3Df& intersectionColor);
     
 protected:
+    
+    void mirrorContributionToRayColorForIntersection(const Ray& ray,
+                                                     const Vec3Df& intersectionPoint,
+                                                     const Vec3Df& intersectionNormal,
+                                                     const Object& intersectionObject,
+                                                     const Scene& scene,
+                                                     Vec3Df& reflectedColor);
+
     
     friend RayTracer;
     MirrorRayTracer () {}

@@ -48,8 +48,8 @@ public slots :
     void exportRayImage ();
     void about ();
     
-    bool getShadowCheckBoxState();
-    bool getMirrorCheckBoxState();
+   // bool getShadowCheckBoxState();
+    //bool getMirrorCheckBoxState();
     
 private :
     void initControlWidget();
@@ -65,6 +65,7 @@ private :
     QComboBox* rayIteratorComboBox;
     QCheckBox* shadowCheckBox;
     DoubleWidget* lightSampleSlider;
+    DoubleWidget* bouncesSlider;
     QCheckBox* mirrorCheckBox;
     
     GLViewer* viewer;

@@ -39,6 +39,8 @@ public:
      */
     static Vec3Df phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light);
     
+    static Vec3Df phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &nextDirection, const Object& object);
+    
     /**
      *  Compute the Cook-Torrance's BRDF (adapted to shading metal or other shiny and highly reflective surfaces )
      *
@@ -54,6 +56,19 @@ public:
      */
     static Vec3Df cook_torrance(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light, float n1 = 1.49f, float n2 = 1.f);
     
+    /**
+     *  Compute a BDRF to make a cartoon render
+     *
+     *  @param hitPoint point of intersection between ray & mesh
+     *  @param normal   normal of the mesh at the hit point
+     *  @param pov      point of view
+     *  @param object   object of intersection
+     *  @param light    light
+     *
+     *  @return Color
+     */
+    static Vec3Df cartoon(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light);
+
     
 };
 

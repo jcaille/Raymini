@@ -12,12 +12,12 @@
 #include "Light.h"
 
 
-void BoundingBoxRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+void BoundingBoxRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
     intersectionColor = intersectionObject.getMaterial().getColor();
 }
 
-void BoundingBoxRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Light& intersectionLight, const Scene& scene, Vec3Df& intersectionColor)
+void BoundingBoxRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Light& intersectionLight, const Scene& scene, Vec3Df& intersectionColor)
 {
     intersectionColor = intersectionLight.getColor();
 }

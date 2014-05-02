@@ -35,6 +35,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QStatusBar>
+#include <omp.h>
 #pragma clang diagnostic pop
 
 #include "GridAARayIterator.h"
@@ -92,17 +93,17 @@ RayIterator* Window::getIterator()
     RayIterator *r = NULL;
     
     switch (rayIteratorComboBox->currentIndex()) {
-            
-        case 1:
-            r = new GridAARayIterator();
-            ((GridAARayIterator*)r)->gridSize = 2;
-            break;
-        case 2:
-            r = new GridAARayIterator();
-            ((GridAARayIterator*)r)->gridSize = 3;
-            break;
-        default:
-            r = new RayIterator();
+
+    case 1:
+        r = new GridAARayIterator();
+        ((GridAARayIterator*)r)->gridSize = 2;
+        break;
+    case 2:
+        r = new GridAARayIterator();
+        ((GridAARayIterator*)r)->gridSize = 3;
+        break;
+    default:
+        r = new RayIterator();
     }
     
     return r;
@@ -111,25 +112,28 @@ RayIterator* Window::getIterator()
 ShadingFunction Window::getShadingFunction()
 {
     switch (shadingComboBox->currentIndex()) {
-        case 0:
-            return CONSTANT;
-            break;
-        case 1 :
-            return PHONG;
-            break;
-        case 2 :
-            return COOK;
-            break;
-        default:
-            return CONSTANT;
-            break;
+    case 0:
+        return CONSTANT;
+        break;
+    case 1 :
+        return PHONG;
+        break;
+    case 2 :
+        return COOK;
+        break;
+    case 3 :
+        return CARTOON;
+        break;
+    default:
+        return CONSTANT;
+        break;
     }
 }
 
 void Window::renderRayImage () {
     // Modify scene to apply options if necessary
     resampleScenesLights();
-        
+
     // Get camera informations
     qglviewer::Camera * cam = viewer->camera ();
     qglviewer::Vec p = cam->position ();
@@ -152,11 +156,40 @@ void Window::renderRayImage () {
     rayTracer->enableCastShadows = shadowCheckBox->isChecked();
     rayTracer->enableMirrorEffet = mirrorCheckBox->isChecked();
     rayTracer->shadingFunction = getShadingFunction();
+    rayTracer->bounces = (int)bouncesSlider->getValue();
     
     QTime timer;
     timer.start ();
-    viewer->setRayImage(rayTracer->render (camPos, viewDirection, upVector, rightVector,
-                        fieldOfView, aspectRatio, screenWidth, screenHeight));
+    int lastTime = timer.elapsed();
+    //Time between refreshing image
+    int refreshTime = 500;//  ms
+    bool over = false;
+    QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
+
+#pragma omp parallel num_threads(2)
+    {
+        int i = omp_get_thread_num();
+
+        //First thread is calculating image
+        if(i == 0)
+           over = rayTracer->render(camPos, viewDirection, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight, image);
+
+        //Second thread is getting image every refreshingTime
+        if(i == 1)
+        {
+            while (!over)
+            {
+                if(timer.elapsed() > lastTime + refreshTime)
+                {
+                    lastTime = timer.elapsed();
+                    viewer->setRayImage(image);
+                    viewer->setDisplayMode (GLViewer::RayDisplayMode);
+                }
+            }
+        }
+    }
+    viewer->setRayImage(image);
+    viewer->setDisplayMode (GLViewer::RayDisplayMode);
     statusBar()->showMessage(QString ("Raytracing performed in ") +
                              QString::number (timer.elapsed ()) +
                              QString ("ms at ") +
@@ -193,8 +226,8 @@ void Window::exportRayImage () {
 }
 
 void Window::about () {
-    QMessageBox::about (this, 
-                        "About This Program", 
+    QMessageBox::about (this,
+                        "About This Program",
                         "<b>RayMini</b> <br> by <i>Jean Caille, Florian Denis, Audrey Fourneret & Simon Martin</i>.");
 }
 
@@ -208,7 +241,7 @@ void Window::initControlWidget () {
     QCheckBox * wireframeCheckBox = new QCheckBox ("Wireframe", previewGroupBox);
     connect (wireframeCheckBox, SIGNAL (toggled (bool)), viewer, SLOT (setWireframe (bool)));
     previewLayout->addWidget (wireframeCheckBox);
-   
+
     QButtonGroup * modeButtonGroup = new QButtonGroup (previewGroupBox);
     modeButtonGroup->setExclusive (true);
     QRadioButton * flatButton = new QRadioButton ("Flat", previewGroupBox);
@@ -233,6 +266,7 @@ void Window::initControlWidget () {
     shadingComboBox->addItem(tr("Constant - No shading"));
     shadingComboBox->addItem(tr("Phong"));
     shadingComboBox->addItem(tr("Cook Torrance"));
+    shadingComboBox->addItem(tr("Cartoon"));
     shadingComboBox->setCurrentIndex(1);
     rayLayout->addWidget(shadingComboBox);
     
@@ -250,6 +284,9 @@ void Window::initControlWidget () {
     
     lightSampleSlider = new DoubleWidget(QString("Light samples density"), 0.0, 500.0, 50, this);
     rayLayout->addWidget(lightSampleSlider);
+
+    bouncesSlider = new DoubleWidget(QString("Ray bounces number"), 0.0, 1000.0, 0, this);
+    rayLayout->addWidget(bouncesSlider);
     
     mirrorCheckBox = new QCheckBox;
     mirrorCheckBox->setText(QString("Mirror"));

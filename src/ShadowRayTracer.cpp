@@ -13,8 +13,11 @@
 
 #define EPSILON 10e-4
 
-bool ShadowRayTracer::lightContributionToRayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Vec3Df& lightPos, const Light& light, const Object& intersectionObject, const Scene& scene, Vec3Df& lightContribution)
+bool ShadowRayTracer::lightContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Vec3Df& lightPos, const Light& light, const Object& intersectionObject, const Scene& scene, Vec3Df& lightContribution)
 {
+    
+    const Vec3Df& pov = ray.getOrigin();
+    
     if(!enableCastShadows)
     {
         //User has decided to not use shadows. Light contribution is basic BRDF
@@ -44,7 +47,7 @@ bool ShadowRayTracer::lightContributionToRayColorForIntersection(const Vec3Df& p
 
 }
 
-void ShadowRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
+void ShadowRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
     
     intersectionColor = Vec3Df(0,0,0);
@@ -54,7 +57,7 @@ void ShadowRayTracer::rayColorForIntersection(const Vec3Df& pov, const Vec3Df& i
     const std::vector<Light>& lights = scene.getLights();
     for (const Light& light : lights){
 
-        if (lightContributionToRayColorForIntersection(pov, intersectionPoint, intersectionNormal, light.getPos(), light, intersectionObject, scene, lightContribution)){
+        if (lightContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, light.getPos(), light, intersectionObject, scene, lightContribution)){
             intersectionColor += lightContribution;
         }
         

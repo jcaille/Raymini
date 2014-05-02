@@ -31,14 +31,14 @@ public :
      *  Default Phong BRDF shading
      */
     
-    virtual void rayColorForIntersection(const Vec3Df& pov,
+    virtual void rayColorForIntersection(const Ray& ray,
                                          const Vec3Df& intersectionPoint,
                                          const Vec3Df& intersectionNormal,
                                          const Object& intersectionObject,
                                          const Scene& scene,
                                          Vec3Df& intersectionColor);
     
-    virtual void rayColorForIntersection(const Vec3Df& pov,
+    virtual void rayColorForIntersection(const Ray& ray,
                                          const Vec3Df& intersectionPoint,
                                          const Vec3Df& intersectionNormal,
                                          const Light& intersectionObject,

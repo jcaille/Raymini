@@ -39,6 +39,7 @@ Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &p
 
 }
 
+
 Vec3Df BRDF::cook_torrance(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light, float n1, float n2)
 {
     const Material& material = object.getMaterial();
@@ -87,5 +88,38 @@ Vec3Df BRDF::cook_torrance(const Vec3Df &hitPoint, const Vec3Df& normal, const V
     float f = diffuse + spec;
 
     return f * light.getIntensity() * material.getColor() * light.getColor();
+
+}
+
+Vec3Df BRDF::cartoon(const Vec3Df &hitPoint, const Vec3Df &normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object &object, const Light &light)
+{
+    const Material& material = object.getMaterial();
+
+    Vec3Df wo = pov - hitPoint ;// wi is camera-hitPoint direction
+    wo.normalize();
+
+    Vec3Df wi = lightPos - hitPoint; // wi is light direction
+    wi.normalize();
+
+    Vec3Df h = wi + wo; // half-vector
+    h.normalize();
+
+    float E1 = 0.2f;
+    float E2 = 0.1f;
+
+
+    //Border
+    if( Vec3Df::dotProduct(normal,wo) < E1)
+    {
+        return Vec3Df(0,0,0);
+    }
+    //Elliptic specular  spot, colored with light color
+    else if ( (normal-h).getLength() < E2)
+    {
+        return light.getIntensity() * light.getColor();
+    }
+
+    //Default case
+    return material.getColor();
 
 }

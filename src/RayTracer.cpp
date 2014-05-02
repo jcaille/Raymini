@@ -8,6 +8,8 @@
 #include "RayTracer.h"
 #include "Ray.h"
 #include "Scene.h"
+
+
 #include "Window.h"
 
 #include "BasicRayTracer.h"
@@ -15,6 +17,7 @@
 #include "BoundingBoxRayTracer.h"
 #include "ExtendedLightSourcesRayTracer.h"
 #include "MirrorRayTracer.h"
+#include "PathTracer.h"
 
 #include "GridAARayIterator.h"
 
@@ -23,11 +26,13 @@
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
+#include <omp.h>
+
 static RayTracer * instance = NULL;
 
-RayTracer * RayTracer::getInstance () {
+RayTracer* RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new MirrorRayTracer();
+        instance = new PathTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
@@ -174,7 +179,7 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
         Vec3Df norm = mesh.getNormal(lightIntersectionTriangle, coords);
         
         // Now that we have that point of intersection, let's compute the color it is supposed to have
-        rayColorForIntersection(ray.getOrigin(), lightIntersectionPoint + lightIntersectionObject->getTrans(), norm, *lightIntersectionObject, scene, intersectionColor);
+        rayColorForIntersection(ray, lightIntersectionPoint + lightIntersectionObject->getTrans(), norm, *lightIntersectionObject, scene, intersectionColor);
         
     } else {
         
@@ -187,21 +192,22 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
         Vec3Df norm = mesh.getNormal(objectIntersectionTriangle, coords);
         
         // Now that we have that point of intersection, let's compute the color it is supposed to have
-        rayColorForIntersection(ray.getOrigin(), objectIntersectionPoint + objectIntersectionObject->getTrans(), norm, *objectIntersectionObject, scene, intersectionColor);
+        rayColorForIntersection(ray, objectIntersectionPoint + objectIntersectionObject->getTrans(), norm, *objectIntersectionObject, scene, intersectionColor);
         
 
     }
 }
 
 
-QImage RayTracer::render (const Vec3Df & camPos,
+bool RayTracer::render (const Vec3Df & camPos,
                           const Vec3Df & direction,
                           const Vec3Df & upVector,
                           const Vec3Df & rightVector,
                           float fieldOfView,
                           float aspectRatio,
                           unsigned int screenWidth,
-                          unsigned int screenHeight) {
+                          unsigned int screenHeight,
+                          QImage & image) {
     
 
     QProgressDialog progressDialog ("Raytracing...", "Cancel", 0, 100);
@@ -211,16 +217,19 @@ QImage RayTracer::render (const Vec3Df & camPos,
     
     rayIterator->setCameraInformation(camPos, direction, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
     
-    QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
+    //QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
     
-    std::vector<Ray> rays;
+
+
     for (unsigned int i = 0; i < screenWidth; i++) {
         
         std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
-        
+
+        //Multithreading
+#pragma omp parallel for
         for (unsigned int j = 0; j < screenHeight; j++) {
-            
+            std::vector<Ray> rays;
             rayIterator->raysForPixel(i, j, rays);
             
             Vec3Df pixelColor;
@@ -238,6 +247,6 @@ QImage RayTracer::render (const Vec3Df & camPos,
         }
     }
     progressDialog.setValue(100);
-    return image;
+    return true;
 
 }
