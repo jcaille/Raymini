@@ -52,6 +52,9 @@ public:
     
     void makePlane(const Vec3Df& center, const Vec3Df& normal, const Vec3Df& up, float sizeX = 1, float sizeY = 1);
     void makeBox(const Vec3Df& center, const Vec3Df& front, const Vec3Df& up, const Vec3Df& size = Vec3Df(1,1,1));
+
+    void rotateAroundZ(float angle);
+    void rotateAroundY(float angle);
     
     Vec3Df getNormal(const Triangle& triangle, const std::vector<float>& barycentricCoordinates) const;
     

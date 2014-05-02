@@ -147,15 +147,14 @@ void Window::setRayIteratorOptions(RayIterator *r)
             break;
     }
     
-    Scene* scene = Scene::getInstance();
     switch (focusOnComboBox->currentIndex()) {
-        case 1:
-            lr->focusOn(scene->getLights()[1]);
-            break;
-        case 2:
-            lr->focusOn(scene->getObjects()[scene->getObjects().size() -1]);
+        case 0:
+            // Using focal length
             break;
         default:
+            Scene* s = Scene::getInstance();
+            std::vector<std::pair<char*, Vec3Df>> poi = s->getPOI();
+            lr->focusOn(poi[focusOnComboBox->currentIndex()-1].second);
             break;
     }
     
@@ -189,6 +188,8 @@ ShadingFunction Window::getShadingFunction()
             break;
     }
 }
+
+#pragma mark - Rendering
 
 void Window::renderRayImage () {
     // Modify scene to apply options if necessary
@@ -265,10 +266,30 @@ void Window::exportRayImage () {
         viewer->getRayImage().save (filename);
 }
 
+#pragma mark - Interface
+
 void Window::about () {
-    QMessageBox::about (this, 
-                        "About This Program", 
-                        "<b>RayMini</b> <br> by <i>Jean Caille, Florian Denis, Audrey Fourneret & Simon Martin</i>.");
+    // I can't add Signals and Slot, so i'm highjacking this one to update the scene being displayed
+
+    Scene* s = Scene::getInstance();
+    AvailableScene selectedScene;
+    
+    switch (availableScenesComboBox->currentIndex()) {
+        case 0:
+            selectedScene = CORNELL;
+            break;
+        case 1 :
+            selectedScene = DINNER_TABLE;
+            break;
+        default:
+            selectedScene = CORNELL;
+            break;
+    }
+
+    s->setCurrentScene(selectedScene);
+    updateFocusOnComboBox();
+    viewer->init();
+    viewer->draw();
 }
 
 void Window::initControlWidget () {
@@ -307,7 +328,12 @@ void Window::initControlWidget () {
     connect (bgColorButton, SIGNAL (clicked()) , this, SLOT (setBGColor()));
     globalLayout->addWidget (bgColorButton);
     
-    QPushButton * aboutButton  = new QPushButton ("About", globalGroupBox);
+    availableScenesComboBox = new QComboBox;
+    availableScenesComboBox->addItem("Cornell Box");
+    availableScenesComboBox->addItem("Dinner Table");
+    globalLayout->addWidget(availableScenesComboBox);
+    
+    QPushButton * aboutButton  = new QPushButton ("Update Scene", globalGroupBox);
     connect (aboutButton, SIGNAL (clicked()) , this, SLOT (about()));
     globalLayout->addWidget (aboutButton);
     
@@ -383,10 +409,7 @@ void Window::initControlWidget () {
     QLabel* label = new QLabel("Focus On ...");
     focalLayout->addWidget(label);
     
-    focusOnComboBox = new QComboBox;
-    focusOnComboBox->addItem(tr("Use focal Length"));
-    focusOnComboBox->addItem(tr("God Ram"));
-    focusOnComboBox->addItem(tr("Astray Rhino"));
+    updateFocusOnComboBox();
     focalLayout->addWidget(focusOnComboBox);
     
     focalLengthSlider = new DoubleWidget(QString("Focal Length"), 0.0, 20.0, 10.0, this);
@@ -394,6 +417,19 @@ void Window::initControlWidget () {
     
     lensBlurDensitySlider = new DoubleWidget(QString("Lens blur samples density"), 0.0, 10000, 2500);
     focalLayout->addWidget(lensBlurDensitySlider);
-    
-    
 }
+
+void Window::updateFocusOnComboBox()
+{
+    Scene* s = Scene::getInstance();
+    
+    focusOnComboBox = new QComboBox;
+    focusOnComboBox->addItem(tr("Use focal Length"));
+    
+    std::vector<std::pair<char*, Vec3Df>> poi = s->getPOI();
+    for (std::pair<char*, Vec3Df> p : poi) {
+        focusOnComboBox->addItem(p.first);
+    }
+}
+
+

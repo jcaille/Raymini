@@ -103,6 +103,7 @@ void GLViewer::init() {
     glLoadIdentity ();
     
     glEnable (GL_LIGHTING);
+    
     for (unsigned int i = 0; i < scene->getLights ().size () && i < 8; i++) {
         GLuint glID = OpenGLLightID[i];
         glEnable (glID);
@@ -116,6 +117,12 @@ void GLViewer::init() {
         glLightfv (glID, GL_DIFFUSE, glColor);
     }
     
+    for(unsigned int i = scene->getLights().size() ; i < 8 ; i++)
+    {
+        GLuint glID = OpenGLLightID[i];
+        glDisable(glID);
+    }
+    
     const BoundingBox & sceneBBox = scene->getBoundingBox ();
     Vec3Df c = sceneBBox.getCenter ();
     float r = sceneBBox.getRadius ();
@@ -123,9 +130,9 @@ void GLViewer::init() {
     setSceneRadius (r);
     
     qglviewer::Camera* cam = camera();
-    cam->setPosition( qglviewer::Vec(0,-r,0) );
+    cam->setPosition( qglviewer::Vec(0,-1,0) );
     cam->setViewDirection(qglviewer::Vec(0,r,0));
-    
+    cam->setUpVector(qglviewer::Vec(0, 0, 1));
     
     showEntireScene ();
 }

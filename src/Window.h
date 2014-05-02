@@ -65,11 +65,13 @@ private :
     
     QString currentDirectory;
 
+    QComboBox* availableScenesComboBox;
     QComboBox* shadingComboBox;
     QComboBox* rayIteratorComboBox;
     QComboBox* apertureComboBox;
     QComboBox* focusOnComboBox;
     
+    void updateFocusOnComboBox();
     DoubleWidget* focalLengthSlider;
     DoubleWidget* lensBlurDensitySlider;
     QCheckBox* shadowCheckBox;
