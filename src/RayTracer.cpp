@@ -26,8 +26,6 @@
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
-#include <omp.h>
-
 static RayTracer * instance = NULL;
 
 RayTracer* RayTracer::getInstance () {
@@ -226,8 +224,6 @@ bool RayTracer::render (const Vec3Df & camPos,
         std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
 
-        //Multithreading
-#pragma omp parallel for
         for (unsigned int j = 0; j < screenHeight; j++) {
             std::vector<Ray> rays;
             rayIterator->raysForPixel(i, j, rays);

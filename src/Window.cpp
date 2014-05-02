@@ -35,7 +35,6 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QStatusBar>
-#include <omp.h>
 #pragma clang diagnostic pop
 
 #include "GridAARayIterator.h"
@@ -160,34 +159,10 @@ void Window::renderRayImage () {
     
     QTime timer;
     timer.start ();
-    int lastTime = timer.elapsed();
-    //Time between refreshing image
-    int refreshTime = 500;//  ms
     bool over = false;
     QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
 
-#pragma omp parallel num_threads(2)
-    {
-        int i = omp_get_thread_num();
-
-        //First thread is calculating image
-        if(i == 0)
-           over = rayTracer->render(camPos, viewDirection, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight, image);
-
-        //Second thread is getting image every refreshingTime
-        if(i == 1)
-        {
-            while (!over)
-            {
-                if(timer.elapsed() > lastTime + refreshTime)
-                {
-                    lastTime = timer.elapsed();
-                    viewer->setRayImage(image);
-                    viewer->setDisplayMode (GLViewer::RayDisplayMode);
-                }
-            }
-        }
-    }
+    over = rayTracer->render(camPos, viewDirection, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight, image);
     viewer->setRayImage(image);
     viewer->setDisplayMode (GLViewer::RayDisplayMode);
     statusBar()->showMessage(QString ("Raytracing performed in ") +
