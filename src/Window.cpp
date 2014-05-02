@@ -35,8 +35,11 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QStatusBar>
-#include <omp.h>
 #pragma clang diagnostic pop
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 #include "GridAARayIterator.h"
 
@@ -166,6 +169,8 @@ void Window::renderRayImage () {
     bool over = false;
     QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
 
+#ifdef _OPENMP
+    
 #pragma omp parallel num_threads(2)
     {
         int i = omp_get_thread_num();
@@ -188,6 +193,10 @@ void Window::renderRayImage () {
             }
         }
     }
+# else
+    rayTracer->render(camPos, viewDirection, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight, image);
+#endif
+    
     viewer->setRayImage(image);
     viewer->setDisplayMode (GLViewer::RayDisplayMode);
     statusBar()->showMessage(QString ("Raytracing performed in ") +
