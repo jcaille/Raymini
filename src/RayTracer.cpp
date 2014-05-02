@@ -26,7 +26,9 @@
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
-#include <dispatch/dispatch.h>
+#ifdef __APPLE__
+    #include <dispatch/dispatch.h>
+#endif
 
 #define PROGRESS_BAR_SIZE 50
 
@@ -228,7 +230,7 @@ bool RayTracer::render (const Vec3Df & camPos,
     cout << endl << "|";
     float milestone = screenWidth / PROGRESS_BAR_SIZE ;
     
-    
+#ifdef __APPLE__
     for (unsigned int i = 0; i < screenWidth; i++) {
         if (i >= milestone) {
             milestone += screenWidth / PROGRESS_BAR_SIZE;
@@ -236,10 +238,10 @@ bool RayTracer::render (const Vec3Df & camPos,
         }
         
         progressDialog.setValue ((100*i)/screenWidth);
-
-        for (unsigned int j = 0; j < screenHeight; j++) {
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_apply(screenHeight, queue, ^(size_t j) {
             std::vector<Ray> rays;
-            rayIterator->raysForPixel(i, j, rays);
+            rayIterator->raysForPixel((int) i, (int) j, rays);
             
             Vec3Df pixelColor;
             Vec3Df rayColor;
@@ -252,8 +254,9 @@ bool RayTracer::render (const Vec3Df & camPos,
             
             QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
             image.setPixel(i, (int) j, rgb);
-        }
+        });
     }
+#endif
     progressDialog.setValue(100);
     return true;
 
