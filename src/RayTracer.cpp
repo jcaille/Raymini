@@ -26,9 +26,11 @@
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
-#include <dispatch/dispatch.h>
-
 #define PROGRESS_BAR_SIZE 50
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 static RayTracer * instance = NULL;
 
@@ -237,6 +239,9 @@ bool RayTracer::render (const Vec3Df & camPos,
         
         progressDialog.setValue ((100*i)/screenWidth);
 
+        //Multithreading
+#ifdef _OPENMP
+    #pragma omp parallel for
         for (unsigned int j = 0; j < screenHeight; j++) {
             std::vector<Ray> rays;
             rayIterator->raysForPixel(i, j, rays);
@@ -253,6 +258,24 @@ bool RayTracer::render (const Vec3Df & camPos,
             QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
             image.setPixel(i, (int) j, rgb);
         }
+#else
+        for (unsigned int j = 0; j < screenHeight; j++) {
+            std::vector<Ray> rays;
+            rayIterator->raysForPixel(i, j, rays);
+            
+            Vec3Df pixelColor;
+            Vec3Df rayColor;
+            
+            for (const Ray& ray : rays) {
+                raySceneInteraction(ray, *scene, rayColor);
+                pixelColor += rayColor;
+            }
+            pixelColor *= 255/float(rays.size());
+            
+            QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
+            image.setPixel(i, (int) j, rgb);
+        }
+#endif
     }
     progressDialog.setValue(100);
     return true;
