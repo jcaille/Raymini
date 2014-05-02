@@ -26,6 +26,10 @@
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
+#include <dispatch/dispatch.h>
+
+#define PROGRESS_BAR_SIZE 50
+
 static RayTracer * instance = NULL;
 
 RayTracer* RayTracer::getInstance () {
@@ -215,13 +219,22 @@ bool RayTracer::render (const Vec3Df & camPos,
     
     rayIterator->setCameraInformation(camPos, direction, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
     
-    //QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
+    // Progress bar initialization
+    cout << endl << "|" ;
+    for(int i = 0; i < PROGRESS_BAR_SIZE - 1 ; i++ )
+    {
+        cout << "-";
+    }
+    cout << endl << "|";
+    float milestone = screenWidth / PROGRESS_BAR_SIZE ;
     
-
-
+    
     for (unsigned int i = 0; i < screenWidth; i++) {
+        if (i >= milestone) {
+            milestone += screenWidth / PROGRESS_BAR_SIZE;
+            cout << "#" ;
+        }
         
-        std::cout << i << " " << screenWidth << std::endl;
         progressDialog.setValue ((100*i)/screenWidth);
 
         for (unsigned int j = 0; j < screenHeight; j++) {
@@ -238,8 +251,7 @@ bool RayTracer::render (const Vec3Df & camPos,
             pixelColor *= 255/float(rays.size());
             
             QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
-
-            image.setPixel(i, j, rgb);
+            image.setPixel(i, (int) j, rgb);
         }
     }
     progressDialog.setValue(100);

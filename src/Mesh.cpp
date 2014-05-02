@@ -336,8 +336,36 @@ void Mesh::makeBox(const Vec3Df& center, const Vec3Df& front, const Vec3Df& up, 
     makePlane(center + .5 * v,   v,   w, size[0], size[2]);
     makePlane(center - .5 * u,  -u,   w, size[1], size[2]);
     makePlane(center + .5 * u,   u,   w, size[1], size[2]);
-
 }
+
+void Mesh::rotateAroundZ(float angle)
+{
+    vector<Vertex> v;
+    for (int i = 0; i < vertices.size(); i++) {
+        Vec3Df newV;
+        Vec3Df V = vertices[i].getPos();
+        newV[0] = cos(angle) * V[0] + sin(angle) * V[1];
+        newV[1] = -sin(angle) * V[0] + cos(angle) * V[1];
+        newV[2] = V[2];
+        vertices[i].setPos(newV);
+    }
+    recomputeSmoothVertexNormals(0);
+}
+
+void Mesh::rotateAroundY(float angle)
+{
+    vector<Vertex> v;
+    for (int i = 0; i < vertices.size(); i++) {
+        Vec3Df newV;
+        Vec3Df V = vertices[i].getPos();
+        newV[0] = cos(angle) * V[0] + sin(angle) * V[2];
+        newV[1] = V[1];
+        newV[2] = -sin(angle) * V[0] + cos(angle) * V[2];
+        vertices[i].setPos(newV);
+    }
+    recomputeSmoothVertexNormals(0);
+}
+
 
 Vec3Df Mesh::getNormal(const Triangle &triangle, const std::vector<float> &barycentricCoordinates) const {
     Vertex p0 = vertices[triangle.getVertex(0)];
