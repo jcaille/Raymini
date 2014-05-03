@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "Object.h"
 #include "Light.h"
@@ -34,7 +35,7 @@ public:
     inline std::vector<Light> & getLights () { return lights; }
     inline const std::vector<Light> & getLights () const { return lights; }
     
-    inline std::vector< std::pair<char*, Vec3Df> > getPOI()
+    inline std::vector< std::pair<std::string, Vec3Df> > getPOI()
     {
         return _pointsOfInterest;
     }
@@ -61,7 +62,7 @@ private:
     std::vector<Light> lights;
     BoundingBox bbox;
     
-    std::vector< std::pair<char*, Vec3Df> > _pointsOfInterest;
+    std::vector< std::pair<std::string, Vec3Df> > _pointsOfInterest;
 };
 
 

@@ -174,7 +174,7 @@ void Scene::buildCornellBoxScene() {
     // I AM RAM-GOD. I SHINE WITH THE POWER OF A THOUSANDS SUN. BOW BEFORE ME!
     Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
     lights.push_back(ramLight);
-    _pointsOfInterest.push_back(std::pair<char*, Vec3Df>("God Ram", ramLight.getPos()));
+    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("God Ram", ramLight.getPos()));
 
     
     Mesh rhinoMesh;
@@ -184,7 +184,7 @@ void Scene::buildCornellBoxScene() {
     rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
     objects.push_back (rhino);
 
-    _pointsOfInterest.push_back(std::pair<char*, Vec3Df>("Rhino", rhino.getTrans()));
+    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("Rhino", rhino.getTrans()));
 }
 
 #pragma mark - DINNER TABLE SCENE

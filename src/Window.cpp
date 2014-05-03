@@ -158,7 +158,7 @@ void Window::setRayIteratorOptions(RayIterator *r)
             break;
         default:
             Scene* s = Scene::getInstance();
-            std::vector<std::pair<char*, Vec3Df>> poi = s->getPOI();
+            std::vector<std::pair<std::string, Vec3Df>> poi = s->getPOI();
             lr->focusOn(poi[focusOnComboBox->currentIndex()-1].second);
             break;
     }
@@ -464,9 +464,9 @@ void Window::updateFocusOnComboBox()
     focusOnComboBox = new QComboBox;
     focusOnComboBox->addItem(tr("Use focal Length"));
     
-    std::vector<std::pair<char*, Vec3Df>> poi = s->getPOI();
-    for (std::pair<char*, Vec3Df> p : poi) {
-        focusOnComboBox->addItem(p.first);
+    std::vector<std::pair<std::string, Vec3Df>> poi = s->getPOI();
+    for (std::pair<std::string, Vec3Df> p : poi) {
+        focusOnComboBox->addItem(p.first.c_str());
     }
 }
 
