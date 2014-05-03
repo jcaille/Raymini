@@ -243,44 +243,19 @@ bool RayTracer::render (const Vec3Df & camPos,
         
         progressDialog.setValue ((100*i)/screenWidth);
 
-#ifdef _OPENMP // MULTITHREADING USING OPENMP
-    #pragma omp parallel for
-        for (unsigned int j = 0; j < screenHeight; j++) {
-            std::vector<Ray> rays;
-            rayIterator->raysForPixel(i, j, rays);
-            
-            Vec3Df pixelColor;
-            Vec3Df rayColor;
-            
-            for (const Ray& ray : rays) {
-                raySceneInteraction(ray, *scene, rayColor);
-                pixelColor += rayColor;
-            }
-            pixelColor *= 255/float(rays.size());
-            
-            QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
-            image.setPixel(i, (int) j, rgb);
-        }
-#elif defined(__APPLE__) // MULTITHREADING USING DISPATCH
+
+#if defined(__APPLE__) // MULTITHREADING USING DISPATCH
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        dispatch_apply(screenHeight, queue, ^(size_t j) {
-            std::vector<Ray> rays;
-            rayIterator->raysForPixel((int) i, (int) j, rays);
-            
-            Vec3Df pixelColor;
-            Vec3Df rayColor;
-            
-            for (const Ray& ray : rays) {
-                raySceneInteraction(ray, *scene, rayColor);
-                pixelColor += rayColor;
-            }
-            pixelColor *= 255/float(rays.size());
-            
-            QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
-            image.setPixel(i, (int) j, rgb);
-        });
-#else // NO MULTITHREADING
+        dispatch_apply(screenHeight, queue, ^(size_t idx) {
+            int j = static_cast<int>(idx);
+#else
+#ifdef _OPENMP
+#pragma omp parallel for // MULTITHREADING USING OPENMP
+#endif
+        // NO MULTITHREADING
         for (unsigned int j = 0; j < screenHeight; j++) {
+#endif
+            
             std::vector<Ray> rays;
             rayIterator->raysForPixel(i, j, rays);
             
@@ -295,9 +270,15 @@ bool RayTracer::render (const Vec3Df & camPos,
             
             QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
             image.setPixel(i, (int) j, rgb);
+
+
+#if defined(__APPLE__) // MULTITHREADING USING DISPATCH
+        });
+#else
         }
 #endif
     }
+                            
 
     progressDialog.setValue(100);
     return true;
