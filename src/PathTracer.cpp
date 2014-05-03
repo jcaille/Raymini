@@ -32,15 +32,16 @@ void PathTracer::indirectContributionToRayColorForIntersection(const Ray& ray, c
     
     int n = ceil(bounces/(depth+1));
     
+    Vec3Df u,v;
+    intersectionNormal.getTwoOrthogonals(u, v);
+    
+    
     Vec3Df bounceContribution;
     for (int i = 0; i < n; ++i)
     {
         // Indirect contribution : draw n random paths and average their contributions
         float theta = random_float(0, 2*M_PI);
         float phi = random_float(0, M_PI/2);
-        
-        Vec3Df u,v;
-        intersectionNormal.getTwoOrthogonals(u, v);
         
         Vec3Df direction = cos(theta) * sin(phi) * u + sin(theta) * sin(phi) * v + cos(phi) * intersectionNormal;
         direction.normalize();
@@ -64,7 +65,7 @@ void PathTracer::allDiffuseContributionToRayColorForIntersection(const Ray& ray,
     Vec3Df indirectContribution;
     indirectContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, indirectContribution);
     
-    diffuseLightContribution = directContribution + .5* indirectContribution;
+    diffuseLightContribution = directContribution + .4* indirectContribution;
 
 }
 
