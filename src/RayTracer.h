@@ -71,7 +71,7 @@ public:
 
 protected:
     
-    RayTracer () : bounces(1000) {}
+    RayTracer () : maxRayDepth(5), bounces(1000), enableCastShadows(true), enableMirrorEffet(true), shadingFunction(PHONG) {}
     virtual ~RayTracer () {}
         
     /**
