@@ -41,6 +41,7 @@
 		1AFADB151910EB0F004DBB4B /* MirrorRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F1B97D8190CFD58000167CE /* MirrorRayTracer.cpp */; };
 		1AFADB161910EBC5004DBB4B /* PathTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7690310E190D45CA0011872C /* PathTracer.cpp */; };
 		7627F8ED1907103400121E57 /* KDTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7627F8EB1907103100121E57 /* KDTree.cpp */; };
+		763ACF3C1913F13B00F2D681 /* TranslucidRayTracer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 763ACF3A1913F13B00F2D681 /* TranslucidRayTracer.cpp */; };
 		7670A94D19067AD000509C5E /* QGLViewer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7670A94C19067AD000509C5E /* QGLViewer.framework */; };
 /* End PBXBuildFile section */
 
@@ -117,6 +118,8 @@
 		1AA67217190A9B6F00745C48 /* BoundingBoxRayTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoundingBoxRayTracer.h; sourceTree = "<group>"; };
 		7627F8EB1907103100121E57 /* KDTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KDTree.cpp; path = src/KDTree.cpp; sourceTree = SOURCE_ROOT; };
 		7627F8EC1907103200121E57 /* KDTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KDTree.h; path = src/KDTree.h; sourceTree = SOURCE_ROOT; };
+		763ACF3A1913F13B00F2D681 /* TranslucidRayTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TranslucidRayTracer.cpp; sourceTree = "<group>"; };
+		763ACF3B1913F13B00F2D681 /* TranslucidRayTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TranslucidRayTracer.h; sourceTree = "<group>"; };
 		7670A94C19067AD000509C5E /* QGLViewer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QGLViewer.framework; path = /usr/local/lib/QGLViewer.framework; sourceTree = "<absolute>"; };
 		7690310E190D45CA0011872C /* PathTracer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PathTracer.cpp; sourceTree = "<group>"; };
 		7690310F190D45CA0011872C /* PathTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathTracer.h; sourceTree = "<group>"; };
@@ -261,6 +264,8 @@
 				0FBF0825190572B700584DCE /* BasicRayTracer.cpp */,
 				1A19E6CC190D4A5B003489AF /* KDTreeRayTracer.h */,
 				1A19E6CB190D4A5B003489AF /* KDTreeRayTracer.cpp */,
+				763ACF3A1913F13B00F2D681 /* TranslucidRayTracer.cpp */,
+				763ACF3B1913F13B00F2D681 /* TranslucidRayTracer.h */,
 				1AA67214190A7CA900745C48 /* ShadowRayTracer.h */,
 				1AA67213190A7CA900745C48 /* ShadowRayTracer.cpp */,
 				1A19E6C7190D122F003489AF /* ExtendedLightSourcesRayTracer.h */,
@@ -379,6 +384,7 @@
 				1A73A78619051BE500B6A310 /* Vertex.cpp in Sources */,
 				1A71DE3819079CB700BB58C8 /* BRDF.cpp in Sources */,
 				7627F8ED1907103400121E57 /* KDTree.cpp in Sources */,
+				763ACF3C1913F13B00F2D681 /* TranslucidRayTracer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

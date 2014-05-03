@@ -118,11 +118,11 @@ void Scene::buildDefaultScene () {
     Vec3Df tallBoxCenter = scale * Vec3Df(-.2, .2, .3);
     Vec3Df tallBoxSize = scale * Vec3Df(.3,.3, .6);
     
-    Mesh tallBoxMesh;
-    tallBoxMesh.makeBox(tallBoxCenter, tallBoxFront, tallBoxUp, tallBoxSize);
-    Material tallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), .5);
-    Object tallBox (tallBoxMesh, tallBoxMat);
-    objects.push_back (tallBox);
+//    Mesh tallBoxMesh;
+//    tallBoxMesh.makeBox(tallBoxCenter, tallBoxFront, tallBoxUp, tallBoxSize);
+//    Material tallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), .5);
+//    Object tallBox (tallBoxMesh, tallBoxMat);
+//    objects.push_back (tallBox);
 
     Vec3Df smallBoxFront(-.2,-1, 0);
     Vec3Df smallBoxUp(0,0,1);
@@ -146,14 +146,14 @@ void Scene::buildDefaultScene () {
 
 //    Mesh ramMesh;
 //    ramMesh.loadOFF("models/ram.off");
-//    Material ramMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f), 0.0);
+//    Material ramMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f), 0.0, 0.8, 1.6);
 //    Object ram (ramMesh, ramMat);
 //    ram.setTrans (smallBoxTop);
 //    objects.push_back (ram);
-//    
+//
 //    Mesh rhinoMesh;
 //    rhinoMesh.loadOFF ("models/rhino.off");
-//    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f), 0.0);
+//    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.9f, 0.9f, 1.0f), 0.0, 0.8, 1.6);
 //    Object rhino (rhinoMesh, rhinoMat);
 //    rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
 //    objects.push_back (rhino);
@@ -170,12 +170,12 @@ void Scene::buildDefaultScene () {
 //    Object ground (groundMesh, groundMat);
 //    objects.push_back (ground);
 
-//    Mesh sphereMesh;
-//    sphereMesh.loadOFF ("models/sphere.off");
-//    Material sphereMat (1.f, 1.f, 9.0, Vec3Df (0.5, 0.5, 0.5));
-//    Object sphere (sphereMesh, sphereMat);
-//    sphere.setTrans (Vec3Df (-1.0f, 0.0f, 0.5f));
-//    objects.push_back (sphere);
+    Mesh sphereMesh;
+    sphereMesh.loadOFF ("models/sphere.off");
+    Material sphereMat (1.f, 1.f, 9.0, Vec3Df (0.5, 0.5, 0.5), 0.0, 0.8, 1.6);
+    Object sphere (sphereMesh, sphereMat);
+    sphere.setTrans (Vec3Df (-1.0f, 0.0f, 0.5f));
+    objects.push_back (sphere);
     
 //    Mesh sphere2Mesh;
 //    sphere2Mesh.loadOFF ("models/sphere.off");

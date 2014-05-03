@@ -10,8 +10,9 @@
 #define __RayTracer__PathTracer__
 
 #include "MirrorRayTracer.h"
+#include "TranslucidRayTracer.h"
 
-class PathTracer : public MirrorRayTracer{
+class PathTracer : public TranslucidRayTracer{
 public:
     
 //    void raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor);

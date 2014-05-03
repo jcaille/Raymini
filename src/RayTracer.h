@@ -41,7 +41,7 @@ class RayTracer {
 public:
     
     /* User defined options */
-    int maxRayDepth;
+    static const int maxRayDepth = 2;
     int bounces;
     bool enableCastShadows;
     bool enableMirrorEffet;
