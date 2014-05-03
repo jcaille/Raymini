@@ -35,9 +35,10 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QStatusBar>
+#include <QDesktopWidget>
 #pragma clang diagnostic pop
 
-#include "GridAARayIterator.h"
+#include "LensBlurIterator.h"
 
 using namespace std;
 
@@ -58,16 +59,43 @@ Window::Window () : QMainWindow (NULL) {
     viewer->setBaseSize(500, 500);
 #endif
     
-    QDockWidget * controlDockWidget = new QDockWidget (this);
     initControlWidget ();
+    
+    QDockWidget * controlDockWidget = new QDockWidget (this);
     
     controlDockWidget->setWidget (controlWidget);
     controlDockWidget->adjustSize ();
     addDockWidget (Qt::RightDockWidgetArea, controlDockWidget);
     controlDockWidget->setFloating(true);
     controlDockWidget->setFeatures (QDockWidget::AllDockWidgetFeatures);
-    controlDockWidget->setGeometry(frameGeometry().x() - 200, frameGeometry().y() - 28, 0, 0);
     controlDockWidget->adjustSize();
+    controlDockWidget->move(0, 0);
+    
+    QDockWidget * focalDockWidget = new QDockWidget (this);
+    focalDockWidget->setWidget(focalWidget);
+    focalDockWidget->adjustSize ();
+    addDockWidget (Qt::LeftDockWidgetArea, focalDockWidget);
+    focalDockWidget->setFloating(true);
+    focalDockWidget->setFeatures (QDockWidget::AllDockWidgetFeatures);
+    focalDockWidget->adjustSize();
+    focalDockWidget->move(200, 0);
+
+    QDockWidget* rayTracerDockWidget = new QDockWidget(this);
+    rayTracerDockWidget->setWidget(rayTracerWidget);
+    rayTracerDockWidget->adjustSize ();
+    addDockWidget (Qt::TopDockWidgetArea, rayTracerDockWidget);
+    rayTracerDockWidget->setFloating(true);
+    rayTracerDockWidget->setFeatures (QDockWidget::AllDockWidgetFeatures);
+    rayTracerDockWidget->adjustSize();
+
+    // Move widgets around the raytracer
+    
+    QDesktopWidget desktop;
+    QRect mainScreenSize = desktop.availableGeometry(desktop.primaryScreen());
+    
+    controlDockWidget->move(mainScreenSize.width() - 200, 0);
+    rayTracerDockWidget->move(0, 0);
+    focalDockWidget->move(0, mainScreenSize.height() - focalDockWidget->height());
     
     statusBar()->showMessage("");
 }
@@ -86,26 +114,61 @@ void Window::resampleScenesLights()
     scene->resampleLights((float) lightSampleSlider->getValue());
 }
 
-RayIterator* Window::getIterator()
+void Window::setRayIteratorOptions(RayIterator *r)
 {
-
-    RayIterator *r = NULL;
+    LensBlurIterator* lr = (LensBlurIterator*) r;
+    lr->setFocalLength(focalLengthSlider->getValue());
+    lr->setDensity(lensBlurDensitySlider->getValue());
     
-    switch (rayIteratorComboBox->currentIndex()) {
-            
+    Mesh apertureMesh;
+    
+    switch (apertureComboBox->currentIndex()) {
+        case 0:
+            lr->setFocalLength(-1.0);
+            break;
         case 1:
-            r = new GridAARayIterator();
-            ((GridAARayIterator*)r)->gridSize = 2;
+            // Small square
+
+            apertureMesh.makePlane(Vec3Df(0, 0, 0), Vec3Df(0, 0, 1), Vec3Df(1, 0, 0), 0.05, 0.05);
+            lr->setGeometry(Geometry(apertureMesh));
             break;
         case 2:
-            r = new GridAARayIterator();
-            ((GridAARayIterator*)r)->gridSize = 3;
+            // Medium square
+            apertureMesh.makePlane(Vec3Df(0, 0, 0), Vec3Df(0, 0, 1), Vec3Df(1, 0, 0), 0.15, 0.15);
+            lr->setGeometry(Geometry(apertureMesh));
+            break;
+        case 3:
+            // Large square
+            apertureMesh.makePlane(Vec3Df(0, 0, 0), Vec3Df(0, 0, 1), Vec3Df(1, 0, 0), 0.3, 0.3);
+            lr->setGeometry(Geometry(apertureMesh));
             break;
         default:
-            r = new RayIterator();
+            lr->setFocalLength(-1.0);
+            break;
     }
     
-    return r;
+    switch (focusOnComboBox->currentIndex()) {
+        case 0:
+            // Using focal length
+            break;
+        default:
+            Scene* s = Scene::getInstance();
+            std::vector<std::pair<char*, Vec3Df>> poi = s->getPOI();
+            lr->focusOn(poi[focusOnComboBox->currentIndex()-1].second);
+            break;
+    }
+    
+    switch (rayIteratorComboBox->currentIndex()) {
+        case 1:
+            lr->gridSize = 2;
+            break;
+        case 2:
+            lr->gridSize = 3;
+            break;
+        default:
+            lr->gridSize = 1;
+            break;
+    }
 }
 
 ShadingFunction Window::getShadingFunction()
@@ -126,6 +189,8 @@ ShadingFunction Window::getShadingFunction()
     }
 }
 
+#pragma mark - Rendering
+
 void Window::renderRayImage () {
     // Modify scene to apply options if necessary
     resampleScenesLights();
@@ -145,14 +210,22 @@ void Window::renderRayImage () {
     unsigned int screenWidth = cam->screenWidth ();
     unsigned int screenHeight = cam->screenHeight ();
     
-    // Render the image
-    RayTracer * rayTracer = RayTracer::getInstance ();
-    rayTracer->rayIterator = getIterator();
+    // Create a ray Iterator
+    RayIterator* rayIterator = new LensBlurIterator();
+    rayIterator->setCameraInformation(camPos, viewDirection, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
+    setRayIteratorOptions(rayIterator);
+
     
+    // Create the ray tracer
+    RayTracer * rayTracer = RayTracer::getInstance ();
+    rayTracer->rayIterator = rayIterator;
+    
+    // Pass options down
     rayTracer->enableCastShadows = shadowCheckBox->isChecked();
     rayTracer->enableMirrorEffet = mirrorCheckBox->isChecked();
     rayTracer->shadingFunction = getShadingFunction();
     rayTracer->bounces = (int)bouncesSlider->getValue();
+    
     
     QTime timer;
     timer.start ();
@@ -193,13 +266,36 @@ void Window::exportRayImage () {
         viewer->getRayImage().save (filename);
 }
 
+#pragma mark - Interface
+
 void Window::about () {
-    QMessageBox::about (this, 
-                        "About This Program", 
-                        "<b>RayMini</b> <br> by <i>Jean Caille, Florian Denis, Audrey Fourneret & Simon Martin</i>.");
+    // I can't add Signals and Slot, so i'm highjacking this one to update the scene being displayed
+
+    Scene* s = Scene::getInstance();
+    AvailableScene selectedScene;
+    
+    switch (availableScenesComboBox->currentIndex()) {
+        case 0:
+            selectedScene = CORNELL;
+            break;
+        case 1 :
+            selectedScene = DINNER_TABLE;
+            break;
+        default:
+            selectedScene = CORNELL;
+            break;
+    }
+
+    s->setCurrentScene(selectedScene);
+    updateFocusOnComboBox();
+    viewer->init();
+    viewer->draw();
 }
 
 void Window::initControlWidget () {
+    
+// Boubekeur's controls
+    
     controlWidget = new QGroupBox ();
     QVBoxLayout * layout = new QVBoxLayout (controlWidget);
     
@@ -225,9 +321,36 @@ void Window::initControlWidget () {
     previewLayout->addWidget (snapshotButton);
 
     layout->addWidget (previewGroupBox);
+    QGroupBox * globalGroupBox = new QGroupBox ("Global Settings", controlWidget);
+    QVBoxLayout * globalLayout = new QVBoxLayout (globalGroupBox);
     
+    QPushButton * bgColorButton  = new QPushButton ("Background Color", globalGroupBox);
+    connect (bgColorButton, SIGNAL (clicked()) , this, SLOT (setBGColor()));
+    globalLayout->addWidget (bgColorButton);
     
-    QGroupBox * rayGroupBox = new QGroupBox ("Ray Tracing", controlWidget);
+    availableScenesComboBox = new QComboBox;
+    availableScenesComboBox->addItem("Cornell Box");
+    availableScenesComboBox->addItem("Dinner Table");
+    globalLayout->addWidget(availableScenesComboBox);
+    
+    QPushButton * aboutButton  = new QPushButton ("Update Scene", globalGroupBox);
+    connect (aboutButton, SIGNAL (clicked()) , this, SLOT (about()));
+    globalLayout->addWidget (aboutButton);
+    
+    QPushButton * quitButton  = new QPushButton ("Quit", globalGroupBox);
+    connect (quitButton, SIGNAL (clicked()) , qApp, SLOT (closeAllWindows()));
+    globalLayout->addWidget (quitButton);
+    
+    layout->addWidget (globalGroupBox);
+    
+    layout->addStretch (0);
+
+// Ray Tracer controls
+    
+    rayTracerWidget = new QGroupBox ();
+    QVBoxLayout * rayTracerLayout = new QVBoxLayout (rayTracerWidget);
+
+    QGroupBox * rayGroupBox = new QGroupBox ("Ray Tracing", rayTracerWidget);
     QVBoxLayout * rayLayout = new QVBoxLayout (rayGroupBox);
     
     shadingComboBox = new QComboBox;
@@ -270,24 +393,43 @@ void Window::initControlWidget () {
     connect (saveButton, SIGNAL (clicked ()) , this, SLOT (exportRayImage ()));
     rayLayout->addWidget (saveButton);
 
-    layout->addWidget (rayGroupBox);
+    rayTracerLayout->addWidget (rayGroupBox);
     
-    QGroupBox * globalGroupBox = new QGroupBox ("Global Settings", controlWidget);
-    QVBoxLayout * globalLayout = new QVBoxLayout (globalGroupBox);
-    
-    QPushButton * bgColorButton  = new QPushButton ("Background Color", globalGroupBox);
-    connect (bgColorButton, SIGNAL (clicked()) , this, SLOT (setBGColor()));
-    globalLayout->addWidget (bgColorButton);
-    
-    QPushButton * aboutButton  = new QPushButton ("About", globalGroupBox);
-    connect (aboutButton, SIGNAL (clicked()) , this, SLOT (about()));
-    globalLayout->addWidget (aboutButton);
-    
-    QPushButton * quitButton  = new QPushButton ("Quit", globalGroupBox);
-    connect (quitButton, SIGNAL (clicked()) , qApp, SLOT (closeAllWindows()));
-    globalLayout->addWidget (quitButton);
+ // Focal controls
+    focalWidget = new QGroupBox ();
+    QVBoxLayout * focalLayout = new QVBoxLayout (focalWidget);
 
-    layout->addWidget (globalGroupBox);
-
-    layout->addStretch (0);
+    apertureComboBox = new QComboBox;
+    apertureComboBox->addItem(tr("Pinhole camera"));
+    apertureComboBox->addItem(tr("Small square aperture"));
+    apertureComboBox->addItem(tr("Medium square aperture"));
+    apertureComboBox->addItem(tr("Large square aperture"));
+    focalLayout->addWidget(apertureComboBox);
+    
+    QLabel* label = new QLabel("Focus On ...");
+    focalLayout->addWidget(label);
+    
+    updateFocusOnComboBox();
+    focalLayout->addWidget(focusOnComboBox);
+    
+    focalLengthSlider = new DoubleWidget(QString("Focal Length"), 0.0, 20.0, 10.0, this);
+    focalLayout->addWidget(focalLengthSlider);
+    
+    lensBlurDensitySlider = new DoubleWidget(QString("Lens blur samples density"), 0.0, 10000, 2500);
+    focalLayout->addWidget(lensBlurDensitySlider);
 }
+
+void Window::updateFocusOnComboBox()
+{
+    Scene* s = Scene::getInstance();
+    
+    focusOnComboBox = new QComboBox;
+    focusOnComboBox->addItem(tr("Use focal Length"));
+    
+    std::vector<std::pair<char*, Vec3Df>> poi = s->getPOI();
+    for (std::pair<char*, Vec3Df> p : poi) {
+        focusOnComboBox->addItem(p.first);
+    }
+}
+
+

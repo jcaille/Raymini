@@ -42,7 +42,9 @@ public:
     private:
         std::string message;
     }; 
-     
+    void init();
+    void draw ();
+
 public slots :
     void setWireframe (bool b);
     void setRenderingMode (RenderingMode m);
@@ -52,8 +54,6 @@ public slots :
     void setRayImage (const QImage & image);
     
 protected :
-    void init();
-    void draw ();
     QString helpString() const;
 
     virtual void keyPressEvent (QKeyEvent * event);

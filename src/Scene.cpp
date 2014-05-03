@@ -25,8 +25,29 @@ void Scene::destroyInstance () {
 }
 
 Scene::Scene () {
-    buildDefaultScene ();
+    _currentScene = DINNER_TABLE;
+    buildDinnerTableScene();
     updateBoundingBox ();
+}
+
+void Scene::setCurrentScene(AvailableScene s)
+{
+    objects.clear();
+    lights.clear();
+    _pointsOfInterest.clear();
+    switch (s) {
+        case CORNELL:
+            buildCornellBoxScene();
+            break;
+        case DINNER_TABLE:
+            buildDinnerTableScene();
+            break;
+        default:
+            buildCornellBoxScene();
+            break;
+    }
+    _currentScene = s;
+    updateBoundingBox();
 }
 
 Scene::~Scene () {
@@ -53,6 +74,10 @@ void Scene::resampleLights(float density)
         cout << "Light has been resampled with density of " << density << ": " << lights[i].getSamples().size() << " samples selected" << endl;
     }
 }
+
+#pragma mark - DEFAULT SCENE
+
+#pragma mark - Primitives
 
 void Scene::buildCornellBox(float scale){
     
@@ -103,8 +128,7 @@ void Scene::buildCornellBox(float scale){
 
 }
 
-
-void Scene::buildDefaultScene () {
+void Scene::buildCornellBoxScene() {
     
     float scale = 5;
     
@@ -144,60 +168,69 @@ void Scene::buildDefaultScene () {
     
     /** Put objects in the scene here **/
 
-//    Mesh ramMesh;
-//    ramMesh.loadOFF("models/ram.off");
-//    Material ramMat (1.f, 1.f, 5.0,Vec3Df (1.f, .6f, .2f), 0.0);
-//    Object ram (ramMesh, ramMat);
-//    ram.setTrans (smallBoxTop);
-//    objects.push_back (ram);
-//    
-//    Mesh rhinoMesh;
-//    rhinoMesh.loadOFF ("models/rhino.off");
-//    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f), 0.0);
-//    Object rhino (rhinoMesh, rhinoMat);
-//    rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
-//    objects.push_back (rhino);
-
+    Mesh ramMesh;
+    ramMesh.loadOFF("models/ram.off");
     // I AM RAM-GOD. I SHINE WITH THE POWER OF A THOUSANDS SUN. BOW BEFORE ME!
-//    Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
-//    lights.push_back(ramLight);
+    Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
+    lights.push_back(ramLight);
+    _pointsOfInterest.push_back(std::pair<char*, Vec3Df>("God Ram", ramLight.getPos()));
 
     
-    
-//    Mesh groundMesh;
-//    groundMesh.loadOFF ("models/ground.off");
-//    Material groundMat;
-//    Object ground (groundMesh, groundMat);
-//    objects.push_back (ground);
+    Mesh rhinoMesh;
+    rhinoMesh.loadOFF ("models/rhino.off");
+    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f), 0.0);
+    Object rhino (rhinoMesh, rhinoMat);
+    rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
+    objects.push_back (rhino);
 
-//    Mesh sphereMesh;
-//    sphereMesh.loadOFF ("models/sphere.off");
-//    Material sphereMat (1.f, 1.f, 9.0, Vec3Df (0.5, 0.5, 0.5));
-//    Object sphere (sphereMesh, sphereMat);
-//    sphere.setTrans (Vec3Df (-1.0f, 0.0f, 0.5f));
-//    objects.push_back (sphere);
+    _pointsOfInterest.push_back(std::pair<char*, Vec3Df>("Rhino", rhino.getTrans()));
+}
+
+#pragma mark - DINNER TABLE SCENE
+
+#pragma mark Ground primitive
+
+void Scene::buildGround()
+{
+    Material groundMaterial(1.0, 0.0, 0.0, Vec3Df(0.3, 0.6, 0.3), 0.0);
     
-//    Mesh sphere2Mesh;
-//    sphere2Mesh.loadOFF ("models/sphere.off");
-//    Material sphereMat2 (1.f, 1.f, 5.0,Vec3Df (0.5, 0.5, 0.5));
-//    Object sphere2 (sphere2Mesh, sphereMat2);
-//    sphere2.setTrans (Vec3Df (1.0f, 0.0f, 2.f));
-//    objects.push_back (sphere2);
+    Mesh groundMesh;
+    groundMesh.makePlane(Vec3Df(0, 0, 0), Vec3Df(0.0, 0.0, 1.0), Vec3Df(0.0, 1.0, 0.0), 10.0, 10.0);
+    Object ground(groundMesh, groundMaterial);
+    objects.push_back(ground);
+}
+
+void Scene::buildDinnerTableScene()
+{
+    Material greenMaterial(1.0, 0.0, 0.0, Vec3Df(0.3, 0.6, 0.3), 0.0);
+    Material redMaterial(1.0, 0, 0, Vec3Df(0.6, 0.3, 0.3), 0.0);
+    Material blueMaterial(1.0, 0.6, 2.0, Vec3Df(0.3, 0.3, 0.6), 0.0);
+
+    Mesh monkeyMesh;
+    monkeyMesh.loadOFF("models/table.off");
+    monkeyMesh.rotateAroundY(-M_PI_2);
+    Object monkey(monkeyMesh, redMaterial);
+    monkey.setTrans(Vec3Df(0.0, 0.0, 0.83));
+    objects.push_back(monkey);
     
-//    Mesh gargMesh;
-//    gargMesh.loadOFF ("models/gargoyle.off");
-//    Material gargMat (0.7f, 0.4f, 11.0, Vec3Df (0.5f, 0.8f, 0.5f));
-//    Object garg (gargMesh, gargMat);
-//    garg.setTrans (Vec3Df (-1.f, 1.0f, 0.1f));
-//    objects.push_back (garg);
+    buildGround();
     
-//    Light l1 (Vec3Df (0.0, 0.0, 10.0), Vec3Df (1.0f, 1.0f, 1.0f), 1.0f);
-//    Light l2 (Vec3Df (10.0, 10.0, 23.0), Vec3Df (0.0f, 1.0f, 0.0f), 1.0f);
-//    Light l3 (Vec3Df (-10, -10.0, 23.0), Vec3Df (0.0f, 0.0f, 1.0f), 1.0f);
-//    Light l4 (Vec3Df (0.0, -10.0, 5.0), Vec3Df (1.0f, 1.0f, 1.0f), 1.0f);
-//    
-//    lights.push_back(l1);
-//    lights.push_back(l2);
-//    lights.push_back(l3);
-//    lights.push_back(l4);
+    Light l1(Vec3Df(5.0, 0.0, 0.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l1);
+    
+    Light l2(Vec3Df(-5.0, 0.0, 0.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l2);
+    
+    Light l3(Vec3Df(0.0, 5.0, 0.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l3);
+    
+    Light l4(Vec3Df(0.0, -5.0, 0.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l4);
+    
+    Light l5(Vec3Df(0.0, 0.0, -5.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l5);
+    
+    Light l6(Vec3Df(0.0, 0.0, 5.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l6);
+
 }
