@@ -117,7 +117,7 @@ void GLViewer::init() {
         glLightfv (glID, GL_DIFFUSE, glColor);
     }
     
-    for(unsigned int i = scene->getLights().size() ; i < 8 ; i++)
+    for(size_t i = scene->getLights().size() ; i < 8 ; i++)
     {
         GLuint glID = OpenGLLightID[i];
         glDisable(glID);

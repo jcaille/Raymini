@@ -236,10 +236,10 @@ void Window::renderRayImage () {
     
     QTime timer;
     timer.start ();
-    bool over = false;
     QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
 
 #ifdef _OPENMP
+    bool over = false;
 #pragma omp parallel num_threads(2)
     {
         int i = omp_get_thread_num();
