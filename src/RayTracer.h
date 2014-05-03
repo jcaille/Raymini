@@ -41,7 +41,7 @@ typedef enum ShadingFunction {
 class RayTracer {
 public:
     /* User defined options */
-    int maxRayDepth;
+    static const int maxRayDepth=3;
     int bounces;
     bool enableCastShadows;
     bool enableMirrorEffet;
