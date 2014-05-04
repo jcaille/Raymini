@@ -27,6 +27,7 @@
 #pragma clang diagnostic pop
 
 #define PROGRESS_BAR_SIZE 50
+#define __APPLE__
 
 #ifdef _OPENMP
 #include <omp.h>

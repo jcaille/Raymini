@@ -44,6 +44,8 @@ protected:
                                                          const Object& intersectionObject,
                                                          const Scene& scene,
                                                          Vec3Df& diffuseLightContribution);
+    
+    void refractedContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& refractedContribution);
 
     
 };
