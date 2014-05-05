@@ -185,9 +185,9 @@ void Scene::buildCornellBoxScene() {
 //
     
     Mesh rhinoMesh;
-    rhinoMesh.loadOFF ("models/verre.off");
+    rhinoMesh.loadOFF ("models/sphere.off");
     rhinoMesh.rotateAroundZ(M_PI);
-    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.9f, 0.9f, 1.0f), 0.0, 0.8, 1.6);
+    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.9f, 0.9f, 1.0f), 0.0, 0.9, 1.6);
     Object rhino (rhinoMesh, rhinoMat);
     //rhino.setTrans(tallBoxCenter);
     rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));

@@ -27,7 +27,6 @@
 #pragma clang diagnostic pop
 
 #define PROGRESS_BAR_SIZE 50
-#define __APPLE__
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -42,7 +41,7 @@ static RayTracer * instance = NULL;
 
 RayTracer* RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new PathTracer();
+        instance = new TransparencyRayTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;

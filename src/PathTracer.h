@@ -9,9 +9,9 @@
 #ifndef __RayTracer__PathTracer__
 #define __RayTracer__PathTracer__
 
-#include "MirrorRayTracer.h"
+#include "TransparencyRayTracer.h"
 
-class PathTracer : public MirrorRayTracer{
+class PathTracer : public TransparencyRayTracer {
 public:
     
 //    void raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& intersectionColor);
@@ -45,8 +45,6 @@ protected:
                                                          const Scene& scene,
                                                          Vec3Df& diffuseLightContribution);
     
-    void refractedContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& refractedContribution);
-
     
 };
 
