@@ -25,8 +25,8 @@ void Scene::destroyInstance () {
 }
 
 Scene::Scene () {
-    _currentScene = DINNER_TABLE;
-    buildDinnerTableScene();
+    _currentScene = CORNELL;
+    buildCornellBoxScene();
     updateBoundingBox ();
 }
 
