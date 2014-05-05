@@ -9,7 +9,6 @@
 #include "Ray.h"
 #include "Scene.h"
 
-
 #include "Window.h"
 
 #include "BasicRayTracer.h"
@@ -219,8 +218,8 @@ bool RayTracer::render (const Vec3Df & camPos,
                           QImage & image) {
     
 
-    QProgressDialog progressDialog ("Raytracing...", "Cancel", 0, 100);
-    progressDialog.show ();
+//    QProgressDialog progressDialog ("Raytracing...", "Cancel", 0, 100);
+//    progressDialog.show ();
     
     Scene* scene = Scene::getInstance();
     
@@ -241,17 +240,20 @@ bool RayTracer::render (const Vec3Df & camPos,
             cout << "#" ;
         }
         
-        progressDialog.setValue ((100*i)/screenWidth);
-
-
+        
 #if defined(__APPLE__) // MULTITHREADING USING DISPATCH
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        __block vector<QRgb> columnsColor;
+        columnsColor.resize(screenHeight);
         dispatch_apply(screenHeight, queue, ^(size_t idx) {
             int j = static_cast<int>(idx);
-#else
-#ifdef _OPENMP
+            
+#elif defined(_OPENMP)
 #pragma omp parallel for // MULTITHREADING USING OPENMP
-#endif
+
+#else
+        vector<QRgb> columnsColor;
+        columnsColor.resize(screenHeight);
         // NO MULTITHREADING
         for (unsigned int j = 0; j < screenHeight; j++) {
 #endif
@@ -269,7 +271,7 @@ bool RayTracer::render (const Vec3Df & camPos,
             pixelColor *= 255/float(rays.size());
             
             QRgb rgb = qRgb(clamp(pixelColor[0], 0, 255), clamp(pixelColor[1], 0, 255), clamp(pixelColor[2], 0, 255));
-            image.setPixel(i, (int) j, rgb);
+            columnsColor[j] = rgb;
 
 
 #if defined(__APPLE__) // MULTITHREADING USING DISPATCH
@@ -277,10 +279,14 @@ bool RayTracer::render (const Vec3Df & camPos,
 #else
         }
 #endif
+       for(int j = 0 ; j < screenHeight; j++)
+       {
+           image.setPixel(i, j, columnsColor[j]);
+       }
     }
                             
 
-    progressDialog.setValue(100);
+//    progressDialog.setValue(100);
     return true;
 
 }

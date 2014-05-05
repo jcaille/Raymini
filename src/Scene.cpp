@@ -25,8 +25,8 @@ void Scene::destroyInstance () {
 }
 
 Scene::Scene () {
-    _currentScene = DINNER_TABLE;
-    buildDinnerTableScene();
+    _currentScene = CORNELL;
+    buildCornellBoxScene();
     updateBoundingBox ();
 }
 
@@ -111,7 +111,7 @@ void Scene::buildCornellBox(float scale){
     Material backtWallMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
     Object backWall (backWallMesh, backtWallMat);
     objects.push_back (backWall);
-
+    
     /* White, ceiling */
     Mesh ceilingMesh;
     ceilingMesh.makePlane(scale*Vec3Df(0, 0, 1), Vec3Df(0,0,-1), Vec3Df(0,1,0), scale, scale);
@@ -155,7 +155,7 @@ void Scene::buildCornellBoxScene() {
 
     Mesh smallBoxMesh;
     smallBoxMesh.makeBox(smallBoxCenter, smallBoxFront, smallBoxUp, smallBoxSize);
-    Material smallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
+    Material smallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0, 0.8, 1.6);
     Object smallBox (smallBoxMesh, smallBoxMat);
     objects.push_back (smallBox);
 
@@ -178,8 +178,8 @@ void Scene::buildCornellBoxScene() {
 
     
     Mesh rhinoMesh;
-    rhinoMesh.loadOFF ("models/rhino.off");
-    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.6f, 0.6f, 0.7f), 0.0);
+    rhinoMesh.loadOFF("models/rhino.off");
+    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.9f, 0.9f, 1.0f), 0.0);
     Object rhino (rhinoMesh, rhinoMat);
     rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
     objects.push_back (rhino);
@@ -204,11 +204,11 @@ void Scene::buildGround()
 void Scene::buildDinnerTableScene()
 {
     Material greenMaterial(1.0, 0.0, 0.0, Vec3Df(0.3, 0.6, 0.3), 0.0);
-    Material redMaterial(1.0, 0, 0, Vec3Df(0.6, 0.3, 0.3), 0.0);
+    Material redMaterial(1.0, 0, 0, Vec3Df(0.6, 0.3, 0.3), 0.0, 0.8, 1.6);
     Material blueMaterial(1.0, 0.6, 2.0, Vec3Df(0.3, 0.3, 0.6), 0.0);
 
     Mesh monkeyMesh;
-    monkeyMesh.loadOFF("models/table.off");
+    monkeyMesh.loadOFF("models/verre.off");
     monkeyMesh.rotateAroundY(-M_PI_2);
     Object monkey(monkeyMesh, redMaterial);
     monkey.setTrans(Vec3Df(0.0, 0.0, 0.83));

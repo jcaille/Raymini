@@ -45,6 +45,9 @@
 #endif
 
 
+#ifdef __APPLE__
+#include <dispatch/dispatch.h>
+#endif
 using namespace std;
 
 Window::Window () : QMainWindow (NULL) {
@@ -236,9 +239,9 @@ void Window::renderRayImage () {
     
     QTime timer;
     timer.start ();
-    QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
 
 #ifdef _OPENMP
+    QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
     bool over = false;
 #pragma omp parallel num_threads(2)
     {
@@ -262,8 +265,32 @@ void Window::renderRayImage () {
             }
         }
     }
-# else
-    rayTracer->render(camPos, viewDirection, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight, image);
+# elif __APPLE__
+    QImage image(screenWidth, screenHeight, QImage::Format_RGB888);
+    for(int i = 0 ; i < screenWidth ; i++)
+    {
+        for(int j = 0 ; j < screenHeight  ; j++)
+        {
+            image.setPixel(i, j, qRgb(0, 0, 0));
+        }
+    }
+    
+    __block bool over = false;
+    __block QImage& imgRef = image;
+    
+    dispatch_queue_t rayTracerQueue = dispatch_queue_create("com.raymini.queue", 0);
+    
+    dispatch_async(rayTracerQueue, ^{
+        over = rayTracer->render(camPos, viewDirection, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight, imgRef);
+    });
+    
+    while(!over)
+    {
+        viewer->setDisplayMode (GLViewer::RayDisplayMode);
+        viewer->setRayImage(image);
+    }
+#else
+    rayTracer->render(camPos, viewDirection, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight, imgRef);
 #endif
     
     viewer->setRayImage(image);
@@ -446,7 +473,8 @@ void Window::initControlWidget () {
     
     QLabel* label = new QLabel("Focus On ...");
     focalLayout->addWidget(label);
-    
+
+    focusOnComboBox = new QComboBox;
     updateFocusOnComboBox();
     focalLayout->addWidget(focusOnComboBox);
     
@@ -460,14 +488,20 @@ void Window::initControlWidget () {
 void Window::updateFocusOnComboBox()
 {
     Scene* s = Scene::getInstance();
+    for (int i = 0; i < focusOnComboBox->count(); i++) {
+        focusOnComboBox->removeItem(i);
+    }
     
-    focusOnComboBox = new QComboBox;
     focusOnComboBox->addItem(tr("Use focal Length"));
     
     std::vector<std::pair<std::string, Vec3Df>> poi = s->getPOI();
     for (std::pair<std::string, Vec3Df> p : poi) {
-        focusOnComboBox->addItem(p.first.c_str());
+        focusOnComboBox->addItem(tr(p.first.c_str()));
+        std::cout << p.first.c_str() << std::endl;
     }
+    
+    update();
+    repaint();
 }
 
 
