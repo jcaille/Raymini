@@ -16,10 +16,10 @@
 #include "Light.h"
 #include "BoundingBox.h"
 
-enum AvailableScene{
+typedef enum AvailableScene {
     CORNELL,
-    DINNER_TABLE,
-};
+    CHESS,
+} AvailableScene;
 
 class Scene {
 public:
@@ -55,8 +55,7 @@ private:
     void buildCornellBox(float scale = 1);
     void buildCornellBoxScene();
     
-    void buildGround();
-    void buildDinnerTableScene();
+    void buildChessScene();
     
     std::vector<Object> objects;
     std::vector<Light> lights;

@@ -40,7 +40,7 @@ static RayTracer * instance = NULL;
 
 RayTracer* RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new PathTracer();
+        instance = new MirrorRayTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
@@ -217,47 +217,28 @@ bool RayTracer::render (const Vec3Df & camPos,
                           unsigned int screenHeight,
                           QImage & image) {
     
-
-//    QProgressDialog progressDialog ("Raytracing...", "Cancel", 0, 100);
-//    progressDialog.show ();
     
     Scene* scene = Scene::getInstance();
     
     rayIterator->setCameraInformation(camPos, direction, upVector, rightVector, fieldOfView, aspectRatio, screenWidth, screenHeight);
     
-    // Progress bar initialization
-    cout << endl << "|" ;
-    for(int i = 0; i < PROGRESS_BAR_SIZE - 1 ; i++ )
-    {
-        cout << "-";
-    }
-    cout << endl << "|";
-    float milestone = screenWidth / PROGRESS_BAR_SIZE ;
-    
     for (unsigned int i = 0; i < screenWidth; i++) {
-        if (i >= milestone) {
-            milestone += screenWidth / PROGRESS_BAR_SIZE;
-            cout << "#" ;
-        }
         
-        
-#if defined(__APPLE__) // MULTITHREADING USING DISPATCH
+#if defined(__APPLE__)
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         __block vector<QRgb> columnsColor;
         columnsColor.resize(screenHeight);
         dispatch_apply(screenHeight, queue, ^(size_t idx) {
             int j = static_cast<int>(idx);
             
-#elif defined(_OPENMP)
-#pragma omp parallel for // MULTITHREADING USING OPENMP
-
 #else
         vector<QRgb> columnsColor;
         columnsColor.resize(screenHeight);
-        // NO MULTITHREADING
+#if defined(_OPENMP)
+#pragma omp parallel for
+#endif
         for (unsigned int j = 0; j < screenHeight; j++) {
 #endif
-            
             std::vector<Ray> rays;
             rayIterator->raysForPixel(i, j, rays);
             
@@ -274,7 +255,7 @@ bool RayTracer::render (const Vec3Df & camPos,
             columnsColor[j] = rgb;
 
 
-#if defined(__APPLE__) // MULTITHREADING USING DISPATCH
+#if defined(__APPLE__)
         });
 #else
         }
@@ -286,7 +267,6 @@ bool RayTracer::render (const Vec3Df & camPos,
     }
                             
 
-//    progressDialog.setValue(100);
     return true;
 
 }

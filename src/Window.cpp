@@ -161,7 +161,7 @@ void Window::setRayIteratorOptions(RayIterator *r)
             break;
         default:
             Scene* s = Scene::getInstance();
-            std::vector<std::pair<std::string, Vec3Df>> poi = s->getPOI();
+            std::vector<std::pair<std::string, Vec3Df> > poi = s->getPOI();
             lr->focusOn(poi[focusOnComboBox->currentIndex()-1].second);
             break;
     }
@@ -307,9 +307,9 @@ void Window::setBGColor () {
     QColor c = QColorDialog::getColor (QColor (133, 152, 181), this);
     if (c.isValid () == true) {
         cout << c.red () << endl;
-        RayTracer::getInstance ()->setBackgroundColor (Vec3Df (c.red (), c.green (), c.blue ()));
-        viewer->setBackgroundColor (c);
-        viewer->updateGL ();
+        RayTracer::getInstance()->setBackgroundColor(1/255.0f * Vec3Df(c.red(), c.green(), c.blue()));
+        viewer->setBackgroundColor(c);
+        viewer->updateGL();
     }
 }
 
@@ -336,21 +336,10 @@ void Window::about () {
     // I can't add Signals and Slot, so i'm highjacking this one to update the scene being displayed
 
     Scene* s = Scene::getInstance();
-    AvailableScene selectedScene;
     
-    switch (availableScenesComboBox->currentIndex()) {
-        case 0:
-            selectedScene = CORNELL;
-            break;
-        case 1 :
-            selectedScene = DINNER_TABLE;
-            break;
-        default:
-            selectedScene = CORNELL;
-            break;
-    }
-
+    AvailableScene selectedScene = (AvailableScene)availableScenesComboBox->currentIndex();
     s->setCurrentScene(selectedScene);
+    
     updateFocusOnComboBox();
     viewer->init();
     viewer->draw();
@@ -394,7 +383,7 @@ void Window::initControlWidget () {
     
     availableScenesComboBox = new QComboBox;
     availableScenesComboBox->addItem("Cornell Box");
-    availableScenesComboBox->addItem("Dinner Table");
+    availableScenesComboBox->addItem("Chess");
     globalLayout->addWidget(availableScenesComboBox);
     
     QPushButton * aboutButton  = new QPushButton ("Update Scene", globalGroupBox);
@@ -488,7 +477,9 @@ void Window::initControlWidget () {
 void Window::updateFocusOnComboBox()
 {
     Scene* s = Scene::getInstance();
-    for (int i = 0; i < focusOnComboBox->count(); i++) {
+    
+    int n = focusOnComboBox->count();
+    for (int i = n; i >= 0; --i) {
         focusOnComboBox->removeItem(i);
     }
     
