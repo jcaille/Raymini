@@ -366,7 +366,29 @@ void Mesh::rotateAroundY(float angle)
     recomputeSmoothVertexNormals(0);
 }
 
+void Mesh::rotateAroundX(float angle)
+{
+    vector<Vertex> v;
+    for (int i = 0; i < vertices.size(); i++) {
+        Vec3Df newV;
+        Vec3Df V = vertices[i].getPos();
+        newV[0] = V[0];
+        newV[1] = cos(angle) * V[1] + sin(angle) * V[2];
+        newV[2] = -sin(angle) * V[1] + cos(angle) * V[2];
+        vertices[i].setPos(newV);
+    }
+    recomputeSmoothVertexNormals(0);
+}
 
+void Mesh::scale(float lambda)
+{
+    vector<Vertex> v;
+    for (int i = 0; i < vertices.size(); i++) {
+        vertices[i].setPos(lambda * vertices[i].getPos());
+    }
+    recomputeSmoothVertexNormals(0);
+    
+}
 Vec3Df Mesh::getNormal(const Triangle &triangle, const std::vector<float> &barycentricCoordinates) const {
     Vertex p0 = vertices[triangle.getVertex(0)];
     Vertex p1 = vertices[triangle.getVertex(1)];

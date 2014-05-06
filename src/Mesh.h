@@ -55,6 +55,8 @@ public:
 
     void rotateAroundZ(float angle);
     void rotateAroundY(float angle);
+    void rotateAroundX(float angle);
+    void scale(float lambda);
     
     Vec3Df getNormal(const Triangle& triangle, const std::vector<float>& barycentricCoordinates) const;
     

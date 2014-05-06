@@ -21,7 +21,7 @@ class Object;
 class Ray {
 public:
     inline Ray () {}
-    inline Ray (const Vec3Df & origin, const Vec3Df & direction) : _depth(0), _origin(origin), _direction(direction) {}
+    inline Ray (const Vec3Df & origin, const Vec3Df & direction) : _depth(1), _origin(origin), _direction(direction) {}
     inline virtual ~Ray () {}
 
     inline const Vec3Df & getOrigin () const { return _origin; }
