@@ -25,8 +25,6 @@
 #include <QProgressDialog>
 #pragma clang diagnostic pop
 
-#define PROGRESS_BAR_SIZE 50
-
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -239,6 +237,7 @@ bool RayTracer::render (const Vec3Df & camPos,
 #endif
         for (unsigned int j = 0; j < screenHeight; j++) {
 #endif
+
             std::vector<Ray> rays;
             rayIterator->raysForPixel(i, j, rays);
             
