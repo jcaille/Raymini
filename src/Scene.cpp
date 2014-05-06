@@ -101,16 +101,23 @@ void Scene::buildCornellBox(float scale){
     /* Green, right wall */
     Mesh rightWallMesh;
     rightWallMesh.makePlane(scale*Vec3Df(.5,0,.5), Vec3Df(-1,0,0), Vec3Df(0,1,0), scale, scale);
-    Material rightWallMat(.8f, .2f, 10, Vec3Df (0.f, 1.f, 0.f), 0.0);
+    Material rightWallMat(.8f, .2f, 10, Vec3Df (0.7f, 1.f, 0.7f), 0.0);
     Object rightWall (rightWallMesh, rightWallMat);
     objects.push_back (rightWall);
 
     /* White, back wall */
     Mesh backWallMesh;
     backWallMesh.makePlane(scale*Vec3Df(.0,.5,.5), Vec3Df(0,-1,0), Vec3Df(0,0,1), scale, scale);
-    Material backtWallMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
+    Material backtWallMat(.8f, .2f, 10, Vec3Df (1.f, 0.7f, 0.7f), 0.0);
     Object backWall (backWallMesh, backtWallMat);
     objects.push_back (backWall);
+    
+    /* White, front wall */
+    Mesh frontWallMesh;
+    frontWallMesh.makeBox(scale*Vec3Df(0,0,0.5), Vec3Df(0,-1,0), Vec3Df(0,0,1),scale*Vec3Df(1,.1,1));
+    Material frontWallMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0, 0.8, 1.6);
+    Object frontWall (frontWallMesh, frontWallMat);
+    objects.push_back (frontWall);
     
     /* White, ceiling */
     Mesh ceilingMesh;
@@ -142,11 +149,11 @@ void Scene::buildCornellBoxScene() {
     Vec3Df tallBoxCenter = scale * Vec3Df(-.2, .2, .3);
     Vec3Df tallBoxSize = scale * Vec3Df(.3,.3, .6);
     
-    Mesh tallBoxMesh;
-    tallBoxMesh.makeBox(tallBoxCenter, tallBoxFront, tallBoxUp, tallBoxSize);
-    Material tallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), .5);
-    Object tallBox (tallBoxMesh, tallBoxMat);
-    objects.push_back (tallBox);
+//    Mesh tallBoxMesh;
+//    tallBoxMesh.makeBox(tallBoxCenter, tallBoxFront, tallBoxUp, tallBoxSize);
+//    Material tallBoxMat(.8f, .2f, 10, Vec3Df (0.9f, 0.9f, 0.7f), .5);
+//    Object tallBox (tallBoxMesh, tallBoxMat);
+//    objects.push_back (tallBox);
 
     Vec3Df smallBoxFront(-.2,-1, 0);
     Vec3Df smallBoxUp(0,0,1);
@@ -155,9 +162,9 @@ void Scene::buildCornellBoxScene() {
 
     Mesh smallBoxMesh;
     smallBoxMesh.makeBox(smallBoxCenter, smallBoxFront, smallBoxUp, smallBoxSize);
-    Material smallBoxMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0, 0.8, 1.6);
+    Material smallBoxMat(.8f, .2f, 10, Vec3Df (0.9f, 0.8f, 0.9f), 0.0, 0.8, 1.6);
     Object smallBox (smallBoxMesh, smallBoxMat);
-    objects.push_back (smallBox);
+    //objects.push_back (smallBox);
 
     
     // Top of the boxes, useful to put stuff on them
@@ -169,20 +176,28 @@ void Scene::buildCornellBoxScene() {
     /** Put objects in the scene here **/
 
 
-    Mesh ramMesh;
-    ramMesh.loadOFF("models/ram.off");
-    // I AM RAM-GOD. I SHINE WITH THE POWER OF A THOUSANDS SUN. BOW BEFORE ME!
-    Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
-    lights.push_back(ramLight);
-    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("God Ram", ramLight.getPos()));
+//    Mesh ramMesh;
+//    ramMesh.loadOFF("models/ram.off");
+//    // I AM RAM-GOD. I SHINE WITH THE POWER OF A THOUSANDS SUN. BOW BEFORE ME!
+//    Light ramLight (smallBoxTop, ramMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
+//    lights.push_back(ramLight);
+//    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("God Ram", ramLight.getPos()));
 
+//    Mesh ramMesh;
+//    ramMesh.loadOFF("models/ram.off");
+//    Material ramMat(1.0f, 0.6f, 2.0, Vec3Df (0.5f, 0.5f, 1.0f), 0.0);
+//    Object ramObject(ramMesh, ramMat);
+//    ramObject.setTrans(smallBoxTop);
+//    objects.push_back(ramObject);
     
     Mesh rhinoMesh;
-    rhinoMesh.loadOFF("models/rhino.off");
-    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.9f, 0.9f, 1.0f), 0.0);
+    rhinoMesh.loadOFF("models/sphere.off");
+    rhinoMesh.rotateAroundZ(-M_PI/3);
+    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.9f, 0.9f, 1.0f), 0.0, 0.8, 1.6);
     Object rhino (rhinoMesh, rhinoMat);
-    rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
-    objects.push_back (rhino);
+    rhino.setTrans(tallBoxCenter);
+    //rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
+    //objects.push_back (rhino);
 
     _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("Rhino", rhino.getTrans()));
 }
@@ -276,6 +291,7 @@ void Scene::buildChessScene()
         Object blackPawn(pawn, blackPieceMat);
         blackPawn.setTrans(scale * Vec3Df(i-4,2+i%2,0) + pawnCorrection);
         objects.push_back(blackPawn);
+        _pointsOfInterest.push_back(std::pair<std::string, Vec3Df> ("Pawn_" + std::to_string(i), scale * Vec3Df(i-4,2+i%2,0) + pawnCorrection));
     }
     _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("Black pawns", scale*Vec3Df(0,2,0)));
     
