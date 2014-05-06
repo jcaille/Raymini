@@ -75,25 +75,30 @@ void PathTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersect
     float reflectiveness = intersectionObject.getMaterial().getReflectiveness();
     float transmitance = intersectionObject.getMaterial().getTransmitance();
     
-    if(transmitance < EPSILON && (reflectiveness < EPSILON || !enableMirrorEffet))
-    {
-        allDiffuseContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, intersectionColor);
-        return;
-    }
-    
-    Vec3Df reflectedColor;
-    mirrorContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, reflectedColor);
+    Vec3Df reflectedColor(0,0,0);
+    if (reflectiveness < EPSILON || !enableMirrorEffet)
+        mirrorContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, reflectedColor);
     
     if(reflectiveness >= 1.0 - EPSILON){
         intersectionColor = reflectedColor;
         return;
     }
     
-    Vec3Df refractedContribution;
-    refractedContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, refractedContribution);
+    Vec3Df refractedContribution(0,0,0);
+    if (transmitance >= 1.0 - EPSILON){
+        refractedContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, refractedContribution);
+    }
+    
+    if(reflectiveness >= 1.0 - EPSILON){
+        intersectionColor = refractedContribution;
+        return;
+    }
 
-    Vec3Df baseColor;
-    allDiffuseContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, baseColor);
+
+    Vec3Df baseColor(0,0,0);
+    if (1 - reflectiveness - transmitance >= 1.0 - EPSILON){
+        allDiffuseContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, baseColor);
+    }
     
     intersectionColor = reflectiveness * reflectedColor + (1 - reflectiveness - transmitance) * baseColor + transmitance * refractedContribution;
 
