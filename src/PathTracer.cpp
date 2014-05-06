@@ -64,8 +64,8 @@ void PathTracer::allDiffuseContributionToRayColorForIntersection(const Ray& ray,
     
     Vec3Df indirectContribution;
     indirectContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, indirectContribution);
-
-    diffuseLightContribution = directContribution + .2* indirectContribution;
+    
+    diffuseLightContribution = 0.6 * directContribution + .4* indirectContribution;
 
 }
 

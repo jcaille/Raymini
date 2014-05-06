@@ -384,6 +384,7 @@ void Window::initControlWidget () {
     availableScenesComboBox = new QComboBox;
     availableScenesComboBox->addItem("Cornell Box");
     availableScenesComboBox->addItem("Chess");
+    availableScenesComboBox->addItem("Random Spheres");
     globalLayout->addWidget(availableScenesComboBox);
     
     QPushButton * aboutButton  = new QPushButton ("Update Scene", globalGroupBox);
@@ -429,7 +430,7 @@ void Window::initControlWidget () {
     lightSampleSlider = new DoubleWidget(QString("Light samples density"), 0.0, 500.0, 50, this);
     rayLayout->addWidget(lightSampleSlider);
 
-    bouncesSlider = new DoubleWidget(QString("Ray bounces number"), 0.0, 1000.0, 0, this);
+    bouncesSlider = new DoubleWidget(QString("Ray bounces number"), 0.0, 100.0, 0, this);
     rayLayout->addWidget(bouncesSlider);
     
     mirrorCheckBox = new QCheckBox;

@@ -387,8 +387,8 @@ void Mesh::scale(float lambda)
         vertices[i].setPos(lambda * vertices[i].getPos());
     }
     recomputeSmoothVertexNormals(0);
-    
 }
+
 Vec3Df Mesh::getNormal(const Triangle &triangle, const std::vector<float> &barycentricCoordinates) const {
     Vertex p0 = vertices[triangle.getVertex(0)];
     Vertex p1 = vertices[triangle.getVertex(1)];

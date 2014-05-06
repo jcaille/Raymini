@@ -19,6 +19,7 @@
 typedef enum AvailableScene {
     CORNELL,
     CHESS,
+    SPHERES,
 } AvailableScene;
 
 class Scene {
@@ -56,6 +57,7 @@ private:
     void buildCornellBoxScene();
     
     void buildChessScene();
+    void buildSpheresScene();
     
     std::vector<Object> objects;
     std::vector<Light> lights;

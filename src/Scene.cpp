@@ -7,6 +7,11 @@
 
 #include "Scene.h"
 
+float random_float_scene(float lo, float hi)
+{
+    return lo + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX/(hi-lo)));
+}
+
 using namespace std;
 
 static Scene * instance = NULL;
@@ -41,6 +46,9 @@ void Scene::setCurrentScene(AvailableScene s)
             break;
         case CHESS:
             buildChessScene();
+            break;
+        case SPHERES:
+            buildSpheresScene();
             break;
         default:
             buildCornellBoxScene();
@@ -307,6 +315,83 @@ void Scene::buildChessScene()
     lights.push_back(ceilingLight3);
     Light ceilingLight4 (scale*Vec3Df (-4*scale, -4*scale, 10), ceilingLightMesh, Vec3Df (1.0f, 1.0f, 1.0f), .50f);
     lights.push_back(ceilingLight4);
+}
 
+#pragma mark - Random Spheres
+
+void Scene::buildSpheresScene()
+{
+    std::vector<Vec3Df> colors;
     
+    colors.push_back(Vec3Df(0.7, 0.3, 0.2));
+    colors.push_back(Vec3Df(0.2, 0.7, 0.3));
+    colors.push_back(Vec3Df(0.3, 0.2, 0.7));
+
+    colors.push_back(Vec3Df(0.7, 0.2, 0.3));
+    colors.push_back(Vec3Df(0.3, 0.7, 0.2));
+    colors.push_back(Vec3Df(0.2, 0.3, 0.7));
+
+    colors.push_back(Vec3Df(0.7, 0.6, 0.4));
+    colors.push_back(Vec3Df(0.6, 0.4, 0.7));
+    colors.push_back(Vec3Df(0.4, 0.7, 0.6));
+
+    colors.push_back(Vec3Df(0.7, 0.4, 0.6));
+    colors.push_back(Vec3Df(0.4, 0.6, 0.7));
+    colors.push_back(Vec3Df(0.6, 0.7, 0.4));
+
+
+    std::vector<Material> materials;
+    for(int i = 0 ; i < colors.size(); i++)
+    {
+        materials.push_back(Material(1.0, 0.0, 0.4, colors[i], 0.1));
+        materials.push_back(Material(1.0, 0.2, 0.4, colors[i], 0.1));
+        materials.push_back(Material(1.0, 0.0, 0.8, colors[i], 0.3));
+        materials.push_back(Material(1.0, 0.1, 0.4, colors[i], 0.1));
+    }
+
+    for (int i = 0; i < 90; ++i)
+    {
+        float s = random_float_scene(0.15, 1.5);
+        float x = random_float_scene(-10, 10);
+        float y = random_float_scene(-10, 10);
+        float z = random_float_scene(-10, 10);
+
+        int matIdx = round(random_float_scene(0, materials.size() - 1));
+
+        Mesh mesh;
+        mesh.loadOFF("models/sphere.off");
+        mesh.scale(s);
+        
+        
+        if(true)
+        {
+            Object o(mesh, materials[matIdx]);
+            o.setTrans(Vec3Df(x, y, z));
+            objects.push_back(o);
+        } else {
+            Light ramLight (Vec3Df(x, y, z), mesh, materials[matIdx].getColor(), 0.5f);
+            lights.push_back(ramLight);
+        }
+    }
+    
+    Light l0(Vec3Df(0, 0, 0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l0);
+    
+    Light l1(Vec3Df(20.0, 0.0, 0.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l1);
+    
+    Light l2(Vec3Df(-20.0, 0.0, 0.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l2);
+    
+    Light l3(Vec3Df(0.0, 20.0, 0.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l3);
+    
+    Light l4(Vec3Df(0.0, -20.0, 0.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l4);
+    
+    Light l5(Vec3Df(0.0, 0.0, -20.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l5);
+    
+    Light l6(Vec3Df(0.0, 0.0, 20.0), Vec3Df(1.0, 1.0, 1.0), 1.0);
+    lights.push_back(l6);   
 }
