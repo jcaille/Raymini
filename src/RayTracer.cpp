@@ -40,7 +40,7 @@ static RayTracer * instance = NULL;
 
 RayTracer* RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new MirrorRayTracer();
+        instance = new PathTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
@@ -175,7 +175,8 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
         return;
     }
     
-    if (lightIntersectionDistance <= objectIntersectionDistance){
+    // || (lightIntersection && objectIntersection && objectIntersectionObject->getMaterial().getTransmitance() > 0.2f)
+    if ( (lightIntersectionDistance <= objectIntersectionDistance) ){
         
         // We need to compute the normal on the object at the intersection point
         const Mesh& mesh = lightIntersectionObject->getMesh();
