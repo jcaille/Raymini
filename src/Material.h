@@ -18,7 +18,7 @@
 class Material {
 public:
     inline Material () : diffuse (0.8f), specular (0.2f), shininess(.0f), color (0.5f, 0.5f, 0.5f), reflectiveness(0), transmitance(0), refractiveIndex(1)  {}
-    inline Material (float diffuse, float specular, float shininess, const Vec3Df & color, float reflectiveness, float transmitance = 0, float refractiveIndex = 1)
+    inline Material (float diffuse, float specular, float shininess, const Vec3Df & color, float reflectiveness = 0, float transmitance = 0, float refractiveIndex = 1)
     : diffuse (diffuse), specular (specular), shininess (shininess), color (color), reflectiveness(reflectiveness), transmitance(transmitance), refractiveIndex(refractiveIndex){}
     virtual ~Material () {}
     

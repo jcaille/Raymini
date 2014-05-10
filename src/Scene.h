@@ -17,7 +17,8 @@
 #include "BoundingBox.h"
 
 typedef enum AvailableScene {
-    CORNELL,
+    CORNELLANIMAL,
+    CORNELLSPHERE,
     CHESS,
     SPHERES,
 } AvailableScene;
@@ -54,7 +55,8 @@ private:
     AvailableScene _currentScene;
         
     void buildCornellBox(float scale = 1);
-    void buildCornellBoxScene();
+    void buildCornellBoxAnimalScene();
+    void buildCornellBoxSphereScene();
     
     void buildChessScene();
     void buildSpheresScene();

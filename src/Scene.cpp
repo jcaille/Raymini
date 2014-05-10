@@ -37,8 +37,8 @@ void Scene::destroyInstance () {
 }
 
 Scene::Scene () {
-    _currentScene = CORNELL;
-    buildCornellBoxScene();
+    _currentScene = CORNELLANIMAL;
+    buildCornellBoxAnimalScene();
     updateBoundingBox ();
 }
 
@@ -48,8 +48,11 @@ void Scene::setCurrentScene(AvailableScene s)
     lights.clear();
     _pointsOfInterest.clear();
     switch (s) {
-        case CORNELL:
-            buildCornellBoxScene();
+        case CORNELLANIMAL:
+            buildCornellBoxAnimalScene();
+            break;
+        case CORNELLSPHERE:
+            buildCornellBoxSphereScene();
             break;
         case CHESS:
             buildChessScene();
@@ -58,7 +61,7 @@ void Scene::setCurrentScene(AvailableScene s)
             buildSpheresScene();
             break;
         default:
-            buildCornellBoxScene();
+            buildCornellBoxAnimalScene();
             break;
     }
     _currentScene = s;
@@ -102,42 +105,36 @@ void Scene::buildCornellBox(float scale){
     /* White, ground */
     Mesh groundMesh;
     groundMesh.makePlane(scale*Vec3Df(0,0,0), Vec3Df(0,0,1), Vec3Df(0,1,0), scale, scale);
-    Material groundMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
+    Material groundMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f));
     Object ground (groundMesh, groundMat);
     objects.push_back (ground);
 
     /* Red, left wall */
     Mesh leftWallMesh;
     leftWallMesh.makePlane(scale*Vec3Df(-.5,0,.5), Vec3Df(1,0,0), Vec3Df(0,1,0), scale, scale);
-    Material leftWallMat(.8f, .2f, 10, Vec3Df (1.f, 0.f, 0.f), 0.0);
+    Material leftWallMat(.8f, .2f, 10, Vec3Df (1.f, 0.f, 0.f));
     Object leftWall (leftWallMesh, leftWallMat);
     objects.push_back (leftWall);
 
-    /* Green, right wall */
+    /* Blue, right wall */
     Mesh rightWallMesh;
     rightWallMesh.makePlane(scale*Vec3Df(.5,0,.5), Vec3Df(-1,0,0), Vec3Df(0,1,0), scale, scale);
-    Material rightWallMat(.8f, .2f, 10, Vec3Df (0.7f, 1.f, 0.7f), 0.0);
+    Material rightWallMat(.8f, .2f, 10, Vec3Df (0.5f, .7f, 1.0f));
     Object rightWall (rightWallMesh, rightWallMat);
     objects.push_back (rightWall);
 
     /* White, back wall */
     Mesh backWallMesh;
     backWallMesh.makePlane(scale*Vec3Df(.0,.5,.5), Vec3Df(0,-1,0), Vec3Df(0,0,1), scale, scale);
-    Material backtWallMat(.8f, .2f, 10, Vec3Df (1.f, 0.7f, 0.7f), 0.0);
+    Material backtWallMat(.8f, .2f, 10, Vec3Df (1.f, 1.0f, 1.0f));
     Object backWall (backWallMesh, backtWallMat);
     objects.push_back (backWall);
     
-    /* White, front wall */
-    Mesh frontWallMesh;
-    frontWallMesh.makeBox(scale*Vec3Df(0,0,0.5), Vec3Df(0,-1,0), Vec3Df(0,0,1),scale*Vec3Df(1,.1,1));
-    Material frontWallMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0, 0.8, 1.6);
-    Object frontWall (frontWallMesh, frontWallMat);
-    objects.push_back (frontWall);
     
     /* White, ceiling */
     Mesh ceilingMesh;
     ceilingMesh.makePlane(scale*Vec3Df(0, 0, 1), Vec3Df(0,0,-1), Vec3Df(0,1,0), scale, scale);
-    Material ceilingMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f), 0.0);
+    Material ceilingMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f));
     Object ceiling (ceilingMesh, ceilingMat);
     objects.push_back (ceiling);
 
@@ -149,42 +146,56 @@ void Scene::buildCornellBox(float scale){
     lights.push_back(ceilingLight);
 
 }
-
-void Scene::buildCornellBoxScene() {
+void Scene::buildCornellBoxSphereScene() {
     
     float scale = 5;
     
     buildCornellBox(scale);
-//    
-//    // The 2 usual boxes in the cornell box
-//    // I recommend leaving them here and put objects on top of them, see bellow
-//    
-//    Vec3Df tallBoxFront(.2,-1,0);
-//    Vec3Df tallBoxUp(0,0,1);
-//    Vec3Df tallBoxCenter = scale * Vec3Df(-.2, .2, .3);
-//    Vec3Df tallBoxSize = scale * Vec3Df(.3,.3, .6);
-//    
-//    Mesh tallBoxMesh;
-//    tallBoxMesh.makeBox(tallBoxCenter, tallBoxFront, tallBoxUp, tallBoxSize);
-//    Material tallBoxMat(.8f, .2f, 10, Vec3Df (0.9f, 0.9f, 0.7f), .5);
-//    Object tallBox (tallBoxMesh, tallBoxMat);
-//    objects.push_back (tallBox);
-//
-//    Vec3Df smallBoxFront(-.2,-1, 0);
-//    Vec3Df smallBoxUp(0,0,1);
-//    Vec3Df smallBoxCenter = scale * Vec3Df(.2, -.2, .15);
-//    Vec3Df smallBoxSize = scale * Vec3Df(.3,.3,.3);
-//
-//    Mesh smallBoxMesh;
-//    smallBoxMesh.makeBox(smallBoxCenter, smallBoxFront, smallBoxUp, smallBoxSize);
-//    Material smallBoxMat(.8f, .2f, 10, Vec3Df (0.9f, 0.8f, 0.9f), 0.0, 0.8, 1.6);
-//    Object smallBox (smallBoxMesh, smallBoxMat);
-//    objects.push_back (smallBox);
-//
-//    
-//    // Top of the boxes, useful to put stuff on them
-//    Vec3Df tallBoxTop = tallBoxCenter + .5 * tallBoxSize[2] * tallBoxUp;
-//    Vec3Df smallBoxTop = smallBoxCenter + .5 * smallBoxSize[2] * smallBoxUp;
+    
+    Mesh sphereMesh;
+    sphereMesh.loadOFF("models/sphere.off");
+    Material sphereMat(1.0f, 1.0f, 128.0, Vec3Df (1.0f, 1.0f, 1.0f), 0.0, 1.0, 1.5);
+    Object sphere(sphereMesh, sphereMat);
+    sphere.setTrans(scale*Vec3Df(-.2,.1,.3));
+    objects.push_back(sphere);
+
+}
+
+void Scene::buildCornellBoxAnimalScene() {
+    
+    float scale = 5;
+    
+    buildCornellBox(scale);
+    
+    // The 2 usual boxes in the cornell box
+    // I recommend leaving them here and put objects on top of them, see bellow
+    
+    Vec3Df tallBoxFront(.2,-1,0);
+    Vec3Df tallBoxUp(0,0,1);
+    Vec3Df tallBoxCenter = scale * Vec3Df(-.2, .2, .3);
+    Vec3Df tallBoxSize = scale * Vec3Df(.3,.3, .6);
+    
+    Mesh tallBoxMesh;
+    tallBoxMesh.makeBox(tallBoxCenter, tallBoxFront, tallBoxUp, tallBoxSize);
+    Material tallBoxMat(.8f, .2f, 10, Vec3Df (1.0f, 1.0f, 1.0f), .5);
+    Object tallBox (tallBoxMesh, tallBoxMat);
+    objects.push_back (tallBox);
+
+    Vec3Df smallBoxFront(-.2,-1, 0);
+    Vec3Df smallBoxUp(0,0,1);
+    Vec3Df smallBoxCenter = scale * Vec3Df(.2, -.2, .15);
+    Vec3Df smallBoxSize = scale * Vec3Df(.3,.3,.3);
+
+    Mesh smallBoxMesh;
+    smallBoxMesh.makeBox(smallBoxCenter, smallBoxFront, smallBoxUp, smallBoxSize);
+    Material smallBoxMat(.8f, .2f, 10, Vec3Df (1.0f, 1.0f, 1.0f));
+    Object smallBox (smallBoxMesh, smallBoxMat);
+    objects.push_back (smallBox);
+
+    
+    // Top of the boxes, useful to put stuff on them
+    Vec3Df tallBoxTop = tallBoxCenter + .5 * tallBoxSize[2] * tallBoxUp;
+    Vec3Df smallBoxTop = smallBoxCenter + .5 * smallBoxSize[2] * smallBoxUp;
     
     
     
@@ -198,23 +209,21 @@ void Scene::buildCornellBoxScene() {
 //    lights.push_back(ramLight);
 //    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("God Ram", ramLight.getPos()));
 
-//    Mesh ramMesh;
-//    ramMesh.loadOFF("models/ram.off");
-//    Material ramMat(1.0f, 0.6f, 2.0, Vec3Df (0.5f, 0.5f, 1.0f), 0.0);
-//    Object ramObject(ramMesh, ramMat);
-//    ramObject.setTrans(smallBoxTop);
-//    objects.push_back(ramObject);
+    Mesh ramMesh;
+    ramMesh.loadOFF("models/ram.off");
+    Material ramMat(1.0f, 0.6f, 2.0, Vec3Df (1.0f, 0.5f, 0.0f));
+    Object ramObject(ramMesh, ramMat);
+    ramObject.setTrans(smallBoxTop);
+    objects.push_back(ramObject);
     
-//    Mesh rhinoMesh;
-//    rhinoMesh.loadOFF("models/sphere.off");
-//    rhinoMesh.rotateAroundZ(-M_PI/3);
-//    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.9f, 0.9f, 1.0f), 0.0, 0.8, 1.6);
-//    Object rhino (rhinoMesh, rhinoMat);
-//    rhino.setTrans(tallBoxCenter);
-//    rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
-//    objects.push_back (rhino);
-//
-//    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("Rhino", rhino.getTrans()));
+    Mesh rhinoMesh;
+    rhinoMesh.loadOFF("models/rhino.off");
+    rhinoMesh.rotateAroundZ(-M_PI/3);
+    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.9f, 0.9f, 1.0f));
+    Object rhino (rhinoMesh, rhinoMat);
+    rhino.setTrans(tallBoxTop + Vec3Df(0,0,.4));
+    objects.push_back (rhino);
+    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("Rhino", rhino.getTrans()));
 }
 
 #pragma mark - CHESS SCENE

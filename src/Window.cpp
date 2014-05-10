@@ -383,7 +383,8 @@ void Window::initControlWidget () {
     globalLayout->addWidget (bgColorButton);
     
     availableScenesComboBox = new QComboBox;
-    availableScenesComboBox->addItem("Cornell Box");
+    availableScenesComboBox->addItem("Cornell Box - Animals");
+    availableScenesComboBox->addItem("Cornell Box - Sphere");
     availableScenesComboBox->addItem("Chess");
     availableScenesComboBox->addItem("Random Spheres");
     globalLayout->addWidget(availableScenesComboBox);

@@ -47,10 +47,7 @@ public slots :
     void exportGLImage ();
     void exportRayImage ();
     void about ();
-    
-   // bool getShadowCheckBoxState();
-    //bool getMirrorCheckBoxState();
-    
+        
 private :
     void initControlWidget();
     void setRayIteratorOptions(RayIterator *r);
