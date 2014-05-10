@@ -154,7 +154,7 @@ void Scene::buildCornellBoxSphereScene() {
     
     Mesh sphereMesh;
     sphereMesh.loadOFF("models/sphere.off");
-    Material sphereMat(1.0f, 1.0f, 128.0, Vec3Df (1.0f, 1.0f, 1.0f), 0.0, 1.0, 1.5);
+    Material sphereMat(.1f, 1.0f, 128.0, Vec3Df (1.0f, 1.0f, 1.0f), 0.0, 0.8f, 1.5);
     Object sphere(sphereMesh, sphereMat);
     sphere.setTrans(scale*Vec3Df(-.2,.1,.3));
     objects.push_back(sphere);

@@ -19,16 +19,14 @@ void ExtendedLightSourcesRayTracer::directContributionToRayColorForIntersection(
     for (const Light& light : lights){
         
         Vec3Df lightContribution(0,0,0);
+        Vec3Df rayContribution;
         
         const std::vector<Vec3Df>& lightSamples = light.getSamples();
         
         for (const Vec3Df& lightPos : lightSamples){
-            
-            Vec3Df rayContribution;
-            
-            if (lightContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, lightPos, light, intersectionObject, scene, rayContribution)){
-                lightContribution += rayContribution;
-            }
+                
+            lightContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, lightPos, light, intersectionObject, scene, rayContribution);
+            lightContribution += rayContribution;
             
         }
         

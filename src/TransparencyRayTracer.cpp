@@ -16,6 +16,37 @@ static inline float sqr(float x)
     return x*x;
 }
 
+// We need to modify this so that objects that are transparent don't generate hard shadows
+float TransparencyRayTracer::lightContributionPowerToRayColorForIntersection(const Vec3Df& intersectionPoint, const Vec3Df& lightPos, const Scene& scene)
+{
+    
+    Vec3Df direction = lightPos-intersectionPoint;
+    float lightDistance = direction.normalize();
+    
+    // Let's see if direct light from the light can go through to the intersectionPoint
+    Ray lightRay(intersectionPoint, direction);
+    
+    float obstructionDistance;
+    Vec3Df obstructionPoint;
+    Triangle obstructionTriangle;
+    const Object* obstructionObject;
+    
+    bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
+    
+    if (!intersection || obstructionDistance + EPSILON >= lightDistance){
+        return 1.0f;
+    }
+    
+    // Maybe the intersection object is transparent ?
+    if (obstructionObject->getMaterial().getTransmitance() < EPSILON)
+        return 0.0f;
+    
+    return sqrt(obstructionObject->getMaterial().getTransmitance()) * lightContributionPowerToRayColorForIntersection(intersectionPoint+obstructionDistance*direction, lightPos, scene) ;
+    
+    
+}
+
+
 void TransparencyRayTracer::refractedContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& totalContribution)
 {
     
@@ -36,11 +67,18 @@ void TransparencyRayTracer::refractedContributionToRayColorForIntersection(const
     float eta;
 
     float cosIncidentAngle = Vec3Df::dotProduct(incidentRayDirection, intersectionNormal);
+    
+    Vec3Df n;
+
+
     if ( cosIncidentAngle > 0 ){
         //on vient de l'extérieur de l'objet : 1 correspond à l'indice de l'air
         eta = intersectionObject.getMaterial().getRefractiveIndex() / 1;
+        n = intersectionNormal;
     } else {
         eta = 1 / intersectionObject.getMaterial().getRefractiveIndex();
+        n = -intersectionNormal;
+        cosIncidentAngle = -cosIncidentAngle;
     }
     
     
@@ -53,13 +91,12 @@ void TransparencyRayTracer::refractedContributionToRayColorForIntersection(const
         return;
     }
     
-
     Vec3Df refractedContribution;
     Vec3Df reflectedContribution;
 
     float cos_theta = sqrt(cos_theta_t_sqr);
     
-    Vec3Df refractedRayDirection = - 1/eta * incidentRayDirection - ( cos_theta - 1/eta * cosIncidentAngle) * (cosIncidentAngle > 0 ? intersectionNormal : -intersectionNormal);
+    Vec3Df refractedRayDirection = - 1/eta * incidentRayDirection - ( cos_theta - 1/eta * cosIncidentAngle) * n;
     refractedRayDirection.normalize();
     
     Ray refractedRay(intersectionPoint, refractedRayDirection);
@@ -77,7 +114,7 @@ void TransparencyRayTracer::refractedContributionToRayColorForIntersection(const
     
     float Ft = 1 - Fr;
     
-    totalContribution = refractedContribution;//;Ft * refractedContribution + Fr * reflectedContribution;
+    totalContribution = Ft * refractedContribution + Fr * reflectedContribution;
     
 }
 

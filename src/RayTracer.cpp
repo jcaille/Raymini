@@ -173,7 +173,6 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
         return;
     }
     
-    // || (lightIntersection && objectIntersection && objectIntersectionObject->getMaterial().getTransmitance() > 0.2f)
     if ( (lightIntersectionDistance <= objectIntersectionDistance) ){
         
         // We need to compute the normal on the object at the intersection point
