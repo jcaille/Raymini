@@ -9,10 +9,6 @@
 #include "LensBlurIterator.h"
 #include "Scene.h"
 
-static inline float random_float(float lo, float hi)
-{
-    return lo + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX/(hi-lo)));
-}
 
 void LensBlurIterator::setCameraInformation(Vec3Df cameraPosition,
                                        Vec3Df direction,
