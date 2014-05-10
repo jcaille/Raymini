@@ -7,7 +7,7 @@
 
 #include "Scene.h"
 
-float random_float_scene(float lo, float hi)
+static inline float random_float(float lo, float hi)
 {
     return lo + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX/(hi-lo)));
 }
@@ -351,12 +351,12 @@ void Scene::buildSpheresScene()
 
     for (int i = 0; i < 90; ++i)
     {
-        float s = random_float_scene(0.15, 1.5);
-        float x = random_float_scene(-10, 10);
-        float y = random_float_scene(-10, 10);
-        float z = random_float_scene(-10, 10);
+        float s = random_float(0.15, 1.5);
+        float x = random_float(-10, 10);
+        float y = random_float(-10, 10);
+        float z = random_float(-10, 10);
 
-        int matIdx = round(random_float_scene(0, materials.size() - 1));
+        int matIdx = round(random_float(0, materials.size() - 1));
 
         Mesh mesh;
         mesh.loadOFF("models/sphere.off");
