@@ -43,7 +43,6 @@ float TransparencyRayTracer::lightContributionPowerToRayColorForIntersection(con
     
     return sqrt(obstructionObject->getMaterial().getTransmitance()) * lightContributionPowerToRayColorForIntersection(intersectionPoint+obstructionDistance*direction, lightPos, scene) ;
     
-    
 }
 
 

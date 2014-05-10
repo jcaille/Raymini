@@ -341,6 +341,7 @@ void Window::updateScene () {
     updateFocusOnComboBox();
     viewer->init();
     viewer->draw();
+    viewer->setDisplayMode(GLViewer::OpenGLDisplayMode);
 }
 
 void Window::initControlWidget () {
