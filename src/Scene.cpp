@@ -7,6 +7,13 @@
 
 #include "Scene.h"
 
+
+static inline int random_int(int lo, int hi)
+{
+    return lo + (rand() % (hi-lo+1));
+}
+
+
 static inline float random_float(float lo, float hi)
 {
     return lo + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX/(hi-lo)));
@@ -348,30 +355,36 @@ void Scene::buildSpheresScene()
         materials.push_back(Material(1.0, 0.0, 0.8, colors[i], 0.3));
         materials.push_back(Material(1.0, 0.1, 0.4, colors[i], 0.1));
     }
+    
+
+    const int numDifferentScales = 10;
+    std::vector<Mesh> scales;
+    
+    Mesh mesh;
+    mesh.loadOFF("models/sphere.off");
+
+    
+    for (int i = 0; i < numDifferentScales; ++i){
+        Mesh scaledMesh(mesh);
+        scaledMesh.scale(random_float(0.15, 1.5));
+        
+        scales.push_back(scaledMesh);
+    }
+    
 
     for (int i = 0; i < 90; ++i)
     {
-        float s = random_float(0.15, 1.5);
+
         float x = random_float(-10, 10);
         float y = random_float(-10, 10);
         float z = random_float(-10, 10);
 
-        int matIdx = round(random_float(0, materials.size() - 1));
-
-        Mesh mesh;
-        mesh.loadOFF("models/sphere.off");
-        mesh.scale(s);
+        int matIdx = random_int(0, (int)materials.size()-1);
+        int scaleIdx = random_int(0, numDifferentScales-1);
         
-        
-        if(true)
-        {
-            Object o(mesh, materials[matIdx]);
-            o.setTrans(Vec3Df(x, y, z));
-            objects.push_back(o);
-        } else {
-            Light ramLight (Vec3Df(x, y, z), mesh, materials[matIdx].getColor(), 0.5f);
-            lights.push_back(ramLight);
-        }
+        Object o(scales[scaleIdx], materials[matIdx]);
+        o.setTrans(Vec3Df(x, y, z));
+        objects.push_back(o);
     }
     
     Light l0(Vec3Df(0, 0, 0), Vec3Df(1.0, 1.0, 1.0), 1.0);
