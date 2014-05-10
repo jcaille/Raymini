@@ -46,7 +46,7 @@ public slots :
     void showRayImage ();
     void exportGLImage ();
     void exportRayImage ();
-    void about ();
+    void updateScene ();
         
 private :
     void initControlWidget();

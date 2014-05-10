@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../Window.h"
+#include "Window.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'Window.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 63
@@ -43,7 +43,7 @@ static const uint qt_meta_data_Window[] = {
 static const char qt_meta_stringdata_Window[] = {
     "Window\0renderRayImage()\0\0setBGColor()\0"
     "showRayImage()\0exportGLImage()\0"
-    "exportRayImage()\0about()\0"
+    "exportRayImage()\0updateScene()\0"
 };
 
 void Window::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -57,7 +57,7 @@ void Window::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 2: _t->showRayImage(); break;
         case 3: _t->exportGLImage(); break;
         case 4: _t->exportRayImage(); break;
-        case 5: _t->about(); break;
+        case 5: _t->updateScene(); break;
         default: ;
         }
     }

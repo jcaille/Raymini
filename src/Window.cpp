@@ -331,8 +331,7 @@ void Window::exportRayImage () {
 
 #pragma mark - Interface
 
-void Window::about () {
-    // I can't add Signals and Slot, so i'm highjacking this one to update the scene being displayed
+void Window::updateScene () {
 
     Scene* s = Scene::getInstance();
     
@@ -387,9 +386,9 @@ void Window::initControlWidget () {
     availableScenesComboBox->addItem("Random Spheres");
     globalLayout->addWidget(availableScenesComboBox);
     
-    QPushButton * aboutButton  = new QPushButton ("Update Scene", globalGroupBox);
-    connect (aboutButton, SIGNAL (clicked()) , this, SLOT (about()));
-    globalLayout->addWidget (aboutButton);
+    QPushButton * updateSceneButton  = new QPushButton ("Update Scene", globalGroupBox);
+    connect (updateSceneButton, SIGNAL (clicked()) , this, SLOT (updateScene()));
+    globalLayout->addWidget (updateSceneButton);
     
     QPushButton * quitButton  = new QPushButton ("Quit", globalGroupBox);
     connect (quitButton, SIGNAL (clicked()) , qApp, SLOT (closeAllWindows()));
