@@ -75,6 +75,7 @@ private :
     DoubleWidget* focalLengthSlider;
     DoubleWidget* lensBlurDensitySlider;
     QCheckBox* shadowCheckBox;
+    QCheckBox* transparencyCheckBox;
     DoubleWidget* lightSampleSlider;
     DoubleWidget* bouncesSlider;
     QCheckBox* mirrorCheckBox;

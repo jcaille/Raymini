@@ -155,36 +155,36 @@ void Scene::buildCornellBoxScene() {
     float scale = 5;
     
     buildCornellBox(scale);
-    
-    // The 2 usual boxes in the cornell box
-    // I recommend leaving them here and put objects on top of them, see bellow
-    
-    Vec3Df tallBoxFront(.2,-1,0);
-    Vec3Df tallBoxUp(0,0,1);
-    Vec3Df tallBoxCenter = scale * Vec3Df(-.2, .2, .3);
-    Vec3Df tallBoxSize = scale * Vec3Df(.3,.3, .6);
-    
+//    
+//    // The 2 usual boxes in the cornell box
+//    // I recommend leaving them here and put objects on top of them, see bellow
+//    
+//    Vec3Df tallBoxFront(.2,-1,0);
+//    Vec3Df tallBoxUp(0,0,1);
+//    Vec3Df tallBoxCenter = scale * Vec3Df(-.2, .2, .3);
+//    Vec3Df tallBoxSize = scale * Vec3Df(.3,.3, .6);
+//    
 //    Mesh tallBoxMesh;
 //    tallBoxMesh.makeBox(tallBoxCenter, tallBoxFront, tallBoxUp, tallBoxSize);
 //    Material tallBoxMat(.8f, .2f, 10, Vec3Df (0.9f, 0.9f, 0.7f), .5);
 //    Object tallBox (tallBoxMesh, tallBoxMat);
 //    objects.push_back (tallBox);
-
-    Vec3Df smallBoxFront(-.2,-1, 0);
-    Vec3Df smallBoxUp(0,0,1);
-    Vec3Df smallBoxCenter = scale * Vec3Df(.2, -.2, .15);
-    Vec3Df smallBoxSize = scale * Vec3Df(.3,.3,.3);
-
-    Mesh smallBoxMesh;
-    smallBoxMesh.makeBox(smallBoxCenter, smallBoxFront, smallBoxUp, smallBoxSize);
-    Material smallBoxMat(.8f, .2f, 10, Vec3Df (0.9f, 0.8f, 0.9f), 0.0, 0.8, 1.6);
-    Object smallBox (smallBoxMesh, smallBoxMat);
-    //objects.push_back (smallBox);
-
-    
-    // Top of the boxes, useful to put stuff on them
-    Vec3Df tallBoxTop = tallBoxCenter + .5 * tallBoxSize[2] * tallBoxUp;
-    Vec3Df smallBoxTop = smallBoxCenter + .5 * smallBoxSize[2] * smallBoxUp;
+//
+//    Vec3Df smallBoxFront(-.2,-1, 0);
+//    Vec3Df smallBoxUp(0,0,1);
+//    Vec3Df smallBoxCenter = scale * Vec3Df(.2, -.2, .15);
+//    Vec3Df smallBoxSize = scale * Vec3Df(.3,.3,.3);
+//
+//    Mesh smallBoxMesh;
+//    smallBoxMesh.makeBox(smallBoxCenter, smallBoxFront, smallBoxUp, smallBoxSize);
+//    Material smallBoxMat(.8f, .2f, 10, Vec3Df (0.9f, 0.8f, 0.9f), 0.0, 0.8, 1.6);
+//    Object smallBox (smallBoxMesh, smallBoxMat);
+//    objects.push_back (smallBox);
+//
+//    
+//    // Top of the boxes, useful to put stuff on them
+//    Vec3Df tallBoxTop = tallBoxCenter + .5 * tallBoxSize[2] * tallBoxUp;
+//    Vec3Df smallBoxTop = smallBoxCenter + .5 * smallBoxSize[2] * smallBoxUp;
     
     
     
@@ -205,16 +205,16 @@ void Scene::buildCornellBoxScene() {
 //    ramObject.setTrans(smallBoxTop);
 //    objects.push_back(ramObject);
     
-    Mesh rhinoMesh;
-    rhinoMesh.loadOFF("models/sphere.off");
-    rhinoMesh.rotateAroundZ(-M_PI/3);
-    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.9f, 0.9f, 1.0f), 0.0, 0.8, 1.6);
-    Object rhino (rhinoMesh, rhinoMat);
-    rhino.setTrans(tallBoxCenter);
-    //rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
-    //objects.push_back (rhino);
-
-    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("Rhino", rhino.getTrans()));
+//    Mesh rhinoMesh;
+//    rhinoMesh.loadOFF("models/sphere.off");
+//    rhinoMesh.rotateAroundZ(-M_PI/3);
+//    Material rhinoMat (1.0f, 0.2f, 2.0, Vec3Df (0.9f, 0.9f, 1.0f), 0.0, 0.8, 1.6);
+//    Object rhino (rhinoMesh, rhinoMat);
+//    rhino.setTrans(tallBoxCenter);
+//    rhino.setTrans (tallBoxTop + Vec3Df(0,0,.4));
+//    objects.push_back (rhino);
+//
+//    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("Rhino", rhino.getTrans()));
 }
 
 #pragma mark - CHESS SCENE
@@ -328,6 +328,7 @@ void Scene::buildChessScene()
 
 void Scene::buildSpheresScene()
 {
+    
     std::vector<Vec3Df> colors;
     
     colors.push_back(Vec3Df(0.7, 0.3, 0.2));

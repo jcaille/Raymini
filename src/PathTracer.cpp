@@ -71,13 +71,14 @@ void PathTracer::allDiffuseContributionToRayColorForIntersection(const Ray& ray,
 
 void PathTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& intersectionColor)
 {
-    
+
     float reflectiveness = intersectionObject.getMaterial().getReflectiveness();
     float transmitance = intersectionObject.getMaterial().getTransmitance();
-    
+   
     Vec3Df reflectedColor(0,0,0);
-    if (reflectiveness < EPSILON || !enableMirrorEffet)
+    if (reflectiveness > EPSILON && enableMirrorEffet){
         mirrorContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, reflectedColor);
+    }
     
     if(reflectiveness >= 1.0 - EPSILON){
         intersectionColor = reflectedColor;
@@ -85,7 +86,7 @@ void PathTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersect
     }
     
     Vec3Df refractedContribution(0,0,0);
-    if (transmitance >= 1.0 - EPSILON){
+    if (transmitance > EPSILON && enableRefraction){
         refractedContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, refractedContribution);
     }
     
@@ -93,10 +94,11 @@ void PathTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersect
         intersectionColor = refractedContribution;
         return;
     }
-
-
+    
+    
     Vec3Df baseColor(0,0,0);
-    if (1 - reflectiveness - transmitance >= 1.0 - EPSILON){
+    if (1 - reflectiveness - transmitance > EPSILON){
+        
         allDiffuseContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, baseColor);
     }
     

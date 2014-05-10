@@ -233,6 +233,7 @@ void Window::renderRayImage () {
     
     // Pass options down
     rayTracer->enableCastShadows = shadowCheckBox->isChecked();
+    rayTracer->enableRefraction = transparencyCheckBox->isChecked();
     rayTracer->enableMirrorEffet = mirrorCheckBox->isChecked();
     rayTracer->shadingFunction = getShadingFunction();
     rayTracer->bounces = (int)bouncesSlider->getValue();
@@ -437,6 +438,12 @@ void Window::initControlWidget () {
     mirrorCheckBox->setText(QString("Mirror"));
     mirrorCheckBox->setChecked(true);
     rayLayout->addWidget(mirrorCheckBox);
+
+    transparencyCheckBox = new QCheckBox;
+    transparencyCheckBox->setText(QString("Transparency"));
+    transparencyCheckBox->setChecked(true);
+    rayLayout->addWidget(transparencyCheckBox);
+    
     
     QPushButton * rayButton = new QPushButton ("Render", rayGroupBox);
     rayLayout->addWidget (rayButton);
