@@ -215,18 +215,14 @@ public:
         return (*this) - (N * w);
     }
     static inline Vec3D segment (const Vec3D & a, const Vec3D & b) {
-        Vec3D r;
-        r[0] = b[0] - a[0];
-        r[1] = b[1] - a[1];
-        r[2] = b[2] - a[2];
-        return r;
+        return Vec3D(b[0] - a[0],
+                     b[1] - a[1],
+                     b[2] - a[2]);
     };
     static inline Vec3D crossProduct(const Vec3D & a, const Vec3D & b) {
-        Vec3D result;
-        result[0] = a[1] * b[2] - a[2] * b[1];
-        result[1] = a[2] * b[0] - a[0] * b[2];
-        result[2] = a[0] * b[1] - a[1] * b[0];
-        return(result);
+        return Vec3D(a[1] * b[2] - a[2] * b[1],
+                     a[2] * b[0] - a[0] * b[2],
+                     a[0] * b[1] - a[1] * b[0]);
     }
     static inline T dotProduct(const Vec3D & a, const Vec3D & b) {
         return (a[0] * b[0] + a[1] * b[1] + a[2] * b[2]);

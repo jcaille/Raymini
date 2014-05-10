@@ -60,10 +60,8 @@ Window::Window () : QMainWindow (NULL) {
     setCentralWidget (viewer);
 
 #if DEBUG
-    cout << "Building in Debug mode" << endl << " Small window to allow easy testing" << endl;;
-    viewer->setBaseSize(150, 150);
+    cout << "/ ! \\ Building in Debug mode. Performance will be impacted" << endl;
 #else
-    cout << "Release" << endl;
     viewer->setBaseSize(500, 500);
 #endif
     

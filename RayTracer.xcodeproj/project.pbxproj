@@ -162,8 +162,8 @@
 				1A71DE3A1907A6E600BB58C8 /* RayIterator.cpp */,
 				1A71DE3F1907B44900BB58C8 /* GridAARayIterator.h */,
 				1A71DE3E1907B44900BB58C8 /* GridAARayIterator.cpp */,
-				0FE3FE751910F6620067E815 /* LensBlurIterator.cpp */,
 				0FE3FE761910F6620067E815 /* LensBlurIterator.h */,
+				0FE3FE751910F6620067E815 /* LensBlurIterator.cpp */,
 			);
 			name = RayIterator;
 			sourceTree = "<group>";
@@ -476,6 +476,7 @@
 				CONFIGURATION_BUILD_DIR = bin;
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch *.xcode* (*) .DS_Store CVS .svn .git .hg";
 				FRAMEWORK_SEARCH_PATHS = /usr/local/lib;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -493,6 +494,7 @@
 				CONFIGURATION_BUILD_DIR = bin;
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.gch *.xcode* (*) .DS_Store CVS .svn .git .hg";
 				FRAMEWORK_SEARCH_PATHS = /usr/local/lib;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,

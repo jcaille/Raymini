@@ -28,9 +28,9 @@ class KDTree {
         Vec3Df position;
         Vec3Df n;
         
-        Plan(Vec3Df position, Vec3Df n);
         Plan(){};
-        bool isLeft(Vec3Df point);
+        bool isLeft(const Vec3Df& point) const;
+        bool isRight(const Vec3Df& point) const;
     };
     
     struct Node{
@@ -59,10 +59,9 @@ class KDTree {
         // Builds a node by finding the bouding box, the separating plan and dividing triangles between left and right node.
         void buildNode(const KDTree& tree, int maxDepth);
         
-        Node(vector<int>& triangleIndexes, int depth, const KDTree& tree);
+        Node(const vector<int>& triangleIndexes, int depth, const KDTree& tree);
         
-        Vec3Df getMedianPoint(const Mesh& mesh, Vec3Df normal);
-        static bool compareTriangles(const int triangleIndex1, const int triangleIndex2);
+        Vec3Df getMedianPoint(const Mesh& mesh, const Vec3Df& normal) const ;
 
         bool intersectRay(const Ray& ray, const KDTree& tree, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle) const;
     };

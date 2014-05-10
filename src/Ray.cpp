@@ -42,7 +42,7 @@ bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const
 
     if (inside)	{
         intersectionPoint = _origin;
-        return (true);
+        return true;
     }
 
     for (i = 0; i < NUMDIM; i++)
@@ -70,12 +70,12 @@ bool Ray::intersect (const BoundingBox & bbox, Vec3Df & intersectionPoint) const
 
 #pragma mark - Triangle
 
-bool Ray::intersect(const Triangle & tri, const vector<Vertex>& vertices, float& intersectionDistance, Vec3Df & intersectionPoint) const
+bool Ray::intersect(const Triangle & tri, const vector<Vertex>& vertices, float& intersectionDistance, Vec3Df& intersectionPoint) const
 {
     
-    Vec3Df p0 = vertices[tri.getVertex(0)].getPos();
-    Vec3Df p1 = vertices[tri.getVertex(1)].getPos();
-    Vec3Df p2 = vertices[tri.getVertex(2)].getPos();
+    const Vec3Df& p0 = vertices[tri.getVertex(0)].getPos();
+    const Vec3Df& p1 = vertices[tri.getVertex(1)].getPos();
+    const Vec3Df& p2 = vertices[tri.getVertex(2)].getPos();
 
     Vec3Df e0 = p1 - p0;
     Vec3Df e1 = p2 - p0;
@@ -112,8 +112,7 @@ bool Ray::intersect(const Triangle & tri, const vector<Vertex>& vertices, float&
     
     float t = Vec3Df::dotProduct(e1, r);
     
-    if (t>=1e-4)
-    {
+    if (t>=1e-4){
 
         intersectionDistance = t;
         intersectionPoint = _origin + t * _direction;

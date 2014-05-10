@@ -59,7 +59,7 @@ KDTree::Node::Node()
 {
 }
 
-KDTree::Node::Node(vector<int>& _triangleIndexes, int _depth, const KDTree& tree)
+KDTree::Node::Node(const vector<int>& _triangleIndexes, int _depth, const KDTree& tree)
  :  depth(_depth),
     triangleIndexes(_triangleIndexes),
     boundingBox(tree.getMesh().getTriangles(), triangleIndexes, tree.getMesh().getVertices()),
@@ -120,17 +120,14 @@ void KDTree::Node::buildNode(const KDTree& tree, int maxDepth)
     Vec3Df n;
     if (boundingBox.getSize() == boundingBox.getWidth() ){
         n = Vec3Df (boundingBox.getMax()[0] - boundingBox.getMin()[0], 0.0, 0.0);
-    }else if (boundingBox.getSize() == boundingBox.getHeight()){
+    } else if (boundingBox.getSize() == boundingBox.getHeight()){
         n = Vec3Df (0.0, boundingBox.getMax()[1] - boundingBox.getMin()[1], 0.0);
-    }else{
+    } else{
         n = Vec3Df( 0.0, 0.0, boundingBox.getMax()[2] - boundingBox.getMin()[2]);
     }
     
     n.normalize();
-    Vec3Df position;
-    //il faut trouver un triangle médian, pour l'instant on prend le milieu de l'axe de la bounding box
-    //position = boundingBox.getCenter();
-    position = getMedianPoint(tree.getMesh(), n);
+    Vec3Df position = getMedianPoint(tree.getMesh(), n);;
     
     plan.n = n;
     plan.position = position;
@@ -144,22 +141,19 @@ void KDTree::Node::buildNode(const KDTree& tree, int maxDepth)
     vector<int> leftIndexes, rightIndexes;
     for (int idx : triangleIndexes){
         
-        Triangle t = tree.getMesh().getTriangles()[idx];
+        const Triangle& t = tree.getMesh().getTriangles()[idx];
         
-        Vec3Df a = tree.getMesh().getVertices()[ t.getVertex(0) ].getPos() - position;
-        Vec3Df b = tree.getMesh().getVertices()[ t.getVertex(1) ].getPos() - position;
-        Vec3Df c = tree.getMesh().getVertices()[ t.getVertex(2) ].getPos() - position;
+        const Vec3Df& a = tree.getMesh().getVertices()[ t.getVertex(0)].getPos();
+        const Vec3Df& b = tree.getMesh().getVertices()[ t.getVertex(1)].getPos();
+        const Vec3Df& c = tree.getMesh().getVertices()[ t.getVertex(2)].getPos();
         
-        bool aLeft = plan.isLeft(a);
-        bool bLeft = plan.isLeft(b);
-        bool cLeft = plan.isLeft(c);
         
         //regarder si tous les sommets sont du même côté du plan...
-        if ( aLeft && bLeft && cLeft ){
+        if ( plan.isLeft(a) && plan.isLeft(b) && plan.isLeft(c) ){
             //Ils sont tous à gauche
             leftIndexes.push_back(idx);
             
-        } else if( !aLeft && !bLeft && !cLeft){
+        } else if( plan.isRight(a) && plan.isRight(b) && plan.isRight(c) ){
             //Ils sont tous à droite
             rightIndexes.push_back(idx);
         } else {
@@ -189,16 +183,17 @@ void KDTree::Node::buildNode(const KDTree& tree, int maxDepth)
     
 }
 
-Vec3Df KDTree::Node::getMedianPoint(const Mesh& mesh, Vec3Df normal){
+Vec3Df KDTree::Node::getMedianPoint(const Mesh& mesh, const Vec3Df& normal) const {
     
     vector<float> median_float;
+    const size_t n = triangleIndexes.size();
     
-    for (unsigned int i = 0; i< triangleIndexes.size(); i++){
+    for (unsigned int i = 0; i<n ; ++i){
         
-        Triangle t = mesh.getTriangles()[triangleIndexes[i]];
-        Vec3Df a = mesh.getVertices()[t.getVertex(0)].getPos();
-        Vec3Df b = mesh.getVertices()[t.getVertex(1)].getPos();
-        Vec3Df c = mesh.getVertices()[t.getVertex(2)].getPos();
+        const Triangle& t = mesh.getTriangles()[triangleIndexes[i]];
+        const Vec3Df& a = mesh.getVertices()[t.getVertex(0)].getPos();
+        const Vec3Df& b = mesh.getVertices()[t.getVertex(1)].getPos();
+        const Vec3Df& c = mesh.getVertices()[t.getVertex(2)].getPos();
         
         Vec3Df average = (a + b + c) / 3;
         
@@ -214,28 +209,34 @@ Vec3Df KDTree::Node::getMedianPoint(const Mesh& mesh, Vec3Df normal){
     std::vector<float>::iterator it = std::find(median_float.begin(), median_float.end(), median);
     std::vector<float>::size_type pos = std::distance(median_float.begin(), it);
     
-    Triangle t = mesh.getTriangles()[triangleIndexes[pos]];
-    Vec3Df a = mesh.getVertices()[t.getVertex(0)].getPos();
-    Vec3Df b = mesh.getVertices()[t.getVertex(1)].getPos();
-    Vec3Df c = mesh.getVertices()[t.getVertex(2)].getPos();
+    const Triangle& t = mesh.getTriangles()[triangleIndexes[pos]];
+    const Vec3Df& a = mesh.getVertices()[t.getVertex(0)].getPos();
+    const Vec3Df& b = mesh.getVertices()[t.getVertex(1)].getPos();
+    const Vec3Df& c = mesh.getVertices()[t.getVertex(2)].getPos();
     
     return (a + b + c) / 3;
     
 }
 
-bool KDTree::Plan::isLeft(Vec3Df point){
+bool KDTree::Plan::isLeft(const Vec3Df& point) const {
     
-    return Vec3Df::dotProduct(n , point) <= 0;
+    return Vec3Df::dotProduct(n , point-position) < 0;
     
 }
+
+bool KDTree::Plan::isRight(const Vec3Df& point) const {
+    
+    return Vec3Df::dotProduct(n , point-position) > 0;
+    
+}
+
 
 #pragma mark - Ray Intersection
 
 bool KDTree::Node::intersectRay(const Ray& ray, const KDTree& tree, float& intersectionDistance, Vec3Df& intersectionPoint, Triangle& intersectionTriangle) const
 {
     // Check if ray intersect bouding box
-    Vec3Df position;
-    if(!ray.intersect(boundingBox, position)){
+    if(!ray.intersect(boundingBox, intersectionPoint)){
         return false;
     }
     
@@ -267,34 +268,21 @@ bool KDTree::Node::intersectRay(const Ray& ray, const KDTree& tree, float& inter
 
     }
     
+    // Otherwise, check with the 2 sons
+    float intersectionDistanceRight;
+    Vec3Df intersectionPointRight;
+    Triangle intersectionTriangleRight;
+
+    bool intersectionLeft = left_node && left_node->intersectRay(ray, tree, intersectionDistance, intersectionPoint, intersectionTriangle);
+    bool intersectionRight = right_node && right_node->intersectRay(ray, tree, intersectionDistanceRight, intersectionPointRight, intersectionTriangleRight);
     
-    // Otherwise, the two sons are present.
-    float intersectionDistanceLeft, intersectionDistanceRight;
-    intersectionDistanceLeft = intersectionDistanceRight = std::numeric_limits<float>::max();
-    
-    Vec3Df intersectionPointLeft, intersectionPointRight;
-    Triangle intersectionTriangleLeft, intersectiontriangleRight;
-    
-    // Recursive part
-    bool intersectionLeft   = left_node != NULL && left_node->intersectRay(ray, tree, intersectionDistanceLeft, intersectionPointLeft, intersectionTriangleLeft);
-    bool intersectionRight  = right_node != NULL && right_node->intersectRay(ray, tree, intersectionDistanceRight, intersectionPointRight, intersectiontriangleRight);
-    
-    if (intersectionRight && !intersectionLeft) {
+    if ((intersectionRight && !intersectionLeft)
+        || (intersectionRight && intersectionLeft && intersectionDistanceRight < intersectionDistance)){
+        
         intersectionDistance = intersectionDistanceRight;
         intersectionPoint = intersectionPointRight;
-        intersectionTriangle = intersectiontriangleRight;
-    } else if (!intersectionRight && intersectionLeft) {
-        intersectionDistance = intersectionDistanceLeft;
-        intersectionPoint = intersectionPointLeft;
-        intersectionTriangle = intersectionTriangleLeft;
-    } else if(intersectionDistanceLeft < intersectionDistanceRight) {
-        intersectionDistance = intersectionDistanceLeft;
-        intersectionPoint = intersectionPointLeft;
-        intersectionTriangle = intersectionTriangleLeft;
-    } else {
-        intersectionDistance = intersectionDistanceRight;
-        intersectionPoint = intersectionPointRight;
-        intersectionTriangle = intersectiontriangleRight;
+        intersectionTriangle = intersectionTriangleRight;
+        
     }
     
     return intersectionLeft || intersectionRight;

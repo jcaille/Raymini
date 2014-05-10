@@ -143,9 +143,9 @@ void Mesh::markBorderEdges (EdgeMapIndex & edgeMap) {
 
 void Mesh::barycentricCoordinates(const Vec3Df pt, const Triangle& triangle, std::vector<float>& coords) const
 {
-    Vec3Df p0 = vertices[triangle.getVertex(0)].getPos();
-    Vec3Df p1 = vertices[triangle.getVertex(1)].getPos();
-    Vec3Df p2 = vertices[triangle.getVertex(2)].getPos();
+    const Vec3Df& p0 = vertices[triangle.getVertex(0)].getPos();
+    const Vec3Df& p1 = vertices[triangle.getVertex(1)].getPos();
+    const Vec3Df& p2 = vertices[triangle.getVertex(2)].getPos();
     
     Vec3Df e0 = p1 - p0;
     Vec3Df e1 = p2 - p0;
@@ -389,14 +389,14 @@ void Mesh::scale(float lambda)
     recomputeSmoothVertexNormals(0);
 }
 
-Vec3Df Mesh::getNormal(const Triangle &triangle, const std::vector<float> &barycentricCoordinates) const {
-    Vertex p0 = vertices[triangle.getVertex(0)];
-    Vertex p1 = vertices[triangle.getVertex(1)];
-    Vertex p2 = vertices[triangle.getVertex(2)];
+Vec3Df Mesh::getNormal(const Triangle &triangle, const std::vector<float>& barycentricCoordinates) const {
+    const Vertex& p0 = vertices[triangle.getVertex(0)];
+    const Vertex& p1 = vertices[triangle.getVertex(1)];
+    const Vertex& p2 = vertices[triangle.getVertex(2)];
     
-    Vec3Df n0 = p0.getNormal();
-    Vec3Df n1 = p1.getNormal();
-    Vec3Df n2 = p2.getNormal();
+    const Vec3Df& n0 = p0.getNormal();
+    const Vec3Df& n1 = p1.getNormal();
+    const Vec3Df& n2 = p2.getNormal();
     
     Vec3Df norm = barycentricCoordinates[0] * n0 + barycentricCoordinates[1] * n1 + barycentricCoordinates[2] * n2;
     norm.normalize();

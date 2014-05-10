@@ -11,6 +11,10 @@
 #include "Light.h"
 #include "Object.h"
 
+static inline float sqr(float x){
+    return x*x;
+}
+
 Vec3Df BRDF::phong(const Vec3Df &hitPoint, const Vec3Df& normal, const Vec3Df &pov, const Vec3Df &lightPos, const Object& object, const Light& light)
 {
 
@@ -61,9 +65,9 @@ Vec3Df BRDF::cook_torrance(const Vec3Df &hitPoint, const Vec3Df& normal, const V
     float diffuse = material.getDiffuse() * a;
 
     //1-Schlick approximation (for Fresnel term)
-    float R0 = pow( (n1-n2) / (n1+n2) , 2);
+    float R0 = sqr( (n1-n2) / (n1+n2));
     float cos = Vec3Df::dotProduct(h,wo);
-    float schlickTerm = R0 + (1.f-R0)*pow(1.f-cos,5);
+    float schlickTerm = R0 + (1.f-R0)*powf(1.f-cos,5);
 
     //2-Geometric attenuation
     float tmp = max(Vec3Df::dotProduct(normal,h),0.f);
@@ -74,9 +78,9 @@ Vec3Df BRDF::cook_torrance(const Vec3Df &hitPoint, const Vec3Df& normal, const V
     //3-Beckmann distribution
     float alpha = std::acos(Vec3Df::dotProduct(normal,h));
     //A way to convert shininess into m factor ( Source : http://simonstechblog.blogspot.fr/2011/12/microfacet-brdf.html )
-    float m = pow( (2.f/(2.f+object.getMaterial().getShininess ())),0.5f);
-    float beckmannDenom = PI * pow(m,2) * pow( Vec3Df::dotProduct(h,normal) ,4);
-    float beckmannNum = std::exp( -1.f*pow( (tan(alpha)/m) ,2 ) );
+    float m = powf( (2.f/(2.f+object.getMaterial().getShininess ())),0.5f);
+    float beckmannDenom = PI * sqr(m) * powf( Vec3Df::dotProduct(h,normal) ,4);
+    float beckmannNum = std::exp( -sqr( tan(alpha)/m ) );
     float beckmannTerm = beckmannNum/beckmannDenom;
 
 

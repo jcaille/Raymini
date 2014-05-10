@@ -183,7 +183,7 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
         std::vector<float> coords;
         mesh.barycentricCoordinates(lightIntersectionPoint, lightIntersectionTriangle, coords);
         
-        Vec3Df norm = mesh.getNormal(lightIntersectionTriangle, coords);
+        const Vec3Df& norm = mesh.getNormal(lightIntersectionTriangle, coords);
         
         // Now that we have that point of intersection, let's compute the color it is supposed to have
         rayColorForIntersection(ray, lightIntersectionPoint + lightIntersectionObject->getTrans(), norm, *lightIntersectionObject, scene, intersectionColor);
@@ -196,7 +196,8 @@ void RayTracer::raySceneInteraction(const Ray& ray, const Scene& scene, Vec3Df& 
         // Get barycentric coordinates
         std::vector<float> coords;
         mesh.barycentricCoordinates(objectIntersectionPoint, objectIntersectionTriangle, coords);
-        Vec3Df norm = mesh.getNormal(objectIntersectionTriangle, coords);
+        
+        const Vec3Df& norm = mesh.getNormal(objectIntersectionTriangle, coords);
         
         // Now that we have that point of intersection, let's compute the color it is supposed to have
         rayColorForIntersection(ray, objectIntersectionPoint + objectIntersectionObject->getTrans(), norm, *objectIntersectionObject, scene, intersectionColor);
