@@ -16,36 +16,6 @@ static inline float sqr(float x)
     return x*x;
 }
 
-// We need to modify this so that objects that are transparent don't generate hard shadows
-float TransparencyRayTracer::lightContributionPowerToRayColorForIntersection(const Vec3Df& intersectionPoint, const Vec3Df& lightPos, const Scene& scene)
-{
-    
-    Vec3Df direction = lightPos-intersectionPoint;
-    float lightDistance = direction.normalize();
-    
-    // Let's see if direct light from the light can go through to the intersectionPoint
-    Ray lightRay(intersectionPoint, direction);
-    
-    float obstructionDistance;
-    Vec3Df obstructionPoint;
-    Triangle obstructionTriangle;
-    const Object* obstructionObject;
-    
-    bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
-    
-    if (!intersection || obstructionDistance + EPSILON >= lightDistance){
-        return 1.0f;
-    }
-    
-    // Maybe the intersection object is transparent ?
-    if (obstructionObject->getMaterial().getTransmitance() < EPSILON)
-        return 0.0f;
-    
-    return sqrt(obstructionObject->getMaterial().getTransmitance()) * lightContributionPowerToRayColorForIntersection(intersectionPoint+obstructionDistance*direction, lightPos, scene) ;
-    
-}
-
-
 void TransparencyRayTracer::refractedContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Object& intersectionObject, const Scene& scene, Vec3Df& totalContribution)
 {
     
@@ -67,6 +37,12 @@ void TransparencyRayTracer::refractedContributionToRayColorForIntersection(const
 
     float cosIncidentAngle = Vec3Df::dotProduct(incidentRayDirection, intersectionNormal);
     
+    // Where do we reflect ?
+    Vec3Df reflectedRayDirection = 2 * cosIncidentAngle * intersectionNormal - incidentRayDirection;
+    reflectedRayDirection.normalize();
+    Ray reflectedRay(intersectionPoint, reflectedRayDirection);
+    reflectedRay.setDepth(ray.getDepth()+1);
+
     Vec3Df n;
 
 
@@ -86,7 +62,7 @@ void TransparencyRayTracer::refractedContributionToRayColorForIntersection(const
     
     // Angle limite : uniquement reflection
     if (cos_theta_t_sqr < 0){
-        mirrorContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, totalContribution);
+        raySceneInteraction(reflectedRay, scene, totalContribution);
         return;
     }
     
@@ -102,8 +78,7 @@ void TransparencyRayTracer::refractedContributionToRayColorForIntersection(const
     refractedRay.setDepth(ray.getDepth()+1);
     
     raySceneInteraction(refractedRay, scene, refractedContribution);
-    
-    mirrorContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, reflectedContribution);
+    raySceneInteraction(reflectedRay, scene, reflectedContribution);
     
     float Fr_interm = sqr((eta * cosIncidentAngle - cos_theta) /(eta * cosIncidentAngle + cos_theta));
     
@@ -124,6 +99,16 @@ void TransparencyRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df
     float reflectiveness = intersectionObject.getMaterial().getReflectiveness();
     float transmitance = intersectionObject.getMaterial().getTransmitance();
     
+    Vec3Df baseColor(0,0,0);
+    if (1 - reflectiveness - transmitance > EPSILON){
+        directContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, baseColor);
+    }
+
+    if (1 - reflectiveness - transmitance > 1.0 - EPSILON){
+        intersectionColor = baseColor;
+        return;
+    }
+    
     Vec3Df reflectedColor(0,0,0);
     if (reflectiveness > EPSILON && enableMirrorEffet){
         mirrorContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, reflectedColor);
@@ -139,18 +124,12 @@ void TransparencyRayTracer::rayColorForIntersection(const Ray& ray, const Vec3Df
         refractedContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, refractedContribution);
     }
     
-    if(reflectiveness >= 1.0 - EPSILON){
+    if(transmitance >= 1.0 - EPSILON){
         intersectionColor = refractedContribution;
         return;
     }
     
-    
-    Vec3Df baseColor(0,0,0);
-    if (1 - reflectiveness - transmitance > EPSILON){
-        directContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, baseColor);
-    }
-    
-    intersectionColor = reflectiveness * reflectedColor + (1 - reflectiveness - transmitance) * baseColor + transmitance * refractedContribution;
+    intersectionColor = reflectiveness * reflectedColor + transmitance * refractedContribution + (1 - reflectiveness - transmitance) * baseColor ;
     
 }
 

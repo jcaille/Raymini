@@ -28,11 +28,6 @@ class ShadowRayTracer : public KDTreeRayTracer
 protected:
 
     
-    virtual float lightContributionPowerToRayColorForIntersection(const Vec3Df& intersectionPoint,
-                                                                  const Vec3Df& lightPos,
-                                                                  const Scene& scene);
-
-    
     void lightContributionToRayColorForIntersection(const Ray& ray,
                                                     const Vec3Df& intersectionPoint,
                                                     const Vec3Df& intersectionNormal,

@@ -13,9 +13,16 @@
 
 #define EPSILON 10e-4
 
-float ShadowRayTracer::lightContributionPowerToRayColorForIntersection(const Vec3Df& intersectionPoint , const Vec3Df& lightPos, const Scene& scene)
+void ShadowRayTracer::lightContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Vec3Df& lightPos, const Light& light, const Object& intersectionObject, const Scene& scene, Vec3Df& lightContribution)
 {
-
+    
+    if (!enableCastShadows){
+        lightContribution = brdf(intersectionPoint, intersectionNormal, ray.getOrigin(), lightPos, intersectionObject, light);
+        return;
+    }
+    
+    lightContribution = Vec3Df(0,0,0);
+    
     Vec3Df direction = lightPos-intersectionPoint;
     float lightDistance = direction.normalize();
     
@@ -30,24 +37,10 @@ float ShadowRayTracer::lightContributionPowerToRayColorForIntersection(const Vec
     bool intersection = raySceneIntersection(lightRay, scene, obstructionDistance, obstructionPoint, obstructionTriangle, obstructionObject);
     
     if (!intersection || obstructionDistance + EPSILON >= lightDistance){
-        return 1.0f;
+        lightContribution = brdf(intersectionPoint, intersectionNormal, ray.getOrigin(), lightPos, intersectionObject, light);
     }
     
-    return 0.0f;
-
-}
-
-
-void ShadowRayTracer::lightContributionToRayColorForIntersection(const Ray& ray, const Vec3Df& intersectionPoint, const Vec3Df& intersectionNormal, const Vec3Df& lightPos, const Light& light, const Object& intersectionObject, const Scene& scene, Vec3Df& lightContribution)
-{
-    
-    lightContribution = Vec3Df(0,0,0);
-    
-    float lightContributionPower = enableCastShadows ? lightContributionPowerToRayColorForIntersection(intersectionPoint, lightPos, scene) : 1.0f;
-    
-    if (lightContributionPower > EPSILON){
-        lightContribution = lightContributionPower * brdf(intersectionPoint, intersectionNormal, ray.getOrigin(), lightPos, intersectionObject, light);
-    }
+    return;
 
 }
 

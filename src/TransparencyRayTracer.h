@@ -23,10 +23,6 @@ class TransparencyRayTracer : public MirrorRayTracer {
     
 protected:
     
-    virtual float lightContributionPowerToRayColorForIntersection(const Vec3Df& intersectionPoint,
-                                                                  const Vec3Df& lightPos,
-                                                                  const Scene& scene);
-
     void refractedContributionToRayColorForIntersection(const Ray& ray,
                                                         const Vec3Df& intersectionPoint,
                                                         const Vec3Df& intersectionNormal,
