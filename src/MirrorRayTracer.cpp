@@ -29,6 +29,7 @@ void MirrorRayTracer::mirrorContributionToRayColorForIntersection(const Ray& ray
     Vec3Df reflecteRayDirection = incidentRayDirection - 2 * intersectionNormal * (Vec3Df::dotProduct(incidentRayDirection, intersectionNormal));
     Ray reflectedRay(intersectionPoint, reflecteRayDirection);
     reflectedRay.setDepth(ray.getDepth()+1);
+    reflectedRay.setShouldBounce(ray.shouldBounce());
     
     raySceneInteraction(reflectedRay, scene, reflectedColor);
     

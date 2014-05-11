@@ -25,8 +25,7 @@ void PathTracer::indirectContributionToRayColorForIntersection(const Ray& ray, c
     int depth = ray.getDepth();
     
     // Stop-condition
-    if (depth > 1){
-        // Indirect contribution is non-zero only for first-order rays only
+    if (!ray.shouldBounce()){
         return;
     }
     
@@ -45,6 +44,7 @@ void PathTracer::indirectContributionToRayColorForIntersection(const Ray& ray, c
         
         Ray newRay(intersectionPoint, direction);
         newRay.setDepth(depth+1);
+        newRay.setShouldBounce(false);
         
         raySceneInteraction(newRay, scene, bounceContribution);
         
@@ -62,7 +62,7 @@ void PathTracer::allDiffuseContributionToRayColorForIntersection(const Ray& ray,
     Vec3Df indirectContribution;
     indirectContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, indirectContribution);
     
-    diffuseLightContribution = directContribution + .3* indirectContribution;
+    diffuseLightContribution = directContribution + .5 * indirectContribution;
 
 }
 
@@ -76,6 +76,7 @@ void PathTracer::rayColorForIntersection(const Ray& ray, const Vec3Df& intersect
     if (1 - reflectiveness - transmitance > EPSILON){
         allDiffuseContributionToRayColorForIntersection(ray, intersectionPoint, intersectionNormal, intersectionObject, scene, baseColor);
     }
+    
     if (1 - reflectiveness - transmitance >= 1 - EPSILON){
         intersectionColor = baseColor;
         return;

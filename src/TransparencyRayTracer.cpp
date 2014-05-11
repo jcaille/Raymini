@@ -42,7 +42,8 @@ void TransparencyRayTracer::refractedContributionToRayColorForIntersection(const
     reflectedRayDirection.normalize();
     Ray reflectedRay(intersectionPoint, reflectedRayDirection);
     reflectedRay.setDepth(ray.getDepth()+1);
-
+    reflectedRay.setShouldBounce(ray.shouldBounce());
+    
     Vec3Df n;
 
 
@@ -76,6 +77,7 @@ void TransparencyRayTracer::refractedContributionToRayColorForIntersection(const
     
     Ray refractedRay(intersectionPoint, refractedRayDirection);
     refractedRay.setDepth(ray.getDepth()+1);
+    refractedRay.setShouldBounce(ray.shouldBounce());
     
     raySceneInteraction(refractedRay, scene, refractedContribution);
     raySceneInteraction(reflectedRay, scene, reflectedContribution);

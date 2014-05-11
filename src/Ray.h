@@ -21,7 +21,7 @@ class Object;
 class Ray {
 public:
     inline Ray () {}
-    inline Ray (const Vec3Df & origin, const Vec3Df & direction) : _depth(1), _origin(origin), _direction(direction) {}
+    inline Ray (const Vec3Df & origin, const Vec3Df & direction) : _depth(1), _origin(origin), _direction(direction), _shouldBounce(true) {}
     inline virtual ~Ray () {}
 
     inline const Vec3Df & getOrigin () const { return _origin; }
@@ -31,6 +31,9 @@ public:
 
     inline const int getDepth () const { return _depth; }
     inline void setDepth (int depth) { _depth = depth; }
+
+    inline const bool shouldBounce () const { return _shouldBounce; }
+    inline void setShouldBounce (bool bounce) { _shouldBounce = bounce; }
 
     
     // Intersection w/ a bounding box
@@ -44,6 +47,7 @@ public:
     
   
 private:
+    bool _shouldBounce;
     int _depth;
     Vec3Df _origin;
     Vec3Df _direction;
