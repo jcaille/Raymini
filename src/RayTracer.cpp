@@ -38,7 +38,7 @@ static RayTracer * instance = NULL;
 
 RayTracer* RayTracer::getInstance () {
     if (instance == NULL){
-        instance = new TransparencyRayTracer();
+        instance = new PathTracer();
         std::cout << "Creating raytracer" << std::endl;
     }
     return instance;
