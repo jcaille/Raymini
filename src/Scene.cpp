@@ -105,28 +105,28 @@ void Scene::buildCornellBox(float scale){
     /* White, ground */
     Mesh groundMesh;
     groundMesh.makePlane(scale*Vec3Df(0,0,0), Vec3Df(0,0,1), Vec3Df(0,1,0), scale, scale);
-    Material groundMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f));
+    Material groundMat(1.0f, 0.0f, 10, Vec3Df (1.f, 1.f, 1.f));
     Object ground (groundMesh, groundMat);
     objects.push_back (ground);
 
     /* Red, left wall */
     Mesh leftWallMesh;
     leftWallMesh.makePlane(scale*Vec3Df(-.5,0,.5), Vec3Df(1,0,0), Vec3Df(0,1,0), scale, scale);
-    Material leftWallMat(.8f, .2f, 10, Vec3Df (1.f, 0.f, 0.f));
+    Material leftWallMat(1.0f, 0.0f, 10, Vec3Df (1.f, 0.f, 0.f));
     Object leftWall (leftWallMesh, leftWallMat);
     objects.push_back (leftWall);
 
     /* Blue, right wall */
     Mesh rightWallMesh;
     rightWallMesh.makePlane(scale*Vec3Df(.5,0,.5), Vec3Df(-1,0,0), Vec3Df(0,1,0), scale, scale);
-    Material rightWallMat(.8f, .2f, 10, Vec3Df (0.5f, .7f, 1.0f));
+    Material rightWallMat(1.0f, 0.0f, 10, Vec3Df (0.5f, .7f, 1.0f));
     Object rightWall (rightWallMesh, rightWallMat);
     objects.push_back (rightWall);
 
     /* White, back wall */
     Mesh backWallMesh;
     backWallMesh.makePlane(scale*Vec3Df(.0,.5,.5), Vec3Df(0,-1,0), Vec3Df(0,0,1), scale, scale);
-    Material backtWallMat(.8f, .2f, 10, Vec3Df (1.f, 1.0f, 1.0f));
+    Material backtWallMat(1.0f, 0.0f, 10, Vec3Df (1.f, 1.0f, 1.0f));
     Object backWall (backWallMesh, backtWallMat);
     objects.push_back (backWall);
     
@@ -134,7 +134,7 @@ void Scene::buildCornellBox(float scale){
     /* White, ceiling */
     Mesh ceilingMesh;
     ceilingMesh.makePlane(scale*Vec3Df(0, 0, 1), Vec3Df(0,0,-1), Vec3Df(0,1,0), scale, scale);
-    Material ceilingMat(.8f, .2f, 10, Vec3Df (1.f, 1.f, 1.f));
+    Material ceilingMat(1.0f, 0.0f, 10, Vec3Df (1.f, 1.f, 1.f));
     Object ceiling (ceilingMesh, ceilingMat);
     objects.push_back (ceiling);
 
@@ -142,7 +142,7 @@ void Scene::buildCornellBox(float scale){
     /* Ceiling light - slightly yellowish */
     Mesh ceilingLightMesh;
     ceilingLightMesh.makePlane(Vec3Df (0.0, 0.0, 0.0), Vec3Df(0,0,-1), Vec3Df(0,1,0), 0.2*scale, 0.2*scale);
-    Light ceilingLight (scale*Vec3Df (0.0, 0.0, 0.99), ceilingLightMesh, Vec3Df (1.0f, .85f, .7f), 1.0f);
+    Light ceilingLight (scale*Vec3Df (0.0, 0.0, 0.99), ceilingLightMesh, Vec3Df (1.0f, 1.0f, 1.0f), 0.8f);
     lights.push_back(ceilingLight);
 
 }
@@ -154,9 +154,10 @@ void Scene::buildCornellBoxSphereScene() {
     
     Mesh sphereMesh;
     sphereMesh.loadOFF("models/sphere.off");
-    Material sphereMat(.1f, 1.0f, 128.0, Vec3Df (1.0f, 1.0f, 1.0f), 0.0, 0.8f, 1.5);
+    sphereMesh.scale(.6);
+    Material sphereMat(.0f, 1.0f, 128.0, Vec3Df (1.0f, 1.0f, 1.0f), 0.0, 1.0f, 1.7);
     Object sphere(sphereMesh, sphereMat);
-    sphere.setTrans(scale*Vec3Df(-.2,.1,.3));
+    sphere.setTrans(scale*Vec3Df(.25,0,.18));
     objects.push_back(sphere);
 
 }
