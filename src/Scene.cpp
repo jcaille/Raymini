@@ -141,7 +141,7 @@ void Scene::buildCornellBox(float scale){
 
     /* Ceiling light - slightly yellowish */
     Mesh ceilingLightMesh;
-    ceilingLightMesh.makePlane(Vec3Df (0.0, 0.0, 0.0), Vec3Df(0,0,-1), Vec3Df(0,1,0), 0.2*scale, 0.2*scale);
+    ceilingLightMesh.makePlane(Vec3Df (0.0, 0.0, 0.0), Vec3Df(0,0,-1), Vec3Df(0,1,0), 0.3*scale, 0.3*scale);
     Light ceilingLight (scale*Vec3Df (0.0, 0.0, 0.99), ceilingLightMesh, Vec3Df (1.0f, 1.0f, 1.0f), 0.8f);
     lights.push_back(ceilingLight);
 
@@ -155,11 +155,20 @@ void Scene::buildCornellBoxSphereScene() {
     Mesh sphereMesh;
     sphereMesh.loadOFF("models/sphere.off");
     sphereMesh.scale(.6);
-    Material sphereMat(.0f, 1.0f, 128.0, Vec3Df (1.0f, 1.0f, 1.0f), 0.0, 1.0f, 1.7);
-    Object sphere(sphereMesh, sphereMat);
-    sphere.setTrans(scale*Vec3Df(.25,0,.18));
-    objects.push_back(sphere);
+    
+    Material glassSphereMat(.0f, 1.0f, 128.0, Vec3Df (1.0f, 1.0f, 1.0f), 0.0, 1.0f, 1.7);
+    Object glassSphere(sphereMesh, glassSphereMat);
+    glassSphere.setTrans(scale*Vec3Df(.25,0,.18));
+    objects.push_back(glassSphere);
+    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("Glass sphere", glassSphere.getTrans()));
+    
+    Material mirrorSphereMat(.0f, 1.0f, 128.0, Vec3Df (1.0f, 1.0f, 1.0f), 1.0, 0.0f, 1.7);
+    Object mirrorSphere(sphereMesh, mirrorSphereMat);
+    mirrorSphere.setTrans(scale*Vec3Df(-.25,0.15,.18));
+    objects.push_back(mirrorSphere);
+    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("Mirror sphere", mirrorSphere.getTrans()));
 
+    
 }
 
 void Scene::buildCornellBoxAnimalScene() {
@@ -216,6 +225,7 @@ void Scene::buildCornellBoxAnimalScene() {
     Object ramObject(ramMesh, ramMat);
     ramObject.setTrans(smallBoxTop);
     objects.push_back(ramObject);
+    _pointsOfInterest.push_back(std::pair<std::string, Vec3Df>("Ram", ramObject.getTrans()));
     
     Mesh rhinoMesh;
     rhinoMesh.loadOFF("models/rhino.off");
